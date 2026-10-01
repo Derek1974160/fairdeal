@@ -1,0 +1,1 @@
+Fair Deal Calculator site
