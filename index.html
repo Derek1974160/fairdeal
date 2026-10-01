@@ -356,7 +356,8 @@ footer p{max-width:60ch;margin:0 0 10px}
 <script>
 (function(){
   // Leave empty to hide the email form. Later: point at an Edge Function that stores {email, source:"calculator"}.
-  var SUBMIT_ENDPOINT = "";
+  var SUBMIT_ENDPOINT =
+    "https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-signup";;
 
   var $ = function(id){ return document.getElementById(id); };
   var fields = ["income","deductions","savings","gifts","home","other","cost"];
