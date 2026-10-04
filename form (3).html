@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fill in your Fair Deal application form</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<style>:root{
+  --navy:#0E2A47;--navy-2:#163B63;--teal:#0FA38A;--teal-2:#0B8571;--teal-soft:#E3F7F2;
+  --coral:#FF6B4A;--coral-2:#E8552F;--sun:#FFC43D;--sun-soft:#FFF4D6;--lilac:#7A5AF8;--lilac-soft:#EEEAFF;
+  --ink:#1B2430;--muted:#5B6B7C;--line:#E3E9EF;--bg:#F6F9FB;
+  --head:"Outfit",system-ui,sans-serif;--body:"Source Sans 3",system-ui,Arial,sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--teal-2)}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.12;margin:0;letter-spacing:-.01em}
+p{margin:0 0 1em}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:#fff;box-shadow:0 2px 14px rgba(14,42,71,.08)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:70px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy);font-family:var(--head);font-weight:700;font-size:21px}
+.logo i{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--lilac));display:grid;place-items:center;color:#fff;font-style:normal;font-size:18px}
+.logo small{display:block;font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted);letter-spacing:0}
+.nav nav{display:flex;gap:6px;align-items:center}
+.nav nav a{text-decoration:none;color:var(--navy);font-weight:600;font-size:15px;padding:9px 13px;border-radius:999px}
+.nav nav a:hover{background:var(--teal-soft)}
+.nav nav a.pill{background:var(--coral);color:#fff}
+.nav nav a.pill:hover{background:var(--coral-2)}
+@media(max-width:640px){.nav nav a:not(.pill){display:none}}
+
+/* hero */
+.hero{position:relative;color:#fff;background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 45%,var(--teal) 120%);overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(2px);opacity:.55}
+.hero::before{width:420px;height:420px;background:var(--lilac);right:-120px;top:-160px}
+.hero::after{width:300px;height:300px;background:var(--teal);left:-120px;bottom:-180px}
+.hero .wrap{position:relative;padding:48px 22px 110px;display:grid;gap:20px;max-width:900px;text-align:center}
+@media(max-width:560px){.hero .wrap{padding:34px 20px 96px}.hero h1{font-size:30px;line-height:1.15}}
+.eyebrow{display:inline-block;justify-self:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.hero h1{font-size:clamp(34px,5.4vw,58px)}
+.hero h1 b{color:var(--sun)}
+.hero p{font-size:20px;color:#DCEAF5;max-width:60ch;margin:0 auto}
+.wave{display:block;width:100%;height:60px;margin-top:-60px;position:relative}
+
+/* calculator card */
+.calc-card{position:relative;margin-top:-70px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(14,42,71,.14);display:grid;grid-template-columns:1fr;overflow:hidden}
+@media(min-width:960px){.calc-card{grid-template-columns:minmax(0,1fr) 420px}}
+.calc-form{padding:28px 28px 30px}
+.calc-form h2{font-size:24px;margin-bottom:4px;color:var(--navy)}
+.step{display:flex;align-items:center;gap:12px;margin:26px 0 10px}
+.step span{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--head);font-weight:700;font-size:15px}
+.step h3{font-size:19px;color:var(--navy)}
+.s1 span{background:var(--teal)}.s2 span{background:var(--lilac)}.s3 span{background:var(--coral)}.s4 span{background:var(--sun);color:var(--navy)}
+.hint{font-size:15px;color:var(--muted);margin:0 0 10px}
+.row{display:grid;gap:14px}
+@media(min-width:640px){.row.two{grid-template-columns:1fr 1fr}}
+.field label{display:block;font-weight:600;font-size:15px;margin-bottom:6px;color:var(--navy)}
+.field label span{font-weight:400;color:var(--muted)}
+.money{position:relative}
+.money::before{content:"€";position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600}
+input[type=text],input[type=email]{width:100%;font:inherit;font-size:18px;padding:12px 14px 12px 32px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+input[type=email]{padding-left:14px}
+input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px rgba(15,163,138,.18)}
+.note{font-size:14px;color:var(--muted);margin-top:6px}
+.seg{display:flex;gap:8px}
+.seg input{position:absolute;opacity:0;width:0;height:0}
+.seg label{flex:1;text-align:center;padding:12px 10px;border:2px solid var(--line);border-radius:12px;cursor:pointer;font-weight:600;color:var(--muted);margin:0}
+.seg input:checked+label{background:var(--teal-soft);border-color:var(--teal);color:var(--teal-2)}
+.seg input:focus-visible+label{box-shadow:0 0 0 4px rgba(15,163,138,.18)}
+
+.calc-result{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;padding:30px 28px}
+@media(min-width:960px){.calc-result{position:sticky;top:90px;align-self:start;min-height:100%}}
+.calc-result h2{font-family:var(--body);font-weight:600;font-size:15px;color:#A9C4DB;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.big{font-family:var(--head);font-size:62px;font-weight:700;line-height:1;color:var(--sun)}
+.big small{font-family:var(--body);font-size:17px;font-weight:400;color:#DCEAF5;margin-left:8px}
+.per{color:#DCEAF5;font-size:16px;margin-top:8px}
+.lines{list-style:none;padding:0;margin:22px 0 0;border-top:1px solid rgba(255,255,255,.18)}
+.lines li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:16px}
+.lines li span:last-child{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.lines li.dim{color:#A9C4DB}
+.lines li.dim span:last-child{font-weight:400}
+.callout{margin-top:18px;background:rgba(255,255,255,.1);border-radius:12px;padding:14px 16px;font-size:15px;border-left:4px solid var(--sun)}
+.callout strong{display:block;margin-bottom:3px;color:var(--sun)}
+.empty{color:#A9C4DB;font-size:15px}
+.cta{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
+.cta p{font-size:15px;color:#DCEAF5;margin-bottom:12px}
+.btn{display:inline-block;background:var(--coral);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:13px 22px;border-radius:999px;border:0;cursor:pointer;font-family:var(--head);box-shadow:0 8px 20px rgba(255,107,74,.35);transition:transform .12s,background .12s}
+.btn:hover{background:var(--coral-2);transform:translateY(-1px)}
+.btn:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.btn.teal{background:var(--teal);box-shadow:0 8px 20px rgba(15,163,138,.3)}.btn.teal:hover{background:var(--teal-2)}
+.btn.ghost{background:transparent;border:2px solid #fff;box-shadow:none}
+.mini{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mini input{flex:1;min-width:160px;border-color:transparent}
+.mini .btn{padding:12px 16px;white-space:nowrap}
+.ok{font-size:14px;color:#DCEAF5;margin-top:8px}
+
+/* sections */
+section.band{padding:72px 0}
+.center{text-align:center}
+.kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-2);background:var(--teal-soft);padding:6px 12px;border-radius:999px;margin-bottom:14px}
+.kicker.coral{color:var(--coral-2);background:#FFE8E1}.kicker.lilac{color:var(--lilac);background:var(--lilac-soft)}
+section.band h2{font-size:clamp(28px,3.6vw,40px);color:var(--navy);margin-bottom:10px}
+.lead{color:var(--muted);font-size:19px;max-width:62ch;margin:0 auto 36px}
+.cards{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:760px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:#fff;border-radius:18px;padding:28px 26px;box-shadow:0 10px 30px rgba(14,42,71,.07);border-top:6px solid var(--teal);transition:transform .15s}
+.card:hover{transform:translateY(-4px)}
+.card.lilac{border-top-color:var(--lilac)}.card.coral{border-top-color:var(--coral)}.card.sun{border-top-color:var(--sun)}
+.icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;margin-bottom:16px;background:var(--teal-soft);color:var(--teal-2)}
+.card.lilac .icon{background:var(--lilac-soft);color:var(--lilac)}.card.coral .icon{background:#FFE8E1;color:var(--coral-2)}.card.sun .icon{background:var(--sun-soft);color:#A56E00}
+.icon svg{width:28px;height:28px}
+.card h3{font-size:22px;color:var(--navy);margin-bottom:8px}
+.card p{font-size:16px;color:var(--muted);margin:0}
+.card b{color:var(--ink);font-weight:600}
+
+.stats{background:#fff}
+.stats .wrap{display:grid;gap:18px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:760px){.stats .wrap{grid-template-columns:repeat(4,1fr)}}
+.stat{text-align:center;padding:26px 10px;border-radius:16px;background:var(--bg)}
+.stat b{display:block;font-family:var(--head);font-size:38px;color:var(--teal-2);line-height:1}
+.stat.c b{color:var(--coral-2)}.stat.l b{color:var(--lilac)}.stat.s b{color:#A56E00}
+.stat span{font-size:15px;color:var(--muted)}
+
+.steps{display:grid;gap:18px;grid-template-columns:1fr;counter-reset:s}
+@media(min-width:760px){.steps{grid-template-columns:repeat(4,1fr)}}
+.stepc{background:#fff;border-radius:16px;padding:24px 22px;box-shadow:0 10px 30px rgba(14,42,71,.07);position:relative}
+.stepc::before{counter-increment:s;content:counter(s);position:absolute;top:-16px;left:22px;width:36px;height:36px;border-radius:50%;background:var(--coral);color:#fff;font-family:var(--head);font-weight:700;display:grid;place-items:center;box-shadow:0 6px 14px rgba(255,107,74,.35)}
+.stepc h3{font-size:19px;color:var(--navy);margin:8px 0 6px}
+.stepc p{font-size:15px;color:var(--muted);margin:0}
+
+.faq-wrap{max-width:820px;margin:0 auto}
+details{background:#fff;border-radius:14px;margin-bottom:12px;box-shadow:0 6px 20px rgba(14,42,71,.06);border-left:5px solid var(--teal)}
+details:nth-of-type(2n){border-left-color:var(--lilac)}details:nth-of-type(3n){border-left-color:var(--coral)}
+summary{cursor:pointer;font-family:var(--head);font-weight:600;font-size:19px;color:var(--navy);padding:18px 20px;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:26px;line-height:1;color:var(--coral);flex:none}
+details[open] summary::after{content:"–"}
+details p{padding:0 20px 18px;color:var(--muted);margin:0;max-width:70ch;font-size:16.5px}
+
+.ctaband{background:linear-gradient(120deg,var(--coral),#FF8E6B 60%,var(--sun));color:#fff;text-align:center;padding:64px 0}
+.ctaband h2{color:#fff;font-size:clamp(28px,3.6vw,40px);margin-bottom:10px}
+.ctaband p{color:#fff;opacity:.95;max-width:56ch;margin:0 auto 22px;font-size:18px}
+.ctaband .btn{background:var(--navy);box-shadow:0 8px 20px rgba(14,42,71,.3)}.ctaband .btn:hover{background:#0A1F36}
+
+footer{background:var(--navy);color:#B9CCDF;padding:50px 0 40px;font-size:15px}
+footer .wrap{display:grid;gap:30px;grid-template-columns:1fr}
+@media(min-width:760px){footer .wrap{grid-template-columns:1.3fr 1fr 1fr}}
+footer h4{color:#fff;font-family:var(--head);font-size:16px;margin:0 0 10px}
+footer ul{list-style:none;padding:0;margin:0}
+footer li{margin:6px 0}
+footer a{color:#DCEAF5;text-decoration:none}
+footer a:hover{text-decoration:underline;color:var(--sun)}
+footer p{max-width:60ch;margin:0 0 10px}
+.ind{background:var(--sun);color:var(--navy);display:inline-block;padding:4px 10px;border-radius:999px;font-weight:700;font-size:13px;margin-bottom:12px}
+
+/* article pages */
+.ahero{background:linear-gradient(120deg,var(--navy),var(--navy-2) 60%,var(--lilac) 140%);color:#fff;padding:56px 0 64px;position:relative;overflow:hidden}
+.ahero::after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;background:var(--teal);opacity:.35;right:-140px;bottom:-200px}
+.ahero .wrap{position:relative;max-width:900px}
+.ahero h1{font-size:clamp(30px,4.6vw,48px);max-width:22ch}
+.ahero .intro{font-size:20px;color:#DCEAF5;margin:16px 0 0;max-width:62ch}
+.alayout{display:grid;gap:30px;grid-template-columns:1fr;padding:40px 0 70px}
+@media(min-width:960px){.alayout{grid-template-columns:minmax(0,1fr) 320px;align-items:start}}
+.acontent{background:#fff;border-radius:20px;padding:34px 32px;box-shadow:0 10px 30px rgba(14,42,71,.07)}
+.acontent h2{font-size:26px;color:var(--navy);margin:30px 0 10px;padding-left:14px;border-left:5px solid var(--teal);border-radius:2px}
+.acontent h2:first-child{margin-top:0}
+.acontent h2:nth-of-type(2n){border-left-color:var(--lilac)}.acontent h2:nth-of-type(3n){border-left-color:var(--coral)}
+.acontent p{max-width:70ch}
+.acontent ul{padding-left:22px;margin:0 0 1em}
+.acontent li{margin:6px 0}
+.acontent b{color:var(--navy);font-weight:600}
+.side{display:grid;gap:20px}
+@media(min-width:960px){.side{position:sticky;top:90px}}
+.sidebox{background:linear-gradient(160deg,var(--teal),var(--teal-2));color:#fff;border-radius:18px;padding:26px 24px;box-shadow:0 10px 30px rgba(15,163,138,.3)}
+.sidebox h3{font-size:22px;margin-bottom:8px;color:#fff}
+.sidebox p{font-size:15px;color:#E3F7F2;margin-bottom:14px}
+.sidelist{background:#fff;border-radius:18px;padding:22px 24px;box-shadow:0 10px 30px rgba(14,42,71,.07)}
+.sidelist h3{font-size:18px;color:var(--navy);margin-bottom:10px}
+.sidelist ul{list-style:none;padding:0;margin:0}
+.sidelist li{padding:9px 0;border-top:1px solid var(--line)}
+.sidelist a{text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.sidelist a:hover{color:var(--teal-2)}
+.afaq{margin-top:36px}
+.afaq h2{border:0;padding:0;font-size:26px;margin-bottom:14px}
+
+/* apply page */
+[hidden]{display:none!important}
+.apply{max-width:820px;margin:-70px auto 70px;position:relative}
+.panel{background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(14,42,71,.14);padding:30px 28px}
+.prog{display:flex;gap:6px;margin-bottom:22px}
+.prog span{flex:1;height:8px;border-radius:999px;background:var(--line)}
+.prog span.on{background:var(--teal)}
+.pstep{display:none}.pstep.on{display:block}
+.pstep h2{font-size:26px;color:var(--navy);margin-bottom:6px}
+.pstep .hint{margin-bottom:18px}
+.q{margin:18px 0}
+.q>label,.q>.lbl{display:block;font-weight:600;font-size:16px;color:var(--navy);margin-bottom:8px}
+.opts{display:grid;gap:8px;grid-template-columns:1fr}
+@media(min-width:640px){.opts.two{grid-template-columns:1fr 1fr}.opts.three{grid-template-columns:1fr 1fr 1fr}}
+.opts input{position:absolute;opacity:0;width:0;height:0}
+.opts label{display:block;padding:12px 14px;border:2px solid var(--line);border-radius:12px;cursor:pointer;font-weight:500;color:var(--ink)}
+.opts input:checked+label{background:var(--teal-soft);border-color:var(--teal);color:var(--teal-2);font-weight:600}
+.opts input:focus-visible+label{box-shadow:0 0 0 4px rgba(15,163,138,.18)}
+.sub{display:none;margin:10px 0 0 10px;padding-left:14px;border-left:3px solid var(--sun)}
+.sub.on{display:block}
+.btns{display:flex;justify-content:space-between;gap:10px;margin-top:26px;flex-wrap:wrap}
+.btn.back{background:#fff;color:var(--navy);border:2px solid var(--line);box-shadow:none}
+.btn.back:hover{background:var(--bg)}
+input.txt{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px solid var(--line);border-radius:12px}
+.alert{border-radius:12px;padding:14px 16px;margin:14px 0;font-size:16px;border-left:5px solid var(--coral);background:#FFF1EC}
+.alert.sun{border-left-color:var(--sun);background:var(--sun-soft)}
+.alert strong{display:block;color:var(--navy);margin-bottom:2px}
+.group{margin:22px 0}
+.group h3{font-size:19px;color:var(--navy);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.group h3 i{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-style:normal;font-size:14px;color:#fff;background:var(--teal)}
+.group:nth-of-type(2n) h3 i{background:var(--lilac)}.group:nth-of-type(3n) h3 i{background:var(--coral)}
+.item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.item input{width:22px;height:22px;margin-top:3px;accent-color:var(--teal);flex:none}
+.item b{display:block;font-weight:600;color:var(--ink)}
+.item span{font-size:15px;color:var(--muted)}
+.item.done b{text-decoration:line-through;color:var(--muted)}
+.count{font-size:15px;color:var(--muted);margin-bottom:6px}
+.emailbox{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;border-radius:16px;padding:22px;margin-top:18px}
+.emailbox h3{color:#fff;font-size:20px;margin-bottom:6px}
+.emailbox p{color:#DCEAF5;font-size:15px}
+.emailbox .mini input{border:0}
+.packbox{background:linear-gradient(140deg,var(--teal),var(--teal-2));color:#fff;border-radius:18px;padding:26px 24px;margin-top:26px;box-shadow:0 14px 40px rgba(15,163,138,.3)}
+.pack-kicker{display:inline-block;background:rgba(255,255,255,.18);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.packbox h3{color:#fff;font-size:26px;margin:0 0 8px}
+.pack-lead{color:#EAFBF6;font-size:16px;margin:0 0 12px}
+.pack-lead strong{color:#fff}
+.pack-list{list-style:none;padding:0;margin:0 0 16px}
+.pack-list li{position:relative;padding-left:26px;margin:7px 0;font-size:15px;color:#EAFBF6}
+.pack-list li::before{content:"\2713";position:absolute;left:0;top:0;color:#fff;font-weight:700}
+.packbox .mini input{border:0}
+.packbox .btn{background:var(--coral);box-shadow:0 8px 20px rgba(255,107,74,.35)}
+.packbox .btn:hover{background:var(--coral-2)}
+.pack-note{color:#EAFBF6;font-size:13px;margin:10px 0 0}
+@media print{.nav,.hero,.wave,.btns,.emailbox,.packbox,footer,.ctaband,.prog{display:none!important}.apply{margin:0}.panel{box-shadow:none;padding:0}}
+/* tracker */
+.thero{background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 50%,var(--teal) 130%);color:#fff;padding:46px 0 70px;position:relative;overflow:hidden}
+.thero::after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:var(--lilac);opacity:.35;right:-110px;top:-150px}
+.thero .wrap{position:relative;z-index:1}
+.thero .eyebrow{display:inline-block;background:rgba(255,255,255,.14);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sun);margin-bottom:12px}
+.thero h1{font-size:clamp(30px,4.4vw,46px);margin-bottom:10px}
+.thero p{color:#DCEAF5;font-size:18px;max-width:62ch;margin:0}
+.stages{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.stage{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 16px 7px 7px;font-weight:600;font-size:15px;color:#C9D9EA}
+.stage i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-family:var(--head);background:rgba(255,255,255,.18);color:#fff}
+.stage.now{background:#fff;color:var(--navy);border-color:#fff}.stage.now i{background:var(--coral)}
+.stage.done{color:#fff;border-color:var(--teal)}.stage.done i{background:var(--teal)}
+.tmain{margin-top:-40px;position:relative;z-index:2;padding-bottom:60px}
+.tgrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+@media(max-width:900px){.tgrid{grid-template-columns:1fr}}
+.tcard{background:#fff;border-radius:18px;padding:24px 22px;box-shadow:0 10px 30px rgba(14,42,71,.08);margin-bottom:22px;border-top:6px solid var(--teal)}
+.tcard h2{font-size:24px;color:var(--navy);margin-bottom:8px}.tcard h3{font-size:20px;color:var(--navy);margin-bottom:8px}
+.tcard.sunb{border-top-color:var(--sun)}.tcard.lilacb{border-top-color:var(--lilac)}.tcard.quiet{border-top-color:var(--line)}
+#next-card{border-top-color:var(--coral)}
+.kicker.sun{color:#8A5A00;background:var(--sun-soft)}
+.progress{display:flex;align-items:center;gap:20px;border-top-color:var(--lilac)}
+.ring{position:relative;width:110px;height:110px;flex:none}.ring svg{width:110px;height:110px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:12}.ring .trk{stroke:var(--lilac-soft)}.ring .val{stroke:var(--teal);stroke-linecap:round;stroke-dasharray:314.16;stroke-dashoffset:314.16;transition:stroke-dashoffset .5s}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--head);font-size:26px;color:var(--navy)}
+.progress p{margin:0;color:var(--muted);font-size:16px}
+.nstep{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.nstep:first-child{border-top:0}.nstep b{color:var(--navy);font-size:17px}.nstep span{grid-column:1;color:var(--muted);font-size:15px}
+.nstep .btn{grid-column:2;grid-row:1/span 2}.nstep.ok b::before{content:"\2713  ";color:var(--teal-2)}
+.quietstep span{font-size:14px}
+.btn.small{font-size:14px;padding:9px 16px}.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line);box-shadow:none}.btn.ghost:hover{background:var(--bg)}
+@media(max-width:560px){.nstep{grid-template-columns:1fr}.nstep .btn{grid-column:1;grid-row:auto;justify-self:start;margin-top:6px}}
+.group{margin-top:18px}.group h3{display:flex;align-items:center;gap:10px;font-size:18px;color:var(--navy);margin-bottom:8px}
+.group h3 i{width:28px;height:28px;border-radius:8px;background:var(--teal-soft);color:var(--teal-2);display:grid;place-items:center;font-style:normal;font-size:14px}
+.group:nth-child(2n) h3 i{background:var(--lilac-soft);color:var(--lilac)}.group:nth-child(3n) h3 i{background:#FFE8E1;color:var(--coral-2)}
+.item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;border:2px solid var(--line);margin-bottom:8px;cursor:pointer;transition:background .15s,border-color .15s}
+.item:hover{border-color:var(--teal)}.item input{width:22px;height:22px;margin-top:2px;accent-color:var(--teal);flex:none}
+.item b{display:block;color:var(--ink);font-size:16px}.item span{display:block;color:var(--muted);font-size:14px}
+.item.done{background:var(--teal-soft);border-color:transparent}.item.done b{text-decoration:line-through;color:var(--teal-2)}
+.letters{display:grid;gap:10px}
+.letter{text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit;transition:border-color .15s,transform .12s}
+.letter:hover{border-color:var(--lilac);transform:translateY(-1px)}.letter b{display:block;color:var(--navy);font-size:16px}.letter span{display:block;color:var(--muted);font-size:14px}
+.sel span{display:block;font-weight:600;font-size:15px;color:var(--navy);margin-bottom:6px}
+.sel select{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.office{margin-top:12px;font-size:15px}.office p{margin:0 0 8px}
+.ticks{list-style:none;padding:0;margin:0 0 10px}.ticks li{position:relative;padding-left:26px;margin:8px 0;font-size:15px}
+.ticks li::before{content:"\2713";position:absolute;left:0;color:var(--teal-2);font-weight:700}
+.mini{display:flex;gap:10px;flex-wrap:wrap}.mini input{flex:1;min-width:220px;padding-left:14px}
+.modal{position:fixed;inset:0;background:rgba(10,31,54,.55);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 30px) 14px 30px;overflow:auto}
+.modal[hidden]{display:none}
+.mbox{background:#fff;border-radius:18px;max-width:620px;width:100%;padding:26px 24px;position:relative;border-top:6px solid var(--lilac)}
+.mbox h2{font-size:24px;color:var(--navy);margin:0 30px 6px 0}
+.mbox .x{position:absolute;top:12px;right:14px;border:0;background:none;font-size:30px;line-height:1;color:var(--muted);cursor:pointer}
+.mbox textarea{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;resize:vertical}
+.mbox input[type=text]{padding-left:14px;font-size:16px}
+.mbox .field{margin-bottom:12px}.mbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+body.noscroll{overflow:hidden}
+#printarea{display:none}
+@media print{
+  body.printing>*{display:none!important}
+  body.printing #printarea{display:block!important}
+  .pl{font-family:Georgia,"Times New Roman",serif;font-size:12pt;line-height:1.5;color:#000;max-width:17cm;margin:0 auto}
+  .pl-from{text-align:right;margin-bottom:14pt}.pl-date{text-align:right;margin-bottom:18pt}.pl-to{margin-bottom:18pt}
+  .pl p{margin:0 0 11pt}.pl-re{font-weight:bold}
+}
+
+.formcard{border-top-color:var(--sun);background:linear-gradient(135deg,#fff 60%,var(--sun-soft))}.formcard p{color:var(--muted);font-size:16px}
+.backl{margin-top:14px!important}.backl a{color:var(--sun);font-weight:700;text-decoration:none}
+.wiz{max-width:860px;margin-left:auto;margin-right:auto;border-top-color:var(--lilac)}
+.wtop{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.saved{color:var(--teal-2);text-transform:none;letter-spacing:0;font-weight:600}
+.track{height:8px;background:var(--lilac-soft);border-radius:99px;margin:10px 0 20px;overflow:hidden}#bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--lilac));width:0;transition:width .3s}
+.wiz h2{font-size:28px;color:var(--navy)}
+.wiz .field{margin-bottom:16px}.wiz .field label{display:block;font-weight:600;font-size:16px;color:var(--navy);margin-bottom:6px}
+.wiz input[type=text],.wiz input[type=email],.wiz input[type=tel],.wiz input[type=date],.wiz textarea{width:100%;font:inherit;font-size:17px;padding:11px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.wiz .money input{padding-left:32px}
+.wiz textarea{resize:vertical}.wiz input:focus,.wiz textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px rgba(15,163,138,.18)}
+.wiz .note{margin:2px 0 8px}
+fieldset.q{border:0;padding:0;margin:0 0 18px}fieldset.q legend{font-weight:600;font-size:16px;color:var(--navy);margin-bottom:8px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}.opts input{position:absolute;opacity:0;pointer-events:none}
+.opts label{padding:10px 16px;border:2px solid var(--line);border-radius:12px;cursor:pointer;font-weight:600;font-size:15px;color:var(--muted);background:#fff}
+.opts input:checked+label{background:var(--teal-soft);border-color:var(--teal);color:var(--teal-2)}
+.opts input:focus-visible+label{box-shadow:0 0 0 4px rgba(15,163,138,.25)}
+.pairrow .pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini-l{display:block;font-size:13px;color:var(--muted);min-height:4px}
+.rep{background:var(--bg);border-radius:14px;padding:14px 14px 4px;margin:6px 0 18px}.rep h4{margin:0 0 10px;font-family:var(--head);color:var(--navy);font-size:17px}
+.repitem{position:relative;border-left:4px solid var(--lilac);padding-left:12px;margin-bottom:12px}.repn{position:absolute;left:-14px;top:-6px;background:var(--lilac);color:#fff;border-radius:50%;width:22px;height:22px;font-size:12px;display:grid;place-items:center;font-weight:700}
+.rep .btn{margin-bottom:12px}
+.wbtns{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.clearl{text-align:center;margin-top:14px}.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:14px}
+.alertbox{border-radius:14px;padding:14px 16px;margin-bottom:18px}.alertbox.coral{background:#FFE8E1;border-left:5px solid var(--coral)}.alertbox.teal{background:var(--teal-soft);border-left:5px solid var(--teal)}
+.alertbox ul{margin:6px 0 0 18px;padding:0}
+.sign table{width:100%;border-collapse:collapse;font-size:15px}.sign td{padding:9px 8px;border-top:1px solid var(--line);vertical-align:top}.sign tr td:first-child{white-space:nowrap;color:var(--coral-2)}
+.sign h3,.after h3{font-size:20px;color:var(--navy);margin:8px 0 6px}
+.dl{background:linear-gradient(140deg,var(--navy),var(--navy-2));border-radius:16px;padding:20px;margin:20px 0;text-align:center}.dl .note{color:#C9D9EA;margin-top:10px}
+.after ol{padding-left:20px}.after li{margin:4px 0}
+@media(max-width:560px){.pairrow .pairs{grid-template-columns:1fr}}
+
+.mic{width:18px;height:18px;fill:currentColor;flex:none}
+.speak{display:flex;gap:6px;align-items:center;font-size:14px;color:var(--lilac);margin:6px 0 0;font-weight:600}
+.speakbox{display:flex;gap:12px;align-items:flex-start;background:var(--lilac-soft);border-radius:14px;padding:14px 16px;margin-bottom:20px;color:var(--navy)}
+.speakbox .mic{width:30px;height:30px;padding:6px;border-radius:50%;background:var(--lilac);fill:#fff;box-sizing:content-box}
+.speakbox b{display:block;font-size:16px;margin-bottom:2px}.speakbox span{font-size:15px;color:var(--ink)}
+.alertbox.sunbox{background:#FFF4D6;border-left:5px solid var(--sun)}
+</style>
+</head>
+<body>
+<div class="nav"><div class="wrap">
+  <a class="logo" href="/"><i>€</i><span>Fair Deal Calculator<small>Independent guide. Not the HSE.</small></span></a>
+  <nav><a href="/#how">How it works</a><a href="/#faq">Questions</a><a href="/how-much-does-fair-deal-cost">Guides</a><a href="/#calc">Calculator</a><a class="pill" href="/apply">Start checklist</a></nav>
+</div></div>
+<section class="thero">
+  <div class="wrap">
+    <span class="eyebrow">Fill in the official form</span>
+    <h1 id="h-title">Your Fair Deal application form</h1>
+    <p>Answer plain questions and we fill in the official HSE form for you, ready to print, sign and post. Your answers stay on this device and are never sent to us.</p>
+    <p class="backl"><a id="back-link" href="/my">← Back to my tracker</a></p>
+  </div>
+</section>
+<main class="wrap tmain">
+  <div id="gate" class="tcard sunb" hidden><h2>Open this from your tracker</h2><p id="gate-msg"></p></div>
+  <div id="wiz" class="tcard wiz" hidden>
+    <div class="wtop"><span id="stepno"></span><span id="saved" class="saved"></span></div>
+    <div class="track"><div id="bar"></div></div>
+    <h2 id="s-title"></h2>
+    <p class="hint" id="s-intro"></p>
+    <div id="s-body"></div>
+    <div class="wbtns">
+      <button class="btn ghost" id="back" type="button">Back</button>
+      <button class="btn" id="next" type="button">Next</button>
+    </div>
+    <p class="clearl"><button type="button" id="clear" class="linkbtn">Clear my answers from this device</button></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <span class="ind">Independent. Not the HSE.</span>
+      <p>This is an independent website. It is not run by, connected to, or approved by the HSE or any government body. The calculator gives an estimate based on the published rules of the Nursing Homes Support Scheme. It is not legal, tax or financial advice. Check current figures and download the official form at hse.ie.</p>
+      <p>Alderidge Fusion Limited, registered in Ireland, company number 816930.</p><p><a href="/privacy">Privacy notice</a> · <a href="/terms">Terms of sale</a></p>
+      <p>Your tracker holds your checklist and progress only. Form answers you type stay on your device and are never sent to us.</p>
+    </div>
+    <div>
+      <h4>Guides</h4>
+      <ul>
+        <li><a href="/how-much-does-fair-deal-cost">How much does Fair Deal cost?</a></li>
+        <li><a href="/fair-deal-couples">Fair Deal for couples</a></li>
+        <li><a href="/fair-deal-three-year-cap">The three-year cap</a></li>
+        <li><a href="/fair-deal-nursing-home-loan">The nursing home loan</a></li>
+        <li><a href="/do-you-have-to-sell-your-house-for-fair-deal">Do you have to sell the house?</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>More guides</h4>
+      <ul>
+        <li><a href="/what-counts-as-an-asset-for-fair-deal">What counts as an asset?</a></li>
+        <li><a href="/fair-deal-documents-checklist">Documents checklist</a></li>
+        <li><a href="/fair-deal-farm-and-business">Farms and businesses</a></li>
+        <li><a href="/how-long-does-fair-deal-take">How long does it take?</a></li>
+        <li><a href="/applying-for-fair-deal-for-someone-without-capacity">Applying for someone who cannot sign</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<script>
+// fairdeal.ie form filler for the HSE Nursing Homes Support Scheme application form, Version 4, December 2025.
+// Places the family's answers onto the official 40-page PDF. Runs entirely on the family's own device.
+// Coordinates are taken from the official PDF (landscape A4, 841.89 x 595.28 pt), measured from the top-left.
+(function (root) {
+  var PH = 595.276;
+
+  // ---------- value helpers ----------
+  function s(v) { return v == null ? '' : String(v).trim(); }
+  function up(v) { return s(v).toUpperCase(); }
+  function money(v) {
+    var t = s(v).replace(/[€,\s]/g, '');
+    if (t === '') return '';
+    var n = Number(t);
+    if (!isFinite(n)) return s(v);
+    return n.toLocaleString('en-IE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function ymd(v) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s(v)); return m ? m : null; }
+  function dCells(v) { var m = ymd(v); return m ? m[3] + m[2] + m[1] : ''; }
+  function dText(v) { var m = ymd(v); return m ? m[3] + '/' + m[2] + '/' + m[1] : s(v); }
+  function pps(v) { return up(v).replace(/[^A-Z0-9]/g, ''); }
+  function digits(v) { return s(v).replace(/[^0-9+]/g, ''); }
+  function lines(v) { return s(v).split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean); }
+  function yes(v) { return v === 'yes'; }
+  function no(v) { return v === 'no'; }
+
+  // ---------- build the list of things to draw ----------
+  function buildOps(d) {
+    var ops = [];
+    var T = function (p, x, top, w, h, v, o) { v = s(v); if (v) ops.push({ p: p, k: 'text', x: x, top: top, w: w, h: h, v: v, o: o || {} }); };
+    var U = function (p, x, top, w, h, v) { T(p, x, top, w, h, up(v)); };
+    var M = function (p, x, top, w, h, v) { v = money(v); if (v) ops.push({ p: p, k: 'text', x: x + 11, top: top, w: w - 13, h: h, v: v, o: { right: true } }); };
+    var C = function (p, x, top, cw, h, n, v) { v = s(v); if (v) ops.push({ p: p, k: 'cells', x: x, top: top, cw: cw, h: h, n: n, v: v }); };
+    var X = function (p, x, top, w, h, on) { if (on) ops.push({ p: p, k: 'tick', x: x, top: top, w: w, h: h }); };
+    var XC = function (p, x, top, on) { X(p, x, top + 0.6, 9.2, 9.2, on); };              // small printed box
+    var YN = function (p, top, xy, xn, size, v) { X(p, xy, top, size, size, yes(v)); X(p, xn, top, size, size, no(v)); };
+    var ADDR = function (p, x, w, tops, h, v) { var L = lines(v); tops.forEach(function (t, i) { var txt = i === tops.length - 1 ? L.slice(i).join(', ') : L[i]; U(p, x, t, w, h, txt); }); };
+
+    var a = d.a || {}, sp = d.sp || {}, rel = d.rel || '', couple = rel === 'couple';
+    var cap = d.capacity !== 'no';
+    var fullName = [a.first, a.other, a.surname].filter(function (x) { return s(x); }).join(' ');
+    var signer = d.signer || {};
+
+    // ---- Page 13: Part 1 applicant ----
+    U(13, 342.8, 166.5, 190.8, 28.3, a.first);
+    U(13, 342.8, 194.8, 190.8, 28.3, a.surname);
+    U(13, 342.8, 223.2, 190.8, 28.3, a.other);
+    C(13, 342.8, 257.5, 23.9, 22.7, 8, dCells(a.dob));
+    C(13, 342.8, 286.2, 17.3, 28.1, 11, digits(a.phone));
+    XC(13, 374.2, 324.3, a.gender === 'male'); XC(13, 432.4, 324.3, a.gender === 'female'); XC(13, 483.2, 324.3, a.gender === 'other');
+    C(13, 342.8, 343.5, 21.2, 28.1, 9, pps(a.pps));
+    T(13, 269.8, 393.1, 263.8, 28.3, s(a.email).toLowerCase());
+    U(13, 377.4, 421.4, 156.2, 28.3, a.birthSurname);
+    T(13, 412.0, 449.8, 121.6, 28.3, dText(a.admitted));
+    YN(13, 169.3, 737.7, 783.0, 22.7, a.resident);
+    ADDR(13, 544.5, 262.2, [213.4, 239.0, 264.5], 25.5, a.home);
+    U(13, 588.5, 290.0, 218.2, 25.5, a.homeEir);
+    if (s(a.current)) { ADDR(13, 544.5, 262.2, [365.0, 390.5, 416.0], 25.5, a.current); U(13, 588.5, 441.6, 218.2, 25.5, a.currentEir); }
+    YN(13, 477.9, 737.7, 783.0, 22.7, a.abroad);
+
+    // ---- Page 14: relationship status, spouse ----
+    X(14, 90.7, 81.6, 28.3, 28.3, rel === 'couple');
+    if (couple && s(d.cohabitYears)) T(14, 460.2, 115.9, 28.3, 28.3, d.cohabitYears, { center: true });
+    X(14, 90.7, 144.3, 28.3, 28.3, rel === 'single');
+    X(14, 90.7, 172.6, 28.3, 28.3, rel === 'widowed');
+    X(14, 90.7, 201.0, 28.3, 28.3, rel === 'separated');
+    if (couple) {
+      U(14, 179.2, 238.1, 628.7, 28.3, sp.name);
+      U(14, 179.2, 266.5, 290.7, 28.3, pps(sp.pps));
+      T(14, 596.0, 266.5, 211.9, 28.3, dText(sp.dob));
+      YN(14, 305.8, 377.8, 423.2, 22.7, sp.inCare);
+      if (yes(sp.inCare)) {
+        U(14, 206.9, 356.6, 599.9, 28.3, sp.home);
+        T(14, 206.9, 385.0, 599.9, 28.3, money(sp.weekly));
+        XC(14, 34.0, 439.7, sp.careType === 'nhss'); XC(14, 34.0, 454.6, sp.careType === 'public');
+        XC(14, 34.0, 469.4, sp.careType === 'private'); XC(14, 34.0, 484.2, sp.careType === 'other');
+        U(14, 110.8, 500.8, 697.1, 28.3, sp.careOther);
+      }
+    }
+
+    // ---- Page 15: history and cards ----
+    YN(15, 66.4, 727.5, 778.5, 28.3, d.prevApplied);
+    if (yes(d.prevApplied)) T(15, 232.4, 96.8, 574.9, 28.3, d.prevWhen);
+    YN(15, 138.8, 727.5, 778.5, 28.3, d.card);
+    if (yes(d.card)) U(15, 232.4, 169.1, 574.9, 28.3, d.cardNo);
+    YN(15, 225.4, 727.5, 778.5, 28.3, d.cdmApplicant);
+    YN(15, 257.7, 727.5, 778.5, 28.3, couple ? d.cdmSpouse : (d.cdmSpouse || ''));
+
+    // ---- Page 16: helper and correspondence ----
+    var h = d.helper || {};
+    if (s(h.name)) {
+      U(16, 102.3, 91.3, 705.6, 28.3, h.name);
+      ADDR(16, 102.3, 705.6, [119.7], 28.3, lines(h.address).slice(0, 1).join(''));
+      U(16, 102.3, 148.0, 311.8, 28.3, lines(h.address).slice(1).join(', '));
+      U(16, 492.5, 148.0, 315.4, 28.3, h.eir);
+      U(16, 102.3, 176.4, 311.8, 28.3, h.relationship);
+      T(16, 492.5, 176.4, 315.4, 28.3, h.tel);
+      T(16, 102.3, 204.7, 311.8, 28.3, h.mobile);
+      T(16, 492.5, 204.7, 315.4, 28.3, s(h.email).toLowerCase());
+    }
+    X(16, 124.7, 332.1, 28.3, 28.3, d.corr === 'applicant');
+    X(16, 124.7, 382.3, 28.3, 28.3, d.corr === 'nominated');
+    var sol = d.solicitor || {};
+    U(16, 34.0, 463.4, 773.9, 28.3, sol.name);
+    U(16, 34.0, 491.7, 773.9, 28.3, lines(sol.address).join(', '));
+    T(16, 613.7, 520.0, 194.1, 28.3, sol.tel);
+
+    // ---- Page 18: Part 2 care needs assessment ----
+    var ROLES = ['spouse', 'child', 'doctor', 'nurse', 'socialworker', 'committee', 'epa', 'dmr'];
+    if (cap) {
+      U(18, 122.9, 85.0, 685.0, 28.3, fullName);
+    } else {
+      U(18, 122.9, 223.8, 685.0, 28.3, signer.name);
+      var ri = ROLES.indexOf(signer.role);
+      if (ri >= 0) XC(18, ri < 4 ? 43.7 : 308.3, [317.2, 332.7, 348.2, 363.7][ri % 4], true);
+      U(18, 80.4, 441.5, 727.5, 28.3, lines(signer.address)[0]);
+      U(18, 80.4, 469.8, 334.6, 28.3, lines(signer.address).slice(1).join(', '));
+      U(18, 467.5, 469.8, 340.3, 28.3, signer.eir);
+      T(18, 80.4, 498.1, 334.6, 28.3, signer.tel);
+      T(18, 467.5, 498.1, 340.3, 28.3, s(signer.email).toLowerCase());
+    }
+
+    // ---- Page 19: Part 3A income (weekly) ----
+    var inc = d.inc || {}, incS = d.incS || {};
+    var IROWS = ['dsp', 'foreign', 'occ', 'employ', 'rentals', 'director', 'fees', 'pprRent', 'otherRent', 'settlement', 'royalties', 'transferred', 'farm'];
+    var ITOPS = [194.3, 221.2, 248.2, 275.1, 303.2, 330.1, 357.0, 385.1, 412.1, 439.0, 467.1, 494.0, 522.1];
+    IROWS.forEach(function (k, i) { M(19, 654.7, ITOPS[i], 70.9, 17.0, inc[k]); if (couple) M(19, 734.1, ITOPS[i], 70.9, 17.0, incS[k]); });
+
+    // ---- Page 20: other income, PPS, RTB, cash assets ----
+    (d.otherInc || []).slice(0, 3).forEach(function (r, i) {
+      var t = [82.9, 103.9, 124.9][i];
+      U(20, 333.5, t, 308.3, 17.0, r.desc); M(20, 663.5, t, 70.9, 17.0, r.a); if (couple) M(20, 737.3, t, 70.9, 17.0, r.s);
+    });
+    U(20, 601.1, 169.4, 99.2, 17.0, pps(a.pps)); if (couple) U(20, 706.5, 169.4, 101.4, 17.0, pps(sp.pps));
+    U(20, 601.1, 190.4, 99.2, 17.0, d.rtbA); if (couple) U(20, 706.5, 190.4, 101.4, 17.0, d.rtbS);
+    var cash = d.cash || {}, cashS = d.cashS || {};
+    [['bank', 293.9], ['online', 314.9], ['cu', 335.9], ['post', 356.9], ['other', 377.9]].forEach(function (r) {
+      M(20, 663.3, r[1], 70.9, 17.0, cash[r[0]]); if (couple) M(20, 737.2, r[1], 70.9, 17.0, cashS[r[0]]);
+    });
+    U(20, 465.0, 377.9, 185.7, 17.0, d.cashOtherDesc);
+    (d.invest || []).slice(0, 4).forEach(function (r, i) {
+      var t = [443.6, 464.6, 485.6, 506.6][i];
+      U(20, 333.5, t, 317.2, 17.0, r.desc); M(20, 663.3, t, 70.9, 17.0, r.a); if (couple) M(20, 737.2, t, 70.9, 17.0, r.s);
+    });
+    M(20, 663.3, 527.6, 70.9, 17.0, cash.loaned); if (couple) M(20, 737.2, 527.6, 70.9, 17.0, cashS.loaned);
+
+    // ---- Page 21: transferred cash, home, other property ----
+    M(21, 654.7, 91.5, 74.6, 17.0, cash.transferred); if (couple) M(21, 734.1, 91.5, 73.8, 17.0, cashS.transferred);
+    M(21, 654.7, 124.0, 74.6, 17.0, cash.returned); if (couple) M(21, 734.1, 124.0, 73.8, 17.0, cashS.returned);
+    M(21, 654.7, 177.5, 74.6, 17.0, cash.otherCash); if (couple) M(21, 734.1, 177.5, 73.8, 17.0, cashS.otherCash);
+    T(21, 276.0, 177.5, 372.0, 17.0, up(d.otherCashDesc));
+    var hm = d.home || {};
+    if (s(hm.address) || s(hm.status)) {
+      var HL = lines(hm.address || a.home);
+      U(21, 352.7, 252.9, 455.2, 17.0, HL[0]);
+      U(21, 352.7, 269.9, 292.5, 17.0, HL.slice(1).join(', '));
+      U(21, 691.1, 269.9, 116.8, 17.0, hm.eir || a.homeEir);
+      U(21, 694.0, 298.7, 113.9, 17.0, hm.status);
+      M(21, 694.0, 326.8, 113.9, 30.9, hm.value);
+      M(21, 618.0, 393.8, 90.7, 17.0, hm.loanMonthly);
+      M(21, 717.2, 393.8, 90.7, 17.0, hm.loanBalance);
+      U(21, 618.0, 421.9, 189.9, 17.0, hm.loanType);
+    }
+    (d.otherProp || []).slice(0, 3).forEach(function (r, i) {
+      var t = [485.5, 508.2, 530.9][i];
+      T(21, 276.0, t, 338.0, 17.0, up(r.desc)); M(21, 618.0, t, 90.7, 17.0, r.value); M(21, 717.2, t, 90.7, 17.0, r.balance);
+    });
+
+    // ---- Page 22: transferred non-cash assets, deductions ----
+    (d.transferred || []).slice(0, 3).forEach(function (r, i) {
+      var t = [167.1, 192.6, 218.2][i];
+      U(22, 276.4, t, 161.6, 25.5, r.desc); T(22, 438.0, t, 51.0, 25.5, dText(r.date));
+      M(22, 489.0, t, 87.9, 25.5, r.value); M(22, 576.9, t, 96.4, 25.5, r.received); U(22, 673.2, t, 134.6, 25.5, r.to);
+    });
+    var ded = d.ded || {}, dedS = d.dedS || {};
+    [['health', 352.9], ['interest', 378.4], ['rent', 404.0], ['maint', 429.5], ['levies', 455.0]].forEach(function (r) {
+      M(22, 646.0, r[1], 78.5, 19.8, ded[r[0]]); if (couple) M(22, 729.0, r[1], 78.9, 19.8, dedS[r[0]]);
+    });
+
+    // ---- Page 23: borrowings, dependent children ----
+    M(23, 605.9, 204.9, 97.1, 24.3, ded.borrow); if (couple) M(23, 706.9, 204.9, 101.0, 24.3, dedS.borrow);
+    X(23, 676.5, 326.2, 28.3, 28.3, d.dependants === 'yes'); X(23, 738.2, 326.2, 28.3, 28.3, d.dependants === 'no');
+
+    // ---- Page 25: Part 4 ----
+    if (!cap) {
+      U(25, 375.3, 228.3, 432.5, 25.5, signer.name);
+      U(25, 380.5, 271.2, 427.4, 28.1, fullName);
+      var rj = ROLES.indexOf(signer.role);
+      if (rj >= 0) XC(25, 309.1, [320.8, 336.3, 351.7, 367.1, 382.6, 398.0, 413.4, 428.9][rj], true);
+    }
+
+    // ---- Pages 26-29: Part 5 nursing home loan ----
+    var PROWS = ['details', 'house', 'street', 'town', 'county', 'folio', 'eir'];
+    var props = d.loanProps || [];
+    if (d.wantLoan === 'yes') {
+      var P26 = [248.1, 265.3, 282.5, 299.7, 316.9, 334.0, 351.2];
+      props.slice(0, 2).forEach(function (pr, j) { PROWS.forEach(function (f, i) { U(26, j ? 663.3 : 402.5, P26[i], j ? 144.6 : 141.7, 17.2, pr[f]); }); });
+      // PPS numbers beside each signature line (dates are left for the day of signing)
+      C(26, 640.7, 419.1, 20.9, 17.0, 8, pps(a.pps));
+      if (couple) C(26, 640.7, 453.1, 20.9, 17.0, 8, pps(sp.pps));
+      if (!cap) C(26, 640.7, 487.2, 20.9, 17.0, 8, pps(signer.pps));
+      (d.residents || []).slice(0, 6).forEach(function (r, i) {
+        var t = [96.0, 129.1, 162.2, 195.3, 228.4, 261.5][i];
+        U(27, 479.1, t, 155.9, 28.1, r.name); T(27, 779.5, t, 28.3, 28.1, r.years, { center: true });
+      });
+      var rap = d.rap || {};
+      U(27, 527.2, 315.5, 280.6, 25.5, rap.name);
+      var RL = lines(rap.address);
+      U(27, 527.2, 341.0, 280.6, 25.5, RL[0]); U(27, 527.2, 366.5, 280.6, 25.5, RL.slice(1).join(', '));
+      T(27, 527.2, 392.1, 280.6, 25.5, rap.tel); U(27, 527.2, 417.6, 280.6, 25.5, rap.eir);
+      C(27, 522.6, 451.9, 17.5, 20.0, 8, pps(rap.pps));
+      var jo = (d.jointOwners || []).filter(function (x) { return s(x); });
+      if (jo.length) {
+        jo.slice(0, 5).forEach(function (n, i) { U(28, 378.4, [104.9, 133.3, 161.6, 190.0, 218.3][i], 429.4, 28.3, n); });
+        var P28 = [354.4, 379.9, 405.5, 431.0, 456.5, 482.0, 507.5];
+        props.slice(0, 2).forEach(function (pr, j) { PROWS.forEach(function (f, i) { U(28, j ? 654.8 : 383.2, P28[i], j ? 153.1 : 152.6, 25.5, pr[f]); }); });
+      }
+    }
+
+    // ---- Pages 30-33: Part 6 farm or business ----
+    var fb = d.farm || {};
+    if (d.wantFarmCap === 'yes') {
+      U(30, 457.0, 156.0, 350.9, 28.3, fb.names1 || (cap ? fullName : signer.name));
+      U(30, 457.0, 184.4, 350.9, 28.3, fb.names2);
+      var su = fb.successor || {}, SL = lines(su.address);
+      U(30, 396.5, 293.7, 411.3, 28.3, su.name);
+      U(30, 396.5, 322.1, 411.3, 28.3, SL[0]); U(30, 396.5, 350.4, 411.3, 28.3, SL[1]);
+      U(30, 396.5, 378.8, 187.2, 28.3, SL.slice(2).join(', ')); U(30, 634.3, 378.8, 173.6, 28.3, su.eir);
+      T(30, 396.5, 407.1, 187.2, 28.3, su.tel); T(30, 634.3, 407.1, 173.6, 28.3, su.mobile);
+      T(30, 396.5, 435.5, 411.3, 28.3, s(su.email).toLowerCase());
+      C(30, 396.5, 469.8, 22.7, 28.1, 8, dCells(su.dob));
+      C(30, 635.0, 469.8, 21.6, 28.1, 8, pps(su.pps));
+      U(30, 493.5, 502.9, 314.3, 28.3, su.relationship);
+      C(31, 671.9, 119.9, 17.0, 17.0, 8, pps(a.pps));
+      if (couple) C(31, 671.9, 154.0, 17.0, 17.0, 8, pps(sp.pps));
+      if (!cap) C(31, 671.9, 188.0, 17.0, 17.0, 8, pps(signer.pps));
+      var tr = fb.transferredOwner || {};
+      if (s(tr.name)) {
+        U(31, 426.9, 307.4, 380.9, 28.3, tr.name); U(31, 426.9, 341.8, 380.9, 28.3, tr.address1);
+        U(31, 403.8, 376.1, 218.9, 28.1, tr.county); U(31, 676.5, 376.1, 131.3, 28.1, tr.eir);
+      }
+      var fp = fb.props || [];
+      var P32 = [188.1, 216.2, 244.3, 269.8, 295.3, 320.8, 348.9];
+      fp.slice(0, 2).forEach(function (pr, j) { PROWS.forEach(function (f, i) { U(32, j ? 651.8 : 419.4, P32[i], 155.9, 25.5, pr[f]); }); });
+      C(32, 671.8, 428.0, 17.0, 17.0, 8, pps(a.pps));
+      if (couple) C(32, 671.8, 462.0, 17.0, 17.0, 8, pps(sp.pps));
+      if (!cap) C(32, 671.8, 496.0, 17.0, 17.0, 8, pps(signer.pps));
+      var fj = (fb.jointOwners || []).filter(function (x) { return s(x); });
+      if (fj.length) {
+        U(33, 422.4, 104.9, 385.5, 28.3, fj[0]); U(33, 422.4, 133.3, 385.5, 28.3, fj.slice(1).join(', '));
+        var P33 = [295.9, 315.8, 335.6, 355.4, 375.3, 395.1, 415.0];
+        fp.slice(0, 2).forEach(function (pr, j) { PROWS.forEach(function (f, i) { U(33, j ? 673.7 : 424.3, P33[i], j ? 134.2 : 133.2, 19.8, pr[f]); }); });
+      }
+    }
+
+    // ---- Page 36: Part 7 co-decision-making ----
+    var cdm = d.cdm || {};
+    if (yes(d.cdmApplicant) || yes(d.cdmSpouse)) {
+      if (yes(d.cdmApplicant)) { U(36, 125.7, 144.6, 682.2, 28.3, cdm.applicantCdm); X(36, 263.8, 183.6, 28.3, 28.3, true); }
+      if (yes(d.cdmSpouse)) { U(36, 125.7, 222.7, 682.2, 28.3, cdm.spouseCdm); X(36, 345.8, 262.7, 28.3, 28.3, true); }
+      U(36, 102.3, 378.1, 705.6, 28.3, cdm.name || cdm.applicantCdm || cdm.spouseCdm);
+      var CL = lines(cdm.address);
+      U(36, 102.3, 406.4, 705.6, 28.3, CL[0]); U(36, 102.3, 434.8, 705.6, 28.3, CL.slice(1).join(', '));
+      U(36, 102.3, 463.1, 311.8, 28.3, cdm.eir); T(36, 492.5, 463.1, 315.4, 28.3, cdm.tel);
+      T(36, 102.3, 491.5, 311.8, 28.3, cdm.mobile); T(36, 492.5, 491.5, 315.4, 28.3, s(cdm.email).toLowerCase());
+    }
+    return ops;
+  }
+
+  // ---------- where the family must sign ----------
+  function signingGuide(d) {
+    var cap = d.capacity !== 'no', couple = d.rel === 'couple', g = [];
+    var who = cap ? 'the applicant' : (s((d.signer || {}).name) || 'the person signing on their behalf');
+    g.push(cap ? ['Page 18', 'Part 2A', 'The applicant signs and dates.'] : ['Page 18', 'Part 2B', who + ' signs and dates.']);
+    g.push(cap ? ['Page 25', 'Part 4A', 'The applicant signs and dates.'] : ['Page 25', 'Part 4B', who + ' signs and dates.']);
+    if (d.wantLoan === 'yes') {
+      g.push(['Page 26', 'Part 5A', (cap ? 'The applicant' : who) + (couple ? ' and the spouse or partner' : '') + ' sign and date beside their PPS number.']);
+      if ((d.jointOwners || []).filter(function (x) { return s(x); }).length) g.push(['Page 29', 'Part 5B', 'Each joint owner signs and dates, and the applicant signs the last line.']);
+    }
+    if (d.wantFarmCap === 'yes') {
+      g.push(['Page 31', 'Part 6A', (cap ? 'The applicant' : who) + (couple ? ' and the spouse or partner' : '') + ' sign and date.']);
+      if (s(((d.farm || {}).transferredOwner || {}).name)) g.push(['Page 31', 'Part 6A (lower)', 'Each owner of the transferred asset signs and dates.']);
+      g.push(['Page 32', 'Part 6B', 'Sign and date beside the PPS numbers.']);
+      if (((d.farm || {}).jointOwners || []).filter(function (x) { return s(x); }).length) g.push(['Page 33', 'Part 6C', 'The joint owners sign and date.']);
+    }
+    if (d.cdmApplicant === 'yes' || d.cdmSpouse === 'yes') g.push(['Page 36', 'Part 7', 'The applicant signs and dates with the co-decision-maker.']);
+    return g;
+  }
+
+  // ---------- draw onto the PDF ----------
+  async function fillPdf(PDFLib, bytes, d) {
+    var pdf = await PDFLib.PDFDocument.load(bytes);
+    var font = await pdf.embedFont(PDFLib.StandardFonts.Helvetica);
+    var bold = await pdf.embedFont(PDFLib.StandardFonts.HelveticaBold);
+    var ink = PDFLib.rgb(0.05, 0.11, 0.35);
+    var pages = pdf.getPages();
+    var safe = function (t) { return String(t).replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/[\u2013\u2014]/g, '-').replace(/[^\x20-\x7E\u00A0-\u00FF\u20AC]/g, ''); };
+    buildOps(d).forEach(function (op) {
+      var pg = pages[op.p - 1];
+      if (op.k === 'text') {
+        var t = safe(op.v), size = Math.min(10, op.h * 0.5);
+        while (size > 5 && font.widthOfTextAtSize(t, size) > op.w - 8) size -= 0.25;
+        while (t.length > 1 && font.widthOfTextAtSize(t, size) > op.w - 8) t = t.slice(0, -1);
+        var tw = font.widthOfTextAtSize(t, size);
+        var x = op.o.right ? op.x + op.w - 4 - tw : op.o.center ? op.x + (op.w - tw) / 2 : op.x + 5;
+        pg.drawText(t, { x: x, y: PH - (op.top + op.h / 2) - size * 0.35, size: size, font: font, color: ink });
+      } else if (op.k === 'cells') {
+        var ch = safe(op.v).split('');
+        if (ch.length > op.n) ch = ch.slice(0, op.n - 1).concat([ch.slice(op.n - 1).join('')]);
+        var cs = Math.min(11, op.h * 0.5);
+        ch.forEach(function (c, i) {
+          var sz = cs; while (bold.widthOfTextAtSize(c, sz) > op.cw - 3 && sz > 5) sz -= 0.5;
+          var cx = op.x + i * op.cw + (op.cw - bold.widthOfTextAtSize(c, sz)) / 2;
+          pg.drawText(c, { x: cx, y: PH - (op.top + op.h / 2) - sz * 0.35, size: sz, font: bold, color: ink });
+        });
+      } else if (op.k === 'tick') {
+        var sz2 = Math.min(op.w, op.h) * 0.75, cx2 = op.x + op.w / 2, cy = PH - (op.top + op.h / 2), r = sz2 / 2.4;
+        pg.drawLine({ start: { x: cx2 - r, y: cy - r }, end: { x: cx2 + r, y: cy + r }, thickness: Math.max(1.2, sz2 / 9), color: ink });
+        pg.drawLine({ start: { x: cx2 - r, y: cy + r }, end: { x: cx2 + r, y: cy - r }, thickness: Math.max(1.2, sz2 / 9), color: ink });
+      }
+    });
+    pdf.setTitle('Nursing Homes Support Scheme application, completed');
+    pdf.setProducer('fairdeal.ie');
+    return await pdf.save();
+  }
+
+  var api = { buildOps: buildOps, fillPdf: fillPdf, signingGuide: signingGuide };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.FDFill = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(function(){
+  var API = "https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-case";
+  var FORM_URL = "/nhss-form-v4.pdf";
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+  var token = new URLSearchParams(location.search).get('t') || '';
+  var caseInfo = null, d = {}, KEY = '', step = 0;
+
+  // ---------- data helpers ----------
+  function get(path){ return path.split('.').reduce(function(o,k){ return o == null ? undefined : o[k]; }, d); }
+  function set(path, v){ var ks = path.split('.'), o = d; ks.slice(0,-1).forEach(function(k, i){ var nk = ks[i+1]; if (o[k] == null) o[k] = /^\d+$/.test(nk) ? [] : {}; o = o[k]; }); o[ks[ks.length-1]] = v; save(); }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(d)); $('saved').textContent = 'Saved on this device'; } catch(e) {} }
+  var couple = function(){ return d.rel === 'couple'; };
+  var cap = function(){ return d.capacity !== 'no'; };
+  var nm = function(){ return (d.a && d.a.first) || (caseInfo && caseInfo.case.first_name) || 'the applicant'; };
+
+  // ---------- field builders ----------
+  function F(path, label, type, o){ return Object.assign({path:path, label:label, type:type||'text'}, o||{}); }
+  var YN = [['yes','Yes'],['no','No']];
+  function pair(path, label, o){ return Object.assign({pair:true, path:path, label:label}, o||{}); }   // applicant + spouse money
+
+  var STEPS = [
+    { title: 'Before you start', intro: function(){ return 'This fills in the official HSE application form for you. Everything you type stays on this phone or computer: it is never sent to us. You can stop at any time and come back on this device.'; },
+      fields: function(){ return [
+        F('capacity', 'Is ' + nm() + ' able to sign the form themselves?', 'radio', {opts:[['yes','Yes, they will sign it'],['no','No, someone will sign on their behalf']]}),
+        F('rel', 'Which describes ' + nm() + '?', 'radio', {opts:[['couple','Married, in a civil partnership, or living with a partner'],['single','Single'],['widowed','Widowed'],['separated','Separated or divorced']]})
+      ]; } },
+    { title: 'About the applicant', intro: function(){ return 'These go in Part 1. Use the details exactly as they appear on official documents.'; },
+      fields: function(){ return [
+        F('a.first','First name'), F('a.surname','Surname'), F('a.other','Other names (optional)'), F('a.birthSurname','Birth surname, if different (optional)'),
+        F('a.dob','Date of birth','date'), F('a.gender','Gender','radio',{opts:[['male','Male'],['female','Female'],['other','Other']]}),
+        F('a.pps','PPS number','text',{ph:'1234567T', hint:'On any Revenue or social welfare letter.'}),
+        F('a.phone','Daytime phone','tel'), F('a.email','Email address (optional)','email'),
+        F('a.resident','Has ' + nm() + ' lived in Ireland for at least a year?','radio',{opts:YN}),
+        F('a.home','Home address','textarea',{hint:'One line per row, without the Eircode.'}), F('a.homeEir','Home Eircode'),
+        F('a.current','Current address, if different (hospital, nursing home or a relative’s house)','textarea',{optional:true}), F('a.currentEir','Eircode of current address',null,{optional:true}),
+        F('a.admitted','If in hospital or a nursing home now, date of admission','date',{optional:true}),
+        F('a.abroad','Has ' + nm() + (couple() ? ' or their spouse or partner' : '') + ' ever lived abroad?','radio',{opts:YN})
+      ]; } },
+    { title: 'Spouse or partner', when: couple, intro: function(){ return 'For a couple, the HSE assesses half of the combined income and assets, so it needs the partner’s details too.'; },
+      fields: function(){ return [
+        F('sp.name','Spouse or partner’s full name'), F('sp.pps','Their PPS number'), F('sp.dob','Their date of birth','date'),
+        F('cohabitYears','If not married: how many years have you lived together?','number',{optional:true}),
+        F('sp.inCare','Is the spouse or partner also in long-term care?','radio',{opts:YN}),
+        F('sp.home','Name of their nursing home','text',{when:function(){ return get('sp.inCare')==='yes'; }}),
+        F('sp.weekly','Their weekly contribution for care','money',{when:function(){ return get('sp.inCare')==='yes'; }}),
+        F('sp.careType','Type of care','radio',{opts:[['nhss','Fair Deal (NHSS)'],['public','Public nursing home'],['private','Private nursing home'],['other','Other']], when:function(){ return get('sp.inCare')==='yes'; }}),
+        F('sp.careOther','Please specify','text',{when:function(){ return get('sp.careType')==='other'; }})
+      ]; } },
+    { title: 'Medical cards and earlier applications', fields: function(){ return [
+        F('prevApplied','Has ' + nm() + (couple() ? ' or their partner' : '') + ' applied for Fair Deal before?','radio',{opts:YN}),
+        F('prevWhen','If yes, when (if known)','text',{when:function(){ return d.prevApplied==='yes'; }}),
+        F('card','Does ' + nm() + ' hold a Medical Card, GP Visit Card, Long Term Illness Card or Drugs Payment Scheme card?','radio',{opts:YN, hint:'If it is a Health Amendment Card, contact the local Liaison Officer before applying.'}),
+        F('cardNo','Card number (if known)','text',{when:function(){ return d.card==='yes'; }, optional:true}),
+        F('cdmApplicant','Does ' + nm() + ' have a co-decision-making agreement registered with the Decision Support Service?','radio',{opts:YN}),
+        F('cdmSpouse','Does the spouse or partner have one?','radio',{opts:YN, when:couple})
+      ]; } },
+    { title: 'Who is helping, and where letters go', intro: function(){ return 'If a family member is helping with the application, the HSE can write to them instead of the applicant.'; },
+      fields: function(){ return [
+        F('helper.name','Name of the person helping (optional)','text',{optional:true}),
+        F('helper.address','Their address','textarea',{when:function(){ return !!get('helper.name'); }}), F('helper.eir','Their Eircode','text',{when:function(){ return !!get('helper.name'); }}),
+        F('helper.relationship','Relationship to the applicant','text',{when:function(){ return !!get('helper.name'); }}),
+        F('helper.tel','Phone','tel',{when:function(){ return !!get('helper.name'); }, optional:true}), F('helper.mobile','Mobile','tel',{when:function(){ return !!get('helper.name'); }, optional:true}),
+        F('helper.email','Email','email',{when:function(){ return !!get('helper.name'); }, optional:true}),
+        F('corr','Who should the HSE send letters to?','radio',{opts:[['applicant','The applicant'],['nominated','The person helping']]}),
+        F('solicitor.name','Solicitor’s name, if there is one (optional)','text',{optional:true}),
+        F('solicitor.address','Solicitor’s address','textarea',{when:function(){ return !!get('solicitor.name'); }, optional:true}),
+        F('solicitor.tel','Solicitor’s phone','tel',{when:function(){ return !!get('solicitor.name'); }, optional:true})
+      ]; } },
+    { title: 'Signing on their behalf', when: function(){ return !cap(); }, intro: function(){ return 'This person signs Parts 2B and 4B. If the authority is a power of attorney or a court order, a copy must go in with the form.'; },
+      fields: function(){ return [
+        F('signer.name','Full name of the person signing'),
+        F('signer.role','They are signing as','radio',{opts:[['spouse','Spouse or partner'],['child','Child of the applicant, over 18'],['doctor','Registered medical practitioner'],['nurse','Registered nurse'],['socialworker','Registered social worker'],['committee','Committee of a Ward of Court'],['epa','Attorney under a registered enduring power of attorney'],['dmr','Decision-making representative appointed by court order']]}),
+        F('signer.address','Their address','textarea'), F('signer.eir','Their Eircode'), F('signer.tel','Phone','tel'), F('signer.email','Email','email',{optional:true}),
+        F('signer.pps','Their PPS number (needed beside their signature for the nursing home loan)','text',{optional:true})
+      ]; } },
+    { title: 'Weekly income', intro: function(){ return 'Give the weekly amount after tax and PRSI. If something is paid monthly, multiply by 12 and divide by 52. Leave blank anything that does not apply.'; },
+      fields: function(){ return [
+        pair('dsp','Department of Social Protection pension, allowance or benefit'), pair('foreign','Pension from outside Ireland'),
+        pair('occ','Occupational or private pension'), pair('employ','Work, trade or profession'), pair('rentals','Rent from property (in Ireland or abroad)'),
+        pair('director','Income from a directorship'), pair('fees','Fees, commissions, dividends or interest'), pair('pprRent','Rent from the family home'),
+        pair('otherRent','Rent from other property'), pair('settlement','Settlement, covenant, estate or maintenance payments'), pair('royalties','Royalties and annuities'),
+        pair('transferred','Income given to someone else in the last 5 years'), pair('farm','Farm or business income'),
+        {repeat:'otherInc', max:3, label:'Any other income', item:[['desc','What it is','text'],['a','Applicant, per week','money'],['s','Partner, per week','money',couple]]},
+        F('rtbA','Residential Tenancies Board number, if the home is rented out (optional)','text',{optional:true})
+      ]; } },
+    { title: 'Savings and investments', intro: function(){ return 'Give the total balance today for each type of account. Statements for the last 6 months for every account go in with the form.'; },
+      fields: function(){ return [
+        pair('bank','Bank accounts','cash'), pair('online','Online bank accounts','cash'), pair('cu','Credit union','cash'), pair('post','An Post savings','cash'),
+        pair('other','Other savings','cash'), F('cashOtherDesc','What the other savings are','text',{optional:true, when:function(){ return !!get('cash.other'); }}),
+        {repeat:'invest', max:4, label:'Shares, bonds, prize bonds, ARFs or life policies with a cash value', item:[['desc','What it is','text'],['a','Applicant’s value','money'],['s','Partner’s value','money',couple]]},
+        pair('loaned','Money lent to someone that is owed back','cash'),
+        pair('transferred','Money or shares given away in the last 5 years (total)','cash'),
+        pair('returned','Any of that given back (total)','cash'),
+        pair('otherCash','Any other cash assets','cash'), F('otherCashDesc','What they are','text',{optional:true, when:function(){ return !!get('cash.otherCash'); }})
+      ]; } },
+    { title: 'The home and other property', fields: function(){ return [
+        F('home.status','Is ' + nm() + ' the owner, joint owner, tenant, lodger or other?','text',{ph:'Owner'}),
+        F('home.address','Address of the home','textarea',{hint:'Leave blank to use the home address from earlier.', optional:true}), F('home.eir','Eircode of the home','text',{optional:true}),
+        F('home.value','Current market value of the home','money',{hint:'From the Certificate of Market Value from an auctioneer or valuer.', optional:true}),
+        F('home.loanType','Any loan on the home? Type of loan (for example mortgage, life loan, credit union)','text',{optional:true}),
+        F('home.loanMonthly','Monthly repayment','money',{optional:true, when:function(){ return !!get('home.loanType'); }}),
+        F('home.loanBalance','Amount still owed','money',{optional:true, when:function(){ return !!get('home.loanType'); }}),
+        {repeat:'otherProp', max:3, label:'Other property, land, farm or business', item:[['desc','Details, with the address','text'],['value','Value','money'],['balance','Loan still owed on it','money']]},
+        {repeat:'transferred', max:3, label:'Property or land sold or given away in the last 5 years', item:[['desc','What it was','text'],['date','Date of transfer','date'],['value','Value at the time','money'],['received','Amount received','money'],['to','Given to whom','text']]}
+      ]; } },
+    { title: 'Deductions', intro: function(){ return 'These lower the contribution. Give amounts per year, after any tax relief.'; },
+      fields: function(){ return [
+        pair('health','Health expenses (GP, pharmacy, prescription charges)','ded'), pair('interest','Interest on loans for the home','ded'),
+        pair('rent','Rent paid (if living in rented accommodation)','ded'), pair('maint','Maintenance paid to another person','ded'),
+        pair('levies','Levies required by law, such as property tax','ded'), pair('borrow','Borrowings on the home (if claiming this deduction)','ded'),
+        F('dependants','Claim a deduction for a child under 21 or in full-time education?','radio',{opts:YN})
+      ]; } },
+    { title: 'Nursing home loan', intro: function(){ return 'The optional loan defers the part of the contribution based on property until after death. Only fill this in if you want to apply for it.'; },
+      fields: function(){ var on = function(){ return d.wantLoan==='yes'; }; return [
+        F('wantLoan','Apply for the nursing home loan?','radio',{opts:YN}),
+        {repeat:'loanProps', max:2, when:on, label:'Property for the loan', item:[['details','Details (for example family home)','text'],['house','House number or name','text'],['street','Street','text'],['town','Town or city','text'],['county','County','text'],['folio','Folio number (if known)','text'],['eir','Eircode','text']]},
+        {repeat:'residents', max:6, when:on, label:'Anyone else living in the home', item:[['name','Name','text'],['years','Years living there','number']]},
+        F('rap.name','Relevant accountable person: name','text',{when:on, hint:'The person responsible for repaying the loan, usually the person who will look after the estate.'}),
+        F('rap.address','Their address','textarea',{when:on}), F('rap.eir','Their Eircode','text',{when:on}), F('rap.tel','Their phone','tel',{when:on}), F('rap.pps','Their PPS number','text',{when:on}),
+        {list:'jointOwners', max:5, when:on, label:'Joint owners of the property (if any)'}
+      ]; } },
+    { title: 'Farm or business', intro: function(){ return 'Only for a family farm or business, where a family successor will run it for six years. Take advice from a solicitor before applying.'; },
+      fields: function(){ var on = function(){ return d.wantFarmCap==='yes'; }; return [
+        F('wantFarmCap','Apply for the 3-year cap on a farm or business?','radio',{opts:YN}),
+        F('farm.names2','Second applicant name, if applying jointly (optional)','text',{when:on, optional:true}),
+        F('farm.successor.name','Family successor: full name','text',{when:on}), F('farm.successor.address','Their address','textarea',{when:on}), F('farm.successor.eir','Their Eircode','text',{when:on}),
+        F('farm.successor.tel','Phone','tel',{when:on, optional:true}), F('farm.successor.mobile','Mobile','tel',{when:on, optional:true}), F('farm.successor.email','Email','email',{when:on, optional:true}),
+        F('farm.successor.dob','Their date of birth','date',{when:on}), F('farm.successor.pps','Their PPS number','text',{when:on}), F('farm.successor.relationship','Relationship to ' + nm(),'text',{when:on}),
+        {repeat:'farm.props', max:2, when:on, label:'Farm or business property', item:[['details','Details','text'],['house','House number or name','text'],['street','Street','text'],['town','Town or city','text'],['county','County','text'],['folio','Folio number (if known)','text'],['eir','Eircode','text']]},
+        F('farm.transferredOwner.name','If the asset was already transferred: owner’s name (optional)','text',{when:on, optional:true}),
+        F('farm.transferredOwner.address1','Owner’s first line of address','text',{when:function(){ return on() && !!get('farm.transferredOwner.name'); }}),
+        F('farm.transferredOwner.county','County or city','text',{when:function(){ return on() && !!get('farm.transferredOwner.name'); }}),
+        F('farm.transferredOwner.eir','Eircode','text',{when:function(){ return on() && !!get('farm.transferredOwner.name'); }}),
+        {list:'farm.jointOwners', max:2, when:on, label:'Joint owners of the farm or business (if any)'}
+      ]; } },
+    { title: 'Co-decision-maker', when: function(){ return d.cdmApplicant==='yes' || d.cdmSpouse==='yes'; }, fields: function(){ return [
+        F('cdm.applicantCdm','Co-decision-maker for ' + nm() + ': full name','text',{when:function(){ return d.cdmApplicant==='yes'; }}),
+        F('cdm.spouseCdm','Co-decision-maker for the spouse or partner: full name','text',{when:function(){ return d.cdmSpouse==='yes'; }}),
+        F('cdm.address','Co-decision-maker’s address','textarea'), F('cdm.eir','Eircode'), F('cdm.tel','Phone','tel'), F('cdm.mobile','Mobile','tel',{optional:true}), F('cdm.email','Email','email',{optional:true})
+      ]; } },
+    { title: 'Check and download', review: true }
+  ];
+
+  function visibleSteps(){ return STEPS.filter(function(s){ return !s.when || s.when(); }); }
+
+  // ---------- rendering ----------
+  function inputHtml(id, type, val, ph){
+    var v = esc(val == null ? '' : val);
+    if (type === 'textarea') return '<textarea id="' + id + '" rows="3">' + v + '</textarea>';
+    if (type === 'money') return '<div class="money"><input type="text" inputmode="decimal" id="' + id + '" value="' + v + '" placeholder="0.00"></div>';
+    var t = type === 'date' ? 'date' : type === 'email' ? 'email' : type === 'tel' ? 'tel' : type === 'number' ? 'text" inputmode="numeric' : 'text';
+    return '<input type="' + t + '" id="' + id + '" value="' + v + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>';
+  }
+  var uid = 0;
+  function fieldHtml(f){
+    if (f.when && !f.when()) return '';
+    var id = 'f' + (uid++);
+    if (f.type === 'radio') {
+      var cur = get(f.path);
+      return '<fieldset class="q"><legend>' + esc(f.label) + '</legend>' + (f.hint ? '<p class="note">' + esc(f.hint) + '</p>' : '') + '<div class="opts">' +
+        f.opts.map(function(o, i){ var oid = id + '_' + i; return '<input type="radio" name="' + id + '" id="' + oid + '" value="' + o[0] + '" data-path="' + f.path + '"' + (cur === o[0] ? ' checked' : '') + '><label for="' + oid + '">' + esc(o[1]) + '</label>'; }).join('') + '</div></fieldset>';
+    }
+    return '<div class="field"><label for="' + id + '">' + esc(f.label) + '</label>' + (f.hint ? '<p class="note">' + esc(f.hint) + '</p>' : '') + inputHtml(id, f.type, get(f.path), f.ph).replace('id="' + id + '"', 'id="' + id + '" data-path="' + f.path + '"') + (f.type === 'textarea' ? SPEAK : '') + '</div>';
+  }
+  function pairHtml(f, kind){
+    var o1 = {inc:'inc', cash:'cash', ded:'ded'}[kind || 'inc'], o2 = o1 + 'S';
+    var id = 'f' + (uid++);
+    return '<div class="field pairrow"><label>' + esc(f.label) + '</label><div class="pairs">' +
+      '<div><span class="mini-l">' + (couple() ? 'Applicant' : '') + '</span>' + inputHtml(id + 'a', 'money', get(o1 + '.' + f.path)).replace('id="' + id + 'a"', 'id="' + id + 'a" data-path="' + o1 + '.' + f.path + '"') + '</div>' +
+      (couple() ? '<div><span class="mini-l">Spouse or partner</span>' + inputHtml(id + 's', 'money', get(o2 + '.' + f.path)).replace('id="' + id + 's"', 'id="' + id + 's" data-path="' + o2 + '.' + f.path + '"') + '</div>' : '') +
+      '</div></div>';
+  }
+  function repeatHtml(f){
+    if (f.when && !f.when()) return '';
+    var arr = get(f.repeat) || [], shown = Math.max(1, Math.min(f.max, arr.filter(function(x){ return x && Object.keys(x).some(function(k){ return x[k]; }); }).length + (f._more || 0)));
+    var h = '<div class="rep"><h4>' + esc(f.label) + '</h4>';
+    for (var i = 0; i < shown; i++) {
+      h += '<div class="repitem"><span class="repn">' + (i + 1) + '</span>' + f.item.map(function(it){
+        if (it[3] && !it[3]()) return '';
+        var id = 'f' + (uid++), path = f.repeat + '.' + i + '.' + it[0];
+        return '<div class="field"><label for="' + id + '">' + esc(it[1]) + '</label>' + inputHtml(id, it[2], get(path)).replace('id="' + id + '"', 'id="' + id + '" data-path="' + path + '"') + (it[0] === 'desc' && i === 0 ? SPEAK : '') + '</div>';
+      }).join('') + '</div>';
+    }
+    if (shown < f.max) h += '<button type="button" class="btn small ghost" data-more="' + f.repeat + '">Add another</button>';
+    return h + '</div>';
+  }
+  function listHtml(f){
+    if (f.when && !f.when()) return '';
+    var arr = get(f.list) || [], shown = Math.max(1, Math.min(f.max, arr.filter(Boolean).length + (more[f.list] || 0)));
+    var h = '<div class="rep"><h4>' + esc(f.label) + '</h4>';
+    for (var i = 0; i < shown; i++) { var id = 'f' + (uid++), path = f.list + '.' + i; h += '<div class="field">' + inputHtml(id, 'text', get(path), 'Full name').replace('id="' + id + '"', 'id="' + id + '" data-path="' + path + '"') + '</div>'; }
+    if (shown < f.max) h += '<button type="button" class="btn small ghost" data-more="' + f.list + '">Add another</button>';
+    return h + '</div>';
+  }
+  var more = {};
+  var MIC = '<svg class="mic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>';
+  var SPEAK = '<p class="speak">' + MIC + '<span>Prefer to speak? Tap the box, then tap the microphone on your keyboard.</span></p>';
+  var TRIGGERS = ['helper.name','solicitor.name','cash.other','cash.otherCash','home.loanType','farm.transferredOwner.name'];
+
+  function render(){
+    var vs = visibleSteps(); if (step >= vs.length) step = vs.length - 1;
+    var s = vs[step];
+    $('stepno').textContent = 'Step ' + (step + 1) + ' of ' + vs.length;
+    $('bar').style.width = Math.round((step + 1) * 100 / vs.length) + '%';
+    $('s-title').textContent = s.title;
+    $('s-intro').textContent = s.intro ? s.intro() : '';
+    $('back').hidden = step === 0;
+    $('next').hidden = !!s.review;
+    if (s.review) { $('s-body').innerHTML = reviewHtml(); return; }
+    var fs = s.fields(), html = '';
+    fs.forEach(function(f){
+      if (f.pair) html += pairHtml(f, s.title === 'Savings and investments' ? 'cash' : s.title === 'Deductions' ? 'ded' : 'inc');
+      else if (f.repeat) { f._more = more[f.repeat] || 0; html += repeatHtml(f); }
+      else if (f.list) html += listHtml(f);
+      else html += fieldHtml(f);
+    });
+    if (step === 0) html = '<div class="speakbox">' + MIC + '<div><b>Prefer to speak your answers?</b><span>Tap any box, then tap the microphone on your phone’s keyboard and say the answer. It works on every iPhone and Android phone. Check names and numbers after speaking, because they are easy to mishear.</span></div></div>' + html;
+    $('s-body').innerHTML = html;
+  }
+
+  function missing(){
+    var m = [], a = d.a || {};
+    if (!d.capacity) m.push('Who is signing (step 1)');
+    if (!d.rel) m.push('Relationship status (step 1)');
+    ['first','surname','dob','pps','home'].forEach(function(k){ if (!a[k]) m.push({first:'First name',surname:'Surname',dob:'Date of birth',pps:'PPS number',home:'Home address'}[k]); });
+    if (couple()) { var sp = d.sp || {}; if (!sp.name) m.push('Partner’s name'); if (!sp.pps) m.push('Partner’s PPS number'); if (!sp.dob) m.push('Partner’s date of birth'); }
+    if (!cap()) { var sg = d.signer || {}; if (!sg.name) m.push('Name of the person signing'); if (!sg.role) m.push('What they are signing as'); }
+    if (d.wantLoan === 'yes' && !((d.loanProps || [])[0] || {}).street) m.push('Property for the nursing home loan');
+    return m;
+  }
+  function reviewHtml(){
+    var m = missing(), g = FDFill.signingGuide(d);
+    var h = '';
+    if (m.length) h += '<div class="alertbox coral"><b>Still to fill in</b><ul>' + m.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul><p class="note">You can still download the form and write these in by hand.</p></div>';
+    else h += '<div class="alertbox teal"><b>Everything needed is filled in.</b> Download the form, check every page, then print it.</div>';
+    h += '<div class="alertbox sunbox"><b>Read every number before you print.</b> PPS numbers, Eircodes, dates and amounts are the answers most often mistyped or misheard.</div>';
+    h += '<div class="sign"><h3>Where to sign</h3><p class="note">Signatures and dates are left blank. Sign in pen on the printed form, and date it on the day you sign.</p><table>' +
+      g.map(function(r){ return '<tr><td><b>' + esc(r[0]) + '</b></td><td>' + esc(r[1]) + '</td><td>' + esc(r[2]) + '</td></tr>'; }).join('') + '</table></div>';
+    h += '<div class="dl"><button class="btn" id="make" type="button">Download the completed form</button><p class="note" id="make-note">The form is filled in on this device. Nothing is sent to us.</p></div>';
+    h += '<div class="after"><h3>Then</h3><ol><li>Print all 40 pages, single-sided.</li><li>Sign and date where shown above.</li><li>Put the documents from your checklist behind it, photocopy everything, and post it to the support office.</li>' + (caseInfo && caseInfo.case.tier === 'form' ? '<li>Ring the support office a week later to check it arrived.</li>' : '<li>Mark it as posted in your tracker so we can remind you when to ring them.</li>') + '</ol>' +
+      '<a class="btn teal" href="/my?t=' + encodeURIComponent(token) + '">Back to my tracker</a></div>';
+    h += '<p class="note">fairdeal.ie fills in the form from your answers. Check that everything is correct before you sign: the declaration says the information is correct to the best of your knowledge. This is not legal or financial advice.</p>';
+    return h;
+  }
+
+  // ---------- events ----------
+  document.addEventListener('input', function(e){ var p = e.target.getAttribute && e.target.getAttribute('data-path'); if (p && e.target.type !== 'radio') set(p, e.target.value); });
+  document.addEventListener('change', function(e){
+    var p = e.target.getAttribute && e.target.getAttribute('data-path');
+    if (p && e.target.type === 'radio') { set(p, e.target.value); render(); }
+    else if (p && (e.target.type === 'date')) set(p, e.target.value);
+    else if (p && TRIGGERS.indexOf(p) >= 0) render();
+  });
+  document.addEventListener('click', function(e){
+    var mo = e.target.closest('[data-more]'); if (mo) { var k = mo.getAttribute('data-more'); more[k] = (more[k] || 0) + 1; render(); return; }
+    if (e.target.id === 'make') make();
+  });
+  $('next').addEventListener('click', function(){ step++; render(); window.scrollTo({top: $('wiz').offsetTop - 90, behavior:'smooth'}); });
+  $('back').addEventListener('click', function(){ step = Math.max(0, step - 1); render(); window.scrollTo({top: $('wiz').offsetTop - 90, behavior:'smooth'}); });
+  $('clear').addEventListener('click', function(){ if (confirm('Clear all your answers from this device? This cannot be undone.')) { d = {}; prefill(); save(); step = 0; render(); } });
+
+  var formBytes = null;
+  function make(){
+    var btn = $('make'), note = $('make-note');
+    btn.disabled = true; btn.textContent = 'Filling in the form…';
+    var go = formBytes ? Promise.resolve(formBytes) : fetch(FORM_URL).then(function(r){ if (!r.ok) throw new Error('form'); return r.arrayBuffer(); }).then(function(b){ formBytes = b; return b; });
+    go.then(function(bytes){ return FDFill.fillPdf(PDFLib, bytes, d); })
+      .then(function(out){
+        var blob = new Blob([out], {type:'application/pdf'}), url = URL.createObjectURL(blob), aEl = document.createElement('a');
+        var who = ((d.a && d.a.first) || '') + ' ' + ((d.a && d.a.surname) || '');
+        aEl.href = url; aEl.download = ('Fair Deal application ' + who.trim()).trim().replace(/[^A-Za-z0-9 \-]/g, '').replace(/\s+/g, '-') + '.pdf';
+        document.body.appendChild(aEl); aEl.click(); setTimeout(function(){ URL.revokeObjectURL(url); aEl.remove(); }, 4000);
+        note.textContent = 'Downloaded. Open it, check every page, then print it.';
+        fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({t: token, action:'log', kind:'form_filled'})}).catch(function(){});
+      })
+      .catch(function(){ note.textContent = 'Something went wrong preparing the form. Please try again, or reply to any of our emails for help.'; })
+      .then(function(){ btn.disabled = false; btn.textContent = 'Download the completed form'; });
+  }
+
+  function prefill(){
+    var f = (caseInfo && caseInfo.facts) || {};
+    if (!d.capacity && f.capacity) d.capacity = f.capacity === 'yes' ? 'yes' : 'no';
+    if (!d.rel && f.couple) d.rel = 'couple';
+    if (!d.wantLoan && f.home) d.wantLoan = f.loan === 'yes' ? 'yes' : f.loan === 'no' ? 'no' : '';
+    d.a = d.a || {}; if (!d.a.first && caseInfo && caseInfo.case.first_name) d.a.first = caseInfo.case.first_name;
+    if (!d.corr) d.corr = '';
+  }
+
+  // ---------- start ----------
+  function blocked(msg){ $('gate').hidden = false; $('gate-msg').textContent = msg; $('wiz').hidden = true; }
+  if (!token) blocked('This page opens from your tracker. Use the link in your pack email, then choose “Fill in the form”.');
+  else fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({t: token, action:'get'})})
+    .then(function(r){ return r.json().then(function(j){ if (!r.ok) throw new Error(j.error || 'Not valid'); return j; }); })
+    .then(function(j){
+      caseInfo = j; KEY = 'fd_form_' + j.case.id;
+      try { d = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { d = {}; }
+      prefill();
+      $('h-title').textContent = (j.case.first_name ? j.case.first_name + '’s' : 'Your') + ' Fair Deal application form';
+      $('wiz').hidden = false; $('back-link').href = '/my?t=' + encodeURIComponent(token);
+      render();
+    })
+    .catch(function(e){ blocked(e.message + ' Open the form from the link in your pack email.'); });
+})();
+</script>
+</body>
+</html>
