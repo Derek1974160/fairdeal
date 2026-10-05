@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>How much does Fair Deal cost each week? | Fair Deal Calculator</title>
+<title>How much does Fair Deal cost each week? | fairdeal.ie</title>
 <meta name="description" content="What you will pay under Fair Deal: 80% of income, 7.5% of assets a year, the €36,000 allowance and the three-year cap, with a worked example.">
 <meta property="og:title" content="How much does Fair Deal cost each week?">
 <meta property="og:description" content="What you will pay under Fair Deal: 80% of income, 7.5% of assets a year, the €36,000 allowance and the three-year cap, with a worked example.">
@@ -196,6 +196,7 @@ footer p{max-width:60ch;margin:0 0 10px}
 :root{--lilac:#163B63;--lilac-soft:#E8EEF6;--pale:#EEF3F8}
 a{color:var(--navy-2)}
 .logo i{background:var(--navy);color:var(--sun)}
+.logo em{font-style:normal;color:#B07800}
 .nav nav a:hover{background:var(--pale)}
 .hero,.ahero,.thero,.hhero{background:var(--navy)!important}
 .hero::before,.hero::after,.ahero::after,.thero::after,.hhero::before,.hhero::after{display:none!important}
@@ -233,11 +234,22 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .opts input:checked+label{background:var(--sun-soft);border-color:var(--sun);color:var(--navy)}
 .group h3 i,.group:nth-child(2n) h3 i,.group:nth-child(3n) h3 i{background:var(--pale);color:var(--navy)}
 .fail .hero{background:linear-gradient(140deg,#5B6B7C,#3a4552)!important}
+.wave{display:none}
+.calc-result{background:var(--navy-2)}
+@media(max-width:640px){
+  .nav .wrap{height:62px;gap:10px}
+  .logo{font-size:17px;gap:8px;min-width:0}
+  .logo i{width:32px;height:32px;font-size:16px;flex:none}
+  .logo span{white-space:nowrap;font-size:20px}
+  .logo small{display:none}
+  .nav nav{flex:none}
+  .nav nav a.pill{white-space:nowrap;font-size:14px;padding:8px 14px}
+}
 </style>
 </head>
 <body>
 <div class="nav"><div class="wrap">
-  <a class="logo" href="/"><i>€</i><span>Fair Deal Calculator<small>Independent guide. Not the HSE.</small></span></a>
+  <a class="logo" href="/"><i>€</i><span>fairdeal<em>.ie</em><small>Independent guide. Not the HSE.</small></span></a>
   <nav><a href="/#how">How it works</a><a href="/#faq">Questions</a><a href="/how-much-does-fair-deal-cost">Guides</a><a class="pill" href="/#calc">Calculate</a></nav>
 </div></div>
 <section class="ahero"><div class="wrap"><span class="eyebrow">Fair Deal guide</span><h1>How much does Fair Deal cost each week?</h1><p class="intro">Fair Deal does not have a price. Each person pays a contribution worked out from their own income and assets, and the HSE pays the rest of the nursing home fee. Here is how the number is reached, with a worked example.</p></div></section>

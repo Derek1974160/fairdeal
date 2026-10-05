@@ -44,6 +44,7 @@ footer{color:var(--muted);font-size:14px;text-align:center;padding:0 22px 48px;m
 :root{--lilac:#163B63;--lilac-soft:#E8EEF6;--pale:#EEF3F8}
 a{color:var(--navy-2)}
 .logo i{background:var(--navy);color:var(--sun)}
+.logo em{font-style:normal;color:#B07800}
 .nav nav a:hover{background:var(--pale)}
 .hero,.ahero,.thero,.hhero{background:var(--navy)!important}
 .hero::before,.hero::after,.ahero::after,.thero::after,.hhero::before,.hhero::after{display:none!important}
@@ -81,10 +82,21 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .opts input:checked+label{background:var(--sun-soft);border-color:var(--sun);color:var(--navy)}
 .group h3 i,.group:nth-child(2n) h3 i,.group:nth-child(3n) h3 i{background:var(--pale);color:var(--navy)}
 .fail .hero{background:linear-gradient(140deg,#5B6B7C,#3a4552)!important}
+.wave{display:none}
+.calc-result{background:var(--navy-2)}
+@media(max-width:640px){
+  .nav .wrap{height:62px;gap:10px}
+  .logo{font-size:17px;gap:8px;min-width:0}
+  .logo i{width:32px;height:32px;font-size:16px;flex:none}
+  .logo span{white-space:nowrap;font-size:20px}
+  .logo small{display:none}
+  .nav nav{flex:none}
+  .nav nav a.pill{white-space:nowrap;font-size:14px;padding:8px 14px}
+}
 </style>
 </head>
 <body>
-<div class="nav"><div class="wrap"><a class="logo" href="/"><i>€</i><span>Fair Deal Calculator<small>Independent guide. Not the HSE.</small></span></a></div></div>
+<div class="nav"><div class="wrap"><a class="logo" href="/"><i>€</i><span>fairdeal<em>.ie</em><small>Independent guide. Not the HSE.</small></span></a></div></div>
 
 <div id="ok-view">
   <section class="hero">
@@ -97,7 +109,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   <div class="card">
     <h2>What happens next</h2>
     <ul class="steps">
-      <li data-n="1"><b>Check your email</b><span><span id="t-what">The pack and your tracker link</span> arrive within a few minutes, from Fair Deal Calculator (notifications@fairdeal.ie). If it is not in your inbox, look in your junk or spam folder.</span></li>
+      <li data-n="1"><b>Check your email</b><span><span id="t-what">The pack and your tracker link</span> arrive within a few minutes, from fairdeal.ie (notifications@fairdeal.ie). If it is not in your inbox, look in your junk or spam folder.</span></li>
       <li data-n="2"><b id="t-s2h">Open your tracker</b><span id="t-s2">Tick off each document as you get it, use the ready-made letters to ask the bank and the auctioneer, and find the support office to send it to. We will remind you each week until everything is in.</span></li>
       <li data-n="3"><b>Ask if you get stuck</b><span>Reply to the email and a person will help. For a farm, a business, or where capacity is in doubt, use a solicitor as well.</span></li>
     </ul>
