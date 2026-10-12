@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&display=swap");
 /* fairdeal.ie house style, October 2026.
    One file for every page. Loaded after each page's own styles, so it wins where they differ.
    Ink navy, warm paper, a muted gold rule. Serif headings, hairline borders, real photographs. */
@@ -9,8 +10,8 @@
   --teal:#2F5D50;--teal-2:#264C42;--teal-soft:#EAF0EC;
   --coral:#0F2238;--coral-2:#1B3554;
   --lilac:#1B3554;--lilac-soft:#EEF1F5;
-  --head:"Source Serif 4",Georgia,"Times New Roman",serif;
-  --body:"Source Sans 3",system-ui,Arial,sans-serif;
+  --head:"Libre Franklin","Helvetica Neue",Arial,sans-serif;
+  --body:"Libre Franklin","Helvetica Neue",Arial,sans-serif;
   --r:6px;
 }
 body{background:var(--bg)!important;color:var(--ink);font-feature-settings:"kern","liga"}
@@ -160,3 +161,39 @@ footer .ind,.ind{background:transparent!important;color:#E5CF96!important;border
 .box,.sidelist,.formcard,.tcard,.hcard,.panel{border-radius:var(--r)!important}
 input[type=checkbox],input[type=radio]{accent-color:var(--navy)}
 .demobar{background:var(--gold-soft)!important;color:var(--navy)!important;border:1px solid #E3D3AE;box-shadow:none!important}
+
+
+/* ---- plain typography (12 Oct 2026): one sturdy typeface, no decorative tricks ---- */
+body{font-size:17px;line-height:1.65;letter-spacing:0}
+h1,h2,h3,h4,summary,.logo{letter-spacing:-.012em!important}
+h1{font-weight:600!important}
+h2{font-weight:600!important}
+h3,summary{font-weight:600!important}
+h1 b,h1 strong{font-style:normal!important;font-weight:600!important;color:inherit!important}
+.hero.lead-hero h1{font-size:clamp(34px,4.6vw,54px);line-height:1.1;max-width:17ch}
+/* labels: plain words, no rules, no spaced capitals */
+.eyebrow,.kicker,.kicker.coral,.kicker.lilac,.hhero .eyebrow,.pack-kicker{padding:0!important;text-transform:none!important;letter-spacing:0!important;font-size:15px!important;font-weight:600!important;color:var(--muted)!important}
+.eyebrow::before,.kicker::before,.kicker::after,.pack-kicker::before{display:none!important}
+.center .kicker{padding:0!important}
+.hero .eyebrow,.ahero .eyebrow,.thero .eyebrow,.hhero .eyebrow{color:#C9D4E0!important}
+.calc-result h2,footer h4{text-transform:none!important;letter-spacing:0!important;font-size:15px!important;font-weight:600!important}
+.calc-result h2{color:#C9D4E0!important}
+footer h4{color:#fff!important}
+/* hero facts: separated by thin lines, not diamonds */
+.hero-meta{gap:0;font-size:14.5px}
+.hero-meta span{padding:0 14px;border-left:1px solid rgba(255,255,255,.3)}
+.hero-meta span:first-child{padding-left:0;border-left:0}
+.hero-meta span::before{display:none}
+@media(max-width:640px){.hero-meta{flex-direction:column;gap:4px}.hero-meta span{border:0;padding:0}}
+/* numbers and figures: plain */
+.big,.stat b,.stepc::before,.step span{font-family:var(--body)!important}
+.big{font-weight:600!important;letter-spacing:-.02em}
+.stepc::before,.step span,.s1 span,.s2 span,.s3 span,.s4 span{border:0!important;background:var(--navy)!important;color:#fff!important;font-weight:600!important}
+/* photographs: no offset frame */
+.split figure::before{display:none}
+.split figure img{border-radius:var(--r)}
+.split li::before{display:none}
+.split li{padding-left:0}
+summary::after{font-weight:400}
+.ind{font-weight:600}
+.big{color:#fff!important}
