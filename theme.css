@@ -197,3 +197,5 @@ footer h4{color:#fff!important}
 summary::after{font-weight:400}
 .ind{font-weight:600}
 .big{color:#fff!important}
+.chan input:checked+label{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important}
+.chan label{border-width:1px!important;border-radius:3px!important}

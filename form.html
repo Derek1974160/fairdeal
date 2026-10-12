@@ -411,6 +411,20 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .dictated{background:#FFF4E0 !important;border-color:var(--sun) !important}
 .opts label.dictated{background:#FFF4E0;border-color:var(--sun)}
 .dict-result{margin:10px 0 0;font-size:14px;color:var(--navy)}.dict-result span{color:var(--muted)}
+
+.parts{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:0 0 14px}
+.parts span{font-size:12.5px;color:var(--muted);border-top:3px solid var(--line);padding-top:6px;line-height:1.3}
+.parts span i{font-style:normal;font-weight:700;display:block;color:var(--muted)}
+.parts span.now{border-top-color:var(--navy);color:var(--navy)}.parts span.now i{color:var(--navy)}
+.parts span.done{border-top-color:#2F5D50}.parts span.done i{color:#2F5D50}
+@media(max-width:560px){.parts span{font-size:0}.parts span i{font-size:13px}}
+.picks{display:grid;gap:8px;margin:6px 0 10px}
+.picks input{position:absolute;opacity:0;pointer-events:none}
+.picks label{display:block;padding:13px 14px 13px 44px;border:1px solid #CFC7B8;border-radius:6px;cursor:pointer;position:relative;font-size:16px;color:var(--ink);background:#fff}
+.picks label::before{content:"";position:absolute;left:13px;top:50%;width:20px;height:20px;transform:translateY(-50%);border:1px solid #9AA3AD;border-radius:3px;background:#fff}
+.picks input:checked+label{border-color:var(--navy);background:#F2EEE6}
+.picks input:checked+label::before{background:var(--navy);border-color:var(--navy);content:"✓";color:#fff;font-size:14px;font-weight:700;display:grid;place-items:center}
+.picks input:focus-visible+label{box-shadow:0 0 0 3px rgba(15,34,56,.15)}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -430,6 +444,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 <main class="wrap tmain">
   <div id="gate" class="tcard sunb" hidden><h2>Open this from your tracker</h2><p id="gate-msg"></p></div>
   <div id="wiz" class="tcard wiz" hidden>
+    <div class="parts" id="parts"></div>
     <div class="wtop"><span id="stepno"></span><span id="saved" class="saved"></span></div>
     <div class="track"><div id="bar"></div></div>
     <h2 id="s-title"></h2>
@@ -826,35 +841,46 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   var YN = [['yes','Yes'],['no','No']];
   function pair(path, label, o){ return Object.assign({pair:true, path:path, label:label}, o||{}); }   // applicant + spouse money
 
+  // Five parts, each in small pages. A page shows one to six boxes. The money pages ask what applies first.
+  function picked(group, key){ var p = (d.picks || {})[group] || []; return p.indexOf(key) >= 0; }
+  function P(group, items){ return {picks: group, items: items}; }   // tick-list page
+  var whoHelps = function(){ return !!get('helper.name') || d.hasHelper === 'yes'; };
   var STEPS = [
-    { title: 'Before you start', intro: function(){ return 'This fills in the official HSE application form for you. Everything you type stays on this phone or computer: it is never sent to us. You can stop at any time and come back on this device.'; },
+    // Part 1: the applicant
+    { part: 1, title: 'Before you start', intro: function(){ return 'This fills in the official HSE application form for you. Everything you type or say stays on this phone or computer: it is never sent to us. You can stop at any time and come back on this device.'; },
       fields: function(){ return [
         F('capacity', 'Is ' + nm() + ' able to sign the form themselves?', 'radio', {opts:[['yes','Yes, they will sign it'],['no','No, someone will sign on their behalf']]}),
         F('rel', 'Which describes ' + nm() + '?', 'radio', {opts:[['couple','Married, in a civil partnership, or living with a partner'],['single','Single'],['widowed','Widowed'],['separated','Separated or divorced']]})
       ]; } },
-    { title: 'About the applicant', intro: function(){ return 'These go in Part 1. Use the details exactly as they appear on official documents.'; },
-      fields: function(){ return [
-        F('a.first','First name'), F('a.surname','Surname'), F('a.other','Other names (optional)'), F('a.birthSurname','Birth surname, if different (optional)'),
+    { part: 1, title: 'Their name', intro: function(){ return 'Exactly as it appears on official documents.'; },
+      fields: function(){ return [ F('a.first','First name'), F('a.surname','Surname'), F('a.other','Other names (optional)',null,{optional:true}), F('a.birthSurname','Birth surname, if different (optional)',null,{optional:true}) ]; } },
+    { part: 1, title: 'Date of birth and PPS number', fields: function(){ return [
         F('a.dob','Date of birth','date'), F('a.gender','Gender','radio',{opts:[['male','Male'],['female','Female'],['other','Other']]}),
         F('a.pps','PPS number','text',{ph:'1234567T', hint:'On any Revenue or social welfare letter.'}),
-        F('a.phone','Daytime phone','tel'), F('a.email','Email address (optional)','email'),
-        F('a.resident','Has ' + nm() + ' lived in Ireland for at least a year?','radio',{opts:YN}),
+        F('a.resident','Has ' + nm() + ' lived in Ireland for at least a year?','radio',{opts:YN})
+      ]; } },
+    { part: 1, title: 'Where they live', fields: function(){ return [
         F('a.home','Home address','textarea',{hint:'One line per row, without the Eircode.'}), F('a.homeEir','Home Eircode'),
-        F('a.current','Current address, if different (hospital, nursing home or a relative’s house)','textarea',{optional:true}), F('a.currentEir','Eircode of current address',null,{optional:true}),
+        F('a.phone','Daytime phone','tel'), F('a.email','Email address (optional)','email',{optional:true})
+      ]; } },
+    { part: 1, title: 'Where they are now', intro: function(){ return 'If ' + nm() + ' is in hospital, a nursing home or staying with a relative.'; }, fields: function(){ return [
+        F('a.current','Current address, if different from home','textarea',{optional:true}), F('a.currentEir','Eircode of current address',null,{optional:true}),
         F('a.admitted','If in hospital or a nursing home now, date of admission','date',{optional:true}),
         F('a.abroad','Has ' + nm() + (couple() ? ' or their spouse or partner' : '') + ' ever lived abroad?','radio',{opts:YN})
       ]; } },
-    { title: 'Spouse or partner', when: couple, intro: function(){ return 'For a couple, the HSE assesses half of the combined income and assets, so it needs the partner’s details too.'; },
+    { part: 1, title: 'Spouse or partner', when: couple, intro: function(){ return 'For a couple, the HSE assesses half of the combined income and assets, so it needs the partner’s details too.'; },
       fields: function(){ return [
         F('sp.name','Spouse or partner’s full name'), F('sp.pps','Their PPS number'), F('sp.dob','Their date of birth','date'),
-        F('cohabitYears','If not married: how many years have you lived together?','number',{optional:true}),
+        F('cohabitYears','If not married: how many years have you lived together?','number',{optional:true})
+      ]; } },
+    { part: 1, title: 'Is the spouse or partner in care?', when: couple, fields: function(){ return [
         F('sp.inCare','Is the spouse or partner also in long-term care?','radio',{opts:YN}),
         F('sp.home','Name of their nursing home','text',{when:function(){ return get('sp.inCare')==='yes'; }}),
         F('sp.weekly','Their weekly contribution for care','money',{when:function(){ return get('sp.inCare')==='yes'; }}),
         F('sp.careType','Type of care','radio',{opts:[['nhss','Fair Deal (NHSS)'],['public','Public nursing home'],['private','Private nursing home'],['other','Other']], when:function(){ return get('sp.inCare')==='yes'; }}),
         F('sp.careOther','Please specify','text',{when:function(){ return get('sp.careType')==='other'; }})
       ]; } },
-    { title: 'Medical cards and earlier applications', fields: function(){ return [
+    { part: 1, title: 'Medical cards and earlier applications', fields: function(){ return [
         F('prevApplied','Has ' + nm() + (couple() ? ' or their partner' : '') + ' applied for Fair Deal before?','radio',{opts:YN}),
         F('prevWhen','If yes, when (if known)','text',{when:function(){ return d.prevApplied==='yes'; }}),
         F('card','Does ' + nm() + ' hold a Medical Card, GP Visit Card, Long Term Illness Card or Drugs Payment Scheme card?','radio',{opts:YN, hint:'If it is a Health Amendment Card, contact the local Liaison Officer before applying.'}),
@@ -862,92 +888,123 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
         F('cdmApplicant','Does ' + nm() + ' have a co-decision-making agreement registered with the Decision Support Service?','radio',{opts:YN}),
         F('cdmSpouse','Does the spouse or partner have one?','radio',{opts:YN, when:couple})
       ]; } },
-    { title: 'Who is helping, and where letters go', intro: function(){ return 'If a family member is helping with the application, the HSE can write to them instead of the applicant.'; },
+    // Part 2: who is helping
+    { part: 2, title: 'Is someone helping?', intro: function(){ return 'If a family member is helping with the application, the HSE can write to them instead of the applicant.'; },
       fields: function(){ return [
-        F('helper.name','Name of the person helping (optional)','text',{optional:true}),
-        F('helper.address','Their address','textarea',{when:function(){ return !!get('helper.name'); }}), F('helper.eir','Their Eircode','text',{when:function(){ return !!get('helper.name'); }}),
-        F('helper.relationship','Relationship to the applicant','text',{when:function(){ return !!get('helper.name'); }}),
-        F('helper.tel','Phone','tel',{when:function(){ return !!get('helper.name'); }, optional:true}), F('helper.mobile','Mobile','tel',{when:function(){ return !!get('helper.name'); }, optional:true}),
-        F('helper.email','Email','email',{when:function(){ return !!get('helper.name'); }, optional:true}),
-        F('corr','Who should the HSE send letters to?','radio',{opts:[['applicant','The applicant'],['nominated','The person helping']]}),
-        F('solicitor.name','Solicitor’s name, if there is one (optional)','text',{optional:true}),
+        F('hasHelper','Is a family member or friend helping ' + nm() + ' with this application?','radio',{opts:YN}),
+        F('helper.name','Their full name','text',{when:whoHelps}),
+        F('helper.relationship','Relationship to the applicant','text',{when:whoHelps, ph:'For example, daughter'})
+      ]; } },
+    { part: 2, title: 'How to reach the person helping', when: whoHelps, fields: function(){ return [
+        F('helper.address','Their address','textarea'), F('helper.eir','Their Eircode'),
+        F('helper.mobile','Mobile','tel',{optional:true}), F('helper.tel','Landline (optional)','tel',{optional:true}), F('helper.email','Email','email',{optional:true}),
+        F('corr','Who should the HSE send letters to?','radio',{opts:[['applicant','The applicant'],['nominated','The person helping']]})
+      ]; } },
+    { part: 2, title: 'Solicitor', intro: function(){ return 'Only if a solicitor is involved. Most families leave this blank.'; }, fields: function(){ return [
+        F('solicitor.name','Solicitor’s name (optional)','text',{optional:true}),
         F('solicitor.address','Solicitor’s address','textarea',{when:function(){ return !!get('solicitor.name'); }, optional:true}),
         F('solicitor.tel','Solicitor’s phone','tel',{when:function(){ return !!get('solicitor.name'); }, optional:true})
       ]; } },
-    { title: 'Signing on their behalf', when: function(){ return !cap(); }, intro: function(){ return 'This person signs Parts 2B and 4B. If the authority is a power of attorney or a court order, a copy must go in with the form.'; },
+    { part: 2, title: 'Signing on their behalf', when: function(){ return !cap(); }, intro: function(){ return 'This person signs Parts 2B and 4B. If the authority is a power of attorney or a court order, a copy must go in with the form.'; },
       fields: function(){ return [
         F('signer.name','Full name of the person signing'),
-        F('signer.role','They are signing as','radio',{opts:[['spouse','Spouse or partner'],['child','Child of the applicant, over 18'],['doctor','Registered medical practitioner'],['nurse','Registered nurse'],['socialworker','Registered social worker'],['committee','Committee of a Ward of Court'],['epa','Attorney under a registered enduring power of attorney'],['dmr','Decision-making representative appointed by court order']]}),
+        F('signer.role','They are signing as','radio',{opts:[['spouse','Spouse or partner'],['child','Child of the applicant, over 18'],['doctor','Registered medical practitioner'],['nurse','Registered nurse'],['socialworker','Registered social worker'],['committee','Committee of a Ward of Court'],['epa','Attorney under a registered enduring power of attorney'],['dmr','Decision-making representative appointed by court order']]})
+      ]; } },
+    { part: 2, title: 'How to reach the person signing', when: function(){ return !cap(); }, fields: function(){ return [
         F('signer.address','Their address','textarea'), F('signer.eir','Their Eircode'), F('signer.tel','Phone','tel'), F('signer.email','Email','email',{optional:true}),
         F('signer.pps','Their PPS number (needed beside their signature for the nursing home loan)','text',{optional:true})
       ]; } },
-    { title: 'Weekly income', intro: function(){ return 'Give the weekly amount after tax and PRSI. If something is paid monthly, multiply by 12 and divide by 52. Leave blank anything that does not apply.'; },
-      fields: function(){ return [
-        pair('dsp','Department of Social Protection pension, allowance or benefit'), pair('foreign','Pension from outside Ireland'),
-        pair('occ','Occupational or private pension'), pair('employ','Work, trade or profession'), pair('rentals','Rent from property (in Ireland or abroad)'),
-        pair('director','Income from a directorship'), pair('fees','Fees, commissions, dividends or interest'), pair('pprRent','Rent from the family home'),
-        pair('otherRent','Rent from other property'), pair('settlement','Settlement, covenant, estate or maintenance payments'), pair('royalties','Royalties and annuities'),
-        pair('transferred','Income given to someone else in the last 5 years'), pair('farm','Farm or business income'),
-        {repeat:'otherInc', max:3, label:'Any other income', item:[['desc','What it is','text'],['a','Applicant, per week','money'],['s','Partner, per week','money',couple]]},
-        F('rtbA','Residential Tenancies Board number, if the home is rented out (optional)','text',{optional:true})
-      ]; } },
-    { title: 'Savings and investments', intro: function(){ return 'Give the total balance today for each type of account. Statements for the last 6 months for every account go in with the form.'; },
-      fields: function(){ return [
-        pair('bank','Bank accounts','cash'), pair('online','Online bank accounts','cash'), pair('cu','Credit union','cash'), pair('post','An Post savings','cash'),
-        pair('other','Other savings','cash'), F('cashOtherDesc','What the other savings are','text',{optional:true, when:function(){ return !!get('cash.other'); }}),
-        {repeat:'invest', max:4, label:'Shares, bonds, prize bonds, ARFs or life policies with a cash value', item:[['desc','What it is','text'],['a','Applicant’s value','money'],['s','Partner’s value','money',couple]]},
-        pair('loaned','Money lent to someone that is owed back','cash'),
-        pair('transferred','Money or shares given away in the last 5 years (total)','cash'),
-        pair('returned','Any of that given back (total)','cash'),
-        pair('otherCash','Any other cash assets','cash'), F('otherCashDesc','What they are','text',{optional:true, when:function(){ return !!get('cash.otherCash'); }})
-      ]; } },
-    { title: 'The home and other property', fields: function(){ return [
-        F('home.status','Is ' + nm() + ' the owner, joint owner, tenant, lodger or other?','text',{ph:'Owner'}),
-        F('home.address','Address of the home','textarea',{hint:'Leave blank to use the home address from earlier.', optional:true}), F('home.eir','Eircode of the home','text',{optional:true}),
-        F('home.value','Current market value of the home','money',{hint:'From the Certificate of Market Value from an auctioneer or valuer.', optional:true}),
-        F('home.loanType','Any loan on the home? Type of loan (for example mortgage, life loan, credit union)','text',{optional:true}),
-        F('home.loanMonthly','Monthly repayment','money',{optional:true, when:function(){ return !!get('home.loanType'); }}),
-        F('home.loanBalance','Amount still owed','money',{optional:true, when:function(){ return !!get('home.loanType'); }}),
-        {repeat:'otherProp', max:3, label:'Other property, land, farm or business', item:[['desc','Details, with the address','text'],['value','Value','money'],['balance','Loan still owed on it','money']]},
-        {repeat:'transferred', max:3, label:'Property or land sold or given away in the last 5 years', item:[['desc','What it was','text'],['date','Date of transfer','date'],['value','Value at the time','money'],['received','Amount received','money'],['to','Given to whom','text']]}
-      ]; } },
-    { title: 'Deductions', intro: function(){ return 'These lower the contribution. Give amounts per year, after any tax relief.'; },
-      fields: function(){ return [
-        pair('health','Health expenses (GP, pharmacy, prescription charges)','ded'), pair('interest','Interest on loans for the home','ded'),
-        pair('rent','Rent paid (if living in rented accommodation)','ded'), pair('maint','Maintenance paid to another person','ded'),
-        pair('levies','Levies required by law, such as property tax','ded'), pair('borrow','Borrowings on the home (if claiming this deduction)','ded'),
-        F('dependants','Claim a deduction for a child under 21 or in full-time education?','radio',{opts:YN})
-      ]; } },
-    { title: 'Nursing home loan', intro: function(){ return 'The optional loan defers the part of the contribution based on property until after death. Only fill this in if you want to apply for it.'; },
-      fields: function(){ var on = function(){ return d.wantLoan==='yes'; }; return [
-        F('wantLoan','Apply for the nursing home loan?','radio',{opts:YN}),
-        {repeat:'loanProps', max:2, when:on, label:'Property for the loan', item:[['details','Details (for example family home)','text'],['house','House number or name','text'],['street','Street','text'],['town','Town or city','text'],['county','County','text'],['folio','Folio number (if known)','text'],['eir','Eircode','text']]},
-        {repeat:'residents', max:6, when:on, label:'Anyone else living in the home', item:[['name','Name','text'],['years','Years living there','number']]},
-        F('rap.name','Relevant accountable person: name','text',{when:on, hint:'The person responsible for repaying the loan, usually the person who will look after the estate.'}),
-        F('rap.address','Their address','textarea',{when:on}), F('rap.eir','Their Eircode','text',{when:on}), F('rap.tel','Their phone','tel',{when:on}), F('rap.pps','Their PPS number','text',{when:on}),
-        {list:'jointOwners', max:5, when:on, label:'Joint owners of the property (if any)'}
-      ]; } },
-    { title: 'Farm or business', intro: function(){ return 'Only for a family farm or business, where a family successor will run it for six years. Take advice from a solicitor before applying.'; },
-      fields: function(){ var on = function(){ return d.wantFarmCap==='yes'; }; return [
-        F('wantFarmCap','Apply for the 3-year cap on a farm or business?','radio',{opts:YN}),
-        F('farm.names2','Second applicant name, if applying jointly (optional)','text',{when:on, optional:true}),
-        F('farm.successor.name','Family successor: full name','text',{when:on}), F('farm.successor.address','Their address','textarea',{when:on}), F('farm.successor.eir','Their Eircode','text',{when:on}),
-        F('farm.successor.tel','Phone','tel',{when:on, optional:true}), F('farm.successor.mobile','Mobile','tel',{when:on, optional:true}), F('farm.successor.email','Email','email',{when:on, optional:true}),
-        F('farm.successor.dob','Their date of birth','date',{when:on}), F('farm.successor.pps','Their PPS number','text',{when:on}), F('farm.successor.relationship','Relationship to ' + nm(),'text',{when:on}),
-        {repeat:'farm.props', max:2, when:on, label:'Farm or business property', item:[['details','Details','text'],['house','House number or name','text'],['street','Street','text'],['town','Town or city','text'],['county','County','text'],['folio','Folio number (if known)','text'],['eir','Eircode','text']]},
-        F('farm.transferredOwner.name','If the asset was already transferred: owner’s name (optional)','text',{when:on, optional:true}),
-        F('farm.transferredOwner.address1','Owner’s first line of address','text',{when:function(){ return on() && !!get('farm.transferredOwner.name'); }}),
-        F('farm.transferredOwner.county','County or city','text',{when:function(){ return on() && !!get('farm.transferredOwner.name'); }}),
-        F('farm.transferredOwner.eir','Eircode','text',{when:function(){ return on() && !!get('farm.transferredOwner.name'); }}),
-        {list:'farm.jointOwners', max:2, when:on, label:'Joint owners of the farm or business (if any)'}
-      ]; } },
-    { title: 'Co-decision-maker', when: function(){ return d.cdmApplicant==='yes' || d.cdmSpouse==='yes'; }, fields: function(){ return [
+    { part: 2, title: 'Co-decision-maker', when: function(){ return d.cdmApplicant==='yes' || d.cdmSpouse==='yes'; }, fields: function(){ return [
         F('cdm.applicantCdm','Co-decision-maker for ' + nm() + ': full name','text',{when:function(){ return d.cdmApplicant==='yes'; }}),
         F('cdm.spouseCdm','Co-decision-maker for the spouse or partner: full name','text',{when:function(){ return d.cdmSpouse==='yes'; }}),
         F('cdm.address','Co-decision-maker’s address','textarea'), F('cdm.eir','Eircode'), F('cdm.tel','Phone','tel'), F('cdm.mobile','Mobile','tel',{optional:true}), F('cdm.email','Email','email',{optional:true})
       ]; } },
-    { title: 'Check and download', review: true }
+    // Part 3: money coming in
+    { part: 3, title: 'Which of these does ' + 'the applicant' + ' receive?', titleFn: function(){ return 'Which of these does ' + nm() + (couple() ? ' or their partner' : '') + ' receive?'; },
+      intro: function(){ return 'Tick everything that applies. You give the amounts on the next page.'; },
+      fields: function(){ return [ P('inc', [['dsp','Department of Social Protection pension, allowance or benefit'],['occ','Occupational or private pension'],['foreign','Pension from outside Ireland'],['employ','Work, trade or profession'],['farm','Farm or business income'],['rentals','Rent from property'],['pprRent','Rent from the family home'],['fees','Fees, commissions, dividends or interest'],['director','Income from a directorship'],['settlement','Settlement, covenant, estate or maintenance payments'],['royalties','Royalties and annuities'],['transferred','Income given to someone else in the last 5 years'],['other','Something else']]) ]; } },
+    { part: 3, title: 'Weekly income', intro: function(){ return 'Give the weekly amount after tax and PRSI. If it is paid monthly, say so and it is converted for you. Leave blank anything that does not apply.'; },
+      fields: function(){ return [
+        pair('dsp','Department of Social Protection pension, allowance or benefit',{pick:'inc'}), pair('occ','Occupational or private pension',{pick:'inc'}), pair('foreign','Pension from outside Ireland',{pick:'inc'}),
+        pair('employ','Work, trade or profession',{pick:'inc'}), pair('farm','Farm or business income',{pick:'inc'}), pair('rentals','Rent from property (in Ireland or abroad)',{pick:'inc'}), pair('pprRent','Rent from the family home',{pick:'inc'}),
+        pair('otherRent','Rent from other property',{pick:'inc', key:'rentals'}), pair('fees','Fees, commissions, dividends or interest',{pick:'inc'}), pair('director','Income from a directorship',{pick:'inc'}),
+        pair('settlement','Settlement, covenant, estate or maintenance payments',{pick:'inc'}), pair('royalties','Royalties and annuities',{pick:'inc'}), pair('transferred','Income given to someone else in the last 5 years',{pick:'inc'}),
+        {repeat:'otherInc', max:3, label:'Any other income', when:function(){ return picked('inc','other'); }, item:[['desc','What it is','text'],['a','Applicant, per week','money'],['s','Partner, per week','money',couple]]},
+        F('rtbA','Residential Tenancies Board number, if the home is rented out (optional)','text',{optional:true, when:function(){ return picked('inc','pprRent') || picked('inc','rentals'); }}),
+        F('_none','', 'blank', {when:function(){ return !((d.picks || {}).inc || []).length; }, text:'Nothing ticked on the last page, so there is nothing to give here. Press Next.'})
+      ]; } },
+    // Part 4: what they own
+    { part: 4, title: 'Which of these do they have?', titleFn: function(){ return 'Which of these does ' + nm() + (couple() ? ' or their partner' : '') + ' have?'; },
+      intro: function(){ return 'Tick everything that applies. Statements for the last 6 months for every account go in with the form.'; },
+      fields: function(){ return [ P('cash', [['bank','Bank accounts'],['cu','Credit union'],['post','An Post savings'],['online','Online bank accounts'],['invest','Shares, bonds, prize bonds, ARFs or life policies with a cash value'],['loaned','Money lent to someone that is owed back'],['transferred','Money or shares given away in the last 5 years'],['other','Other savings or cash']]) ]; } },
+    { part: 4, title: 'Savings and investments', intro: function(){ return 'Give the total balance today for each one.'; },
+      fields: function(){ return [
+        pair('bank','Bank accounts',{pick:'cash'}), pair('online','Online bank accounts',{pick:'cash'}), pair('cu','Credit union',{pick:'cash'}), pair('post','An Post savings',{pick:'cash'}),
+        pair('other','Other savings',{pick:'cash'}), F('cashOtherDesc','What the other savings are','text',{optional:true, when:function(){ return picked('cash','other'); }}),
+        {repeat:'invest', max:4, label:'Shares, bonds, prize bonds, ARFs or life policies with a cash value', when:function(){ return picked('cash','invest'); }, item:[['desc','What it is','text'],['a','Applicant’s value','money'],['s','Partner’s value','money',couple]]},
+        pair('loaned','Money lent to someone that is owed back',{pick:'cash'}),
+        pair('transferred','Money or shares given away in the last 5 years (total)',{pick:'cash'}),
+        pair('returned','Any of that given back (total)',{pick:'cash', key:'transferred'}),
+        pair('otherCash','Any other cash assets',{pick:'cash', key:'other'}), F('otherCashDesc','What they are','text',{optional:true, when:function(){ return !!get('cash.otherCash'); }}),
+        F('_none','', 'blank', {when:function(){ return !((d.picks || {}).cash || []).length; }, text:'Nothing ticked on the last page, so there is nothing to give here. Press Next.'})
+      ]; } },
+    { part: 4, title: 'The family home', fields: function(){ return [
+        F('home.status','Is ' + nm() + ' the owner, joint owner, tenant, lodger or other?','text',{ph:'Owner'}),
+        F('home.address','Address of the home','textarea',{hint:'Leave blank to use the home address from earlier.', optional:true}), F('home.eir','Eircode of the home','text',{optional:true}),
+        F('home.value','Current market value of the home','money',{hint:'From the Certificate of Market Value from an auctioneer or valuer.', optional:true})
+      ]; } },
+    { part: 4, title: 'Any loan on the home?', fields: function(){ return [
+        F('home.hasLoan','Is there a mortgage or other loan on the home?','radio',{opts:YN}),
+        F('home.loanType','Type of loan (for example mortgage, life loan, credit union)','text',{when:function(){ return d.home && d.home.hasLoan==='yes'; }}),
+        F('home.loanMonthly','Monthly repayment','money',{optional:true, when:function(){ return d.home && d.home.hasLoan==='yes'; }}),
+        F('home.loanBalance','Amount still owed','money',{optional:true, when:function(){ return d.home && d.home.hasLoan==='yes'; }})
+      ]; } },
+    { part: 4, title: 'Other property, land or a business', fields: function(){ return [
+        F('hasOtherProp','Does ' + nm() + (couple() ? ' or their partner' : '') + ' own any other property, land, farm or business?','radio',{opts:YN}),
+        {repeat:'otherProp', max:3, when:function(){ return d.hasOtherProp==='yes'; }, label:'Other property, land, farm or business', item:[['desc','Details, with the address','text'],['value','Value','money'],['balance','Loan still owed on it','money']]}
+      ]; } },
+    { part: 4, title: 'Property sold or given away', fields: function(){ return [
+        F('hasTransferred','Was any property or land sold or given away in the last 5 years?','radio',{opts:YN}),
+        {repeat:'transferred', max:3, when:function(){ return d.hasTransferred==='yes'; }, label:'Property or land sold or given away in the last 5 years', item:[['desc','What it was','text'],['date','Date of transfer','date'],['value','Value at the time','money'],['received','Amount received','money'],['to','Given to whom','text']]}
+      ]; } },
+    { part: 4, title: 'Which of these do they pay?', intro: function(){ return 'These lower the contribution. Tick any that apply; most families tick one or two.'; },
+      fields: function(){ return [ P('ded', [['health','Health expenses (GP, pharmacy, prescription charges)'],['levies','Levies required by law, such as property tax'],['interest','Interest on loans for the home'],['rent','Rent paid, if living in rented accommodation'],['maint','Maintenance paid to another person'],['borrow','Borrowings on the home']]) ]; } },
+    { part: 4, title: 'Deductions', intro: function(){ return 'Give amounts per year, after any tax relief. If you know the monthly figure, say so and it is converted for you.'; },
+      fields: function(){ return [
+        pair('health','Health expenses (GP, pharmacy, prescription charges)',{pick:'ded'}), pair('levies','Levies required by law, such as property tax',{pick:'ded'}), pair('interest','Interest on loans for the home',{pick:'ded'}),
+        pair('rent','Rent paid (if living in rented accommodation)',{pick:'ded'}), pair('maint','Maintenance paid to another person',{pick:'ded'}), pair('borrow','Borrowings on the home (if claiming this deduction)',{pick:'ded'}),
+        F('dependants','Claim a deduction for a child under 21 or in full-time education?','radio',{opts:YN})
+      ]; } },
+    // Part 5: options and finish
+    { part: 5, title: 'Nursing home loan', intro: function(){ return 'The optional loan defers the part of the contribution based on property until after death. Only fill this in if you want to apply for it.'; },
+      fields: function(){ return [ F('wantLoan','Apply for the nursing home loan?','radio',{opts:YN}) ]; } },
+    { part: 5, title: 'The property for the loan', when: function(){ return d.wantLoan==='yes'; }, fields: function(){ return [
+        {repeat:'loanProps', max:2, label:'Property for the loan', item:[['details','Details (for example family home)','text'],['house','House number or name','text'],['street','Street','text'],['town','Town or city','text'],['county','County','text'],['folio','Folio number (if known)','text'],['eir','Eircode','text']]},
+        {list:'jointOwners', max:5, label:'Joint owners of the property (if any)'},
+        {repeat:'residents', max:6, label:'Anyone else living in the home', item:[['name','Name','text'],['years','Years living there','number']]}
+      ]; } },
+    { part: 5, title: 'Who repays the loan', when: function(){ return d.wantLoan==='yes'; }, intro: function(){ return 'The relevant accountable person: usually the person who will look after the estate.'; }, fields: function(){ return [
+        F('rap.name','Their name'), F('rap.address','Their address','textarea'), F('rap.eir','Their Eircode'), F('rap.tel','Their phone','tel'), F('rap.pps','Their PPS number')
+      ]; } },
+    { part: 5, title: 'Farm or business', intro: function(){ return 'Only for a family farm or business, where a family successor will run it for six years. Take advice from a solicitor before applying.'; },
+      fields: function(){ return [ F('wantFarmCap','Apply for the 3-year cap on a farm or business?','radio',{opts:YN}) ]; } },
+    { part: 5, title: 'The family successor', when: function(){ return d.wantFarmCap==='yes'; }, fields: function(){ return [
+        F('farm.successor.name','Family successor: full name'), F('farm.successor.relationship','Relationship to ' + nm()), F('farm.successor.dob','Their date of birth','date'), F('farm.successor.pps','Their PPS number'),
+        F('farm.successor.address','Their address','textarea'), F('farm.successor.eir','Their Eircode'),
+        F('farm.successor.mobile','Mobile','tel',{optional:true}), F('farm.successor.tel','Landline (optional)','tel',{optional:true}), F('farm.successor.email','Email','email',{optional:true}),
+        F('farm.names2','Second applicant name, if applying jointly (optional)','text',{optional:true})
+      ]; } },
+    { part: 5, title: 'The farm or business property', when: function(){ return d.wantFarmCap==='yes'; }, fields: function(){ return [
+        {repeat:'farm.props', max:2, label:'Farm or business property', item:[['details','Details','text'],['house','House number or name','text'],['street','Street','text'],['town','Town or city','text'],['county','County','text'],['folio','Folio number (if known)','text'],['eir','Eircode','text']]},
+        {list:'farm.jointOwners', max:2, label:'Joint owners of the farm or business (if any)'},
+        F('farm.transferredOwner.name','If the asset was already transferred: owner’s name (optional)','text',{optional:true}),
+        F('farm.transferredOwner.address1','Owner’s first line of address','text',{when:function(){ return !!get('farm.transferredOwner.name'); }}),
+        F('farm.transferredOwner.county','County or city','text',{when:function(){ return !!get('farm.transferredOwner.name'); }}),
+        F('farm.transferredOwner.eir','Eircode','text',{when:function(){ return !!get('farm.transferredOwner.name'); }})
+      ]; } },
+    { part: 5, title: 'Check and download', review: true }
   ];
+  var PARTS = ['', 'The applicant', 'Who is helping', 'Money coming in', 'What they own', 'Options and finish'];
 
   function visibleSteps(){ return STEPS.filter(function(s){ return !s.when || s.when(); }); }
 
@@ -960,8 +1017,13 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     return '<input type="' + t + '" id="' + id + '" value="' + v + '"' + (ph ? ' placeholder="' + esc(ph) + '"' : '') + '>';
   }
   var uid = 0;
+  function picksHtml(f){
+    var cur = (d.picks || {})[f.picks] || [];
+    return '<div class="picks">' + f.items.map(function(it, i){ var id = 'pk_' + f.picks + '_' + i; return '<input type="checkbox" id="' + id + '" data-pick="' + f.picks + '" value="' + it[0] + '"' + (cur.indexOf(it[0]) >= 0 ? ' checked' : '') + '><label for="' + id + '">' + esc(it[1]) + '</label>'; }).join('') + '</div>';
+  }
   function fieldHtml(f){
     if (f.when && !f.when()) return '';
+    if (f.type === 'blank') return '<p class="hint">' + esc(f.text) + '</p>';
     var id = 'f' + (uid++);
     if (f.type === 'radio') {
       var cur = get(f.path);
@@ -972,10 +1034,12 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   }
   function pairHtml(f, kind){
     var o1 = {inc:'inc', cash:'cash', ded:'ded'}[kind || 'inc'], o2 = o1 + 'S';
+    if (f.pick && !picked(f.pick, f.key || f.path) && !get(o1 + '.' + f.path) && !get(o2 + '.' + f.path)) return '';
     var id = 'f' + (uid++);
+    var per = o1 === 'inc' ? ' data-period="week"' : o1 === 'ded' ? ' data-period="year"' : '';
     return '<div class="field pairrow"><label>' + esc(f.label) + '</label><div class="pairs">' +
-      '<div><span class="mini-l">' + (couple() ? 'Applicant' : '') + '</span>' + inputHtml(id + 'a', 'money', get(o1 + '.' + f.path)).replace('id="' + id + 'a"', 'id="' + id + 'a" data-path="' + o1 + '.' + f.path + '"') + '</div>' +
-      (couple() ? '<div><span class="mini-l">Spouse or partner</span>' + inputHtml(id + 's', 'money', get(o2 + '.' + f.path)).replace('id="' + id + 's"', 'id="' + id + 's" data-path="' + o2 + '.' + f.path + '"') + '</div>' : '') +
+      '<div><span class="mini-l">' + (couple() ? 'Applicant' : '') + '</span>' + inputHtml(id + 'a', 'money', get(o1 + '.' + f.path)).replace('id="' + id + 'a"', 'id="' + id + 'a"' + per + ' data-path="' + o1 + '.' + f.path + '"') + '</div>' +
+      (couple() ? '<div><span class="mini-l">Spouse or partner</span>' + inputHtml(id + 's', 'money', get(o2 + '.' + f.path)).replace('id="' + id + 's"', 'id="' + id + 's"' + per + ' data-path="' + o2 + '.' + f.path + '"') + '</div>' : '') +
       '</div></div>';
   }
   function repeatHtml(f){
@@ -1004,6 +1068,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   var MIC = '<svg class="mic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>';
   var SPEAK = '<p class="speak">' + MIC + '<span>Prefer to speak? Tap the box, then tap the microphone on your keyboard.</span></p>';
   var TRIGGERS = ['helper.name','solicitor.name','cash.other','cash.otherCash','home.loanType','farm.transferredOwner.name'];
+  var EX = {};
 
   // ---------- section dictation: speech to text in the browser, sorted into the boxes on this device ----------
   // Nothing here talks to a server. The browser's own speech service turns the voice into text; this code reads
@@ -1241,6 +1306,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   }
   function dictExample(){
     var t = visibleSteps()[step].title;
+    if (EXTRA_EX[t]) return EXTRA_EX[t];
     return {'Before you start':'For example: it is for my mother Mary Byrne, she is a widow and she can sign herself.',
       'About the applicant':'For example: Mary Byrne, born 12 March 1940, PPS 1234567T, lives at 4 Main Street, Naas, eircode W91 AB12, phone 045 123 456. She is in Naas hospital at the moment, admitted on 2 October.',
       'Spouse or partner':'For example: her husband is John Byrne, born 5 May 1938, PPS 7654321A. He is not in care.',
@@ -1255,6 +1321,25 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       'Farm or business':'For example: yes, the farm. The successor is Tom Byrne, her son, born 1 June 1975, PPS 3456789C, Ballymore, Naas.',
       'Co-decision-maker':'For example: the co-decision-maker is Anne Byrne, 10 Church Road, Sallins, 087 123 4567.'}[t] || 'Say the details for this section.';
   }
+  var EXTRA_EX = {
+    'Their name':'For example: Mary Byrne, her maiden name was Kelly.',
+    'Date of birth and PPS number':'For example: born 12 March 1940, PPS 1234567T, female, she has always lived in Ireland.',
+    'Where they live':'For example: 4 Main Street, Naas, eircode W91 AB12, phone 045 123 456.',
+    'Where they are now':'For example: she is in Naas hospital, admitted on 2 October, never lived abroad.',
+    'Is the spouse or partner in care?':'For example: no, he is not in care.',
+    'Is someone helping?':'For example: yes, I am helping, Anne Byrne, her daughter.',
+    'How to reach the person helping':'For example: 10 Church Road, Sallins, W91 CD34, mobile 087 123 4567, email anne at gmail dot com. Send the letters to me.',
+    'Solicitor':'For example: the solicitor is Murphy and Co, Naas, 045 999 999.',
+    'How to reach the person signing':'For example: 10 Church Road, Sallins, W91 CD34, 087 123 4567.',
+    'The family home':'For example: she is the owner, the house is worth 320,000.',
+    'Any loan on the home?':'For example: no loan on the house.',
+    'Other property, land or a business':'For example: yes, a site worth 40,000, no loan on it.',
+    'Property sold or given away':'For example: no, nothing sold or given away.',
+    'Deductions':'For example: medical expenses of about 1,200 a year, property tax 405.',
+    'The property for the loan':'For example: the family home, 4 Main Street, Naas, W91 AB12. Nobody else lives there.',
+    'Who repays the loan':'For example: Anne Byrne, 10 Church Road, Sallins, W91 CD34, 087 123 4567, PPS 2345678B.',
+    'The family successor':'For example: Tom Byrne, her son, born 1 June 1975, PPS 3456789C, Ballymore, Naas.',
+    'The farm or business property':'For example: the farm at Ballymore, Naas, folio KE12345.'};
   function dictStart(){
     var btn = $('dict-mic'), box = $('dict-text');
     if (dictRec) { try { dictRec.stop(); } catch(e) {} return; }
@@ -1269,7 +1354,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   function dictFill(){
     var text = $('dict-text').value.trim(); if (text.length < 4) { $('dict-hint').textContent = 'Say or type something first.'; return; }
     var s = visibleSteps()[step], fs = s.fields();
-    fs.forEach(function(f){ if (f.pair) f._kind = s.title === 'Savings and investments' ? 'cash' : s.title === 'Deductions' ? 'ded' : 'inc'; });
+    fs.forEach(function(f){ if (f.pair) f._kind = f.pick || 'inc'; });
     var r = Dictate.parse(text, fs);
     Object.keys(r.values).forEach(function(p){ set(p, r.values[p]); });
     var keep = text; render(); $('dict-text').value = keep;
@@ -1284,21 +1369,24 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   function render(){
     var vs = visibleSteps(); if (step >= vs.length) step = vs.length - 1;
     var s = vs[step];
-    $('stepno').textContent = 'Step ' + (step + 1) + ' of ' + vs.length;
+    var inPart = vs.filter(function(x){ return x.part === s.part; }), pi = inPart.indexOf(s);
+    $('stepno').textContent = s.review ? 'Finish' : 'Part ' + s.part + ' of 5: ' + PARTS[s.part] + ' · page ' + (pi + 1) + ' of ' + inPart.length;
     $('bar').style.width = Math.round((step + 1) * 100 / vs.length) + '%';
-    $('s-title').textContent = s.title;
+    $('parts').innerHTML = PARTS.slice(1).map(function(n, i){ return '<span class="' + (i + 1 < s.part || s.review ? 'done' : i + 1 === s.part ? 'now' : '') + '"><i>' + (i + 1) + '</i>' + esc(n) + '</span>'; }).join('');
+    $('s-title').textContent = s.titleFn ? s.titleFn() : s.title;
     $('s-intro').textContent = s.intro ? s.intro() : '';
     $('back').hidden = step === 0;
     $('next').hidden = !!s.review;
     if (s.review) { $('s-body').innerHTML = reviewHtml(); return; }
     var fs = s.fields(), html = '';
     fs.forEach(function(f){
-      if (f.pair) html += pairHtml(f, s.title === 'Savings and investments' ? 'cash' : s.title === 'Deductions' ? 'ded' : 'inc');
+      if (f.pair) html += pairHtml(f, f.pick || 'inc');
       else if (f.repeat) { f._more = more[f.repeat] || 0; html += repeatHtml(f); }
       else if (f.list) html += listHtml(f);
+      else if (f.picks) html += picksHtml(f);
       else html += fieldHtml(f);
     });
-    html = dictBox() + html;
+    if (!fs.some(function(f){ return f.picks; })) html = dictBox() + html;
     $('s-body').innerHTML = html;
   }
 
@@ -1330,10 +1418,13 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   // ---------- events ----------
   document.addEventListener('input', function(e){ var p = e.target.getAttribute && e.target.getAttribute('data-path'); if (p && e.target.type !== 'radio') set(p, e.target.value); });
   document.addEventListener('change', function(e){
+    var pk = e.target.getAttribute && e.target.getAttribute('data-pick');
+    if (pk) { d.picks = d.picks || {}; d.picks[pk] = Array.prototype.map.call(document.querySelectorAll('[data-pick="' + pk + '"]:checked'), function(x){ return x.value; }); save(); return; }
     var p = e.target.getAttribute && e.target.getAttribute('data-path');
     if (p && e.target.type === 'radio') { set(p, e.target.value); render(); }
     else if (p && (e.target.type === 'date')) set(p, e.target.value);
     else if (p && TRIGGERS.indexOf(p) >= 0) render();
+    if (p === 'helper.name' && e.target.value) { d.hasHelper = 'yes'; save(); }
   });
   document.addEventListener('click', function(e){
     var mo = e.target.closest('[data-more]'); if (mo) { var k = mo.getAttribute('data-more'); more[k] = (more[k] || 0) + 1; render(); return; }
@@ -1386,5 +1477,6 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     .catch(function(e){ blocked(e.message + ' Open the form from the link in your pack email.'); });
 })();
 </script>
+<script src="/voice.js" defer></script>
 </body>
 </html>

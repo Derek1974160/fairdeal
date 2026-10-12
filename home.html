@@ -418,13 +418,32 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .lst-photos button{position:absolute;top:6px;right:6px;background:rgba(14,42,71,.85);color:#fff;border:0;border-radius:999px;padding:3px 9px;font:inherit;font-size:12px;cursor:pointer}
 .lst-state{font-size:14px;color:var(--muted);margin:4px 0 10px}.lst-state b{color:var(--navy)}
 .lst-h{font-weight:700;color:var(--navy);font-size:15px;margin:14px 0 4px}
+
+/* ---- the LegacySteps way: numbered steps, folds, first-sign-in checklist ---- */
+.hstrip div{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;flex:1 1 220px}
+.hstrip b{width:38px;height:38px;border-radius:50%;background:#E5CF96;color:var(--navy);display:grid;place-items:center;font-size:18px!important;font-weight:700}
+.hstrip span{font-size:15px!important;line-height:1.4}
+.ways{display:grid;gap:10px;grid-template-columns:1fr;margin:6px 0 12px}@media(min-width:760px){.ways{grid-template-columns:repeat(3,1fr)}}
+.ways div{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:var(--bg)}.ways b{display:block;color:var(--navy);margin-bottom:3px}.ways span{font-size:14.5px;color:var(--muted);line-height:1.45}
+.stepline{display:flex;gap:10px;align-items:center;margin:18px 0 8px;font-size:17px;color:var(--navy)}.stepline .hint{margin:0}
+.stepn{width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
+.fold{margin:4px 0 18px}.fold>summary{cursor:pointer;font-weight:600;color:var(--navy);padding:14px 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);list-style:none;display:flex;justify-content:space-between;align-items:center}
+.fold>summary::-webkit-details-marker{display:none}.fold>summary::after{content:"+";font-size:22px;color:var(--gold)}.fold[open]>summary::after{content:"–"}
+.fold[open]>summary{margin-bottom:16px}
+.start{margin-bottom:22px;border-top:2px solid var(--gold)!important}
+.startlist{list-style:none;padding:0;margin:0;counter-reset:st}
+.startlist li{display:grid;grid-template-columns:30px 1fr auto;gap:4px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);counter-increment:st}
+.startlist li::before{content:counter(st);width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;grid-row:span 2}
+.startlist li.done::before{content:"✓";background:#2F5D50}
+.startlist li.done b{text-decoration:line-through;color:var(--muted)}
+.startlist b{color:var(--navy)}.startlist span{grid-column:2;font-size:14.5px;color:var(--muted)}.startlist a{grid-row:span 2;font-weight:600}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <div class="nav"><div class="wrap">
   <a class="logo" href="/"><i>€</i><span>fairdeal<em>.ie</em><small>Independent guide. Not the HSE.</small></span></a>
-  <nav><a href="/#how">How it works</a><a href="/#faq">Questions</a><a href="/how-much-does-fair-deal-cost">Guides</a><a href="/#calc">Calculator</a><a class="pill" href="/apply">Start checklist</a></nav>
+  <nav><a href="/home?demo">Walkthrough</a><a href="/home-agreement">Agreement</a><a href="/fairdeal-nursing-home-quick-start.pdf">Quick start</a><a class="pill" href="/home#out">Sign in</a></nav>
 </div></div>
 <section class="hhero">
   <div class="wrap">
@@ -433,9 +452,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     <p id="h-sub">You look after the care. fairdeal.ie looks after the Fair Deal paperwork. Set up a family in seconds and follow every application from one screen.</p>
     <p class="hwatch" id="hwatch"><a class="btn" href="/home?demo">Watch the one-minute walkthrough</a></p>
     <div class="hstrip" id="hstrip">
-      <div><b>€75</b><span>a month, VAT included. Founding rate for the first 50 homes, yours for as long as you stay</span></div>
-      <div><b>Every</b><span>family covered, no limit</span></div>
-      <div><b>0</b><span>set-up fees or contracts</span></div>
+      <div><b>1</b><span>Claim your home&rsquo;s fairdeal.ie number. Every registered home already has one.</span></div>
+      <div><b>2</b><span>Set up a family: send them a link, or apply with them at the desk.</span></div>
+      <div><b>3</b><span>Follow every application from one screen. The family does the rest, by typing or by voice.</span></div>
     </div>
   </div>
 </section>
@@ -456,9 +475,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       <p class="signalt"><button type="button" id="sign-alt">Sign in with your email instead</button> <span id="sign-restart-wrap" hidden>· <button type="button" id="sign-restart">Start again</button></span></p>
     </div>
     <div class="hcard sun">
-      <span class="kicker sun">New to fairdeal.ie?</span>
+      <span class="kicker sun">Step 1: claim your number</span>
       <h2>Find your home</h2>
-      <p class="hint">Every registered nursing home in Ireland already has a fairdeal.ie number. Search by name or town, then ask to set it up.</p>
+      <p class="hint">Every registered nursing home in Ireland already has a fairdeal.ie number. Search by name or town, claim it, and we switch your home on the same working day. Then your staff sign in with the number and their first name.</p>
       <form class="mini" id="f-search" novalidate><input type="text" id="in-search" placeholder="Home name, town or number" aria-label="Search"><button class="btn teal" type="submit">Search</button></form>
       <div id="results" class="results"></div>
       <form id="f-claim" class="claim" hidden novalidate>
@@ -487,12 +506,30 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       <div class="tile t6"><b id="s-tracked">0</b><span>on your own list</span></div>
     </div>
 
+    <div class="hcard start" id="start-card" hidden>
+      <span class="kicker">Getting started</span>
+      <h2>Four things to do once</h2>
+      <p class="hint">This card goes away after your first family is set up.</p>
+      <ol class="startlist" id="startlist">
+        <li data-done="details"><b>Check your details</b><span>Contact email for statements and families&rsquo; questions.</span><a href="#details-card">Open</a></li>
+        <li data-done="logo"><b>Add your logo</b><span>Shown on every invitation and tracker, so families know it is you.</span><a href="#details-card">Open</a></li>
+        <li data-done="team"><b>Add a colleague</b><span>Anyone who admits residents. They sign in with your home number and their first name.</span><a href="#team-card">Open</a></li>
+        <li data-done="family"><b>Set up your first family</b><span>Below. It takes about fifteen seconds.</span><a href="#setup-card">Open</a></li>
+      </ol>
+    </div>
+
     <div class="hgrid wide">
       <div>
-        <div class="hcard coral">
+        <div class="hcard coral" id="setup-card">
           <span class="kicker coral">Set up a family</span>
-          <h2>Send a family their link</h2>
-          <p class="hint">The family gets a link from fairdeal.ie with your home’s name on it, by email or by text message, or you can set them up at the desk. They answer a few questions and receive the full service: the step-by-step pack, the official form filled in, the checklist with reminders, and the request letters. It helps at any stage, even if the application is already posted.</p>
+          <h2>Three ways, all under your name</h2>
+          <div class="ways">
+            <div><b>Send them a link</b><span>By email or by text message. The family does it at home, in their own time, by typing or by voice.</span></div>
+            <div><b>Apply with them at the desk</b><span>Open the family&rsquo;s link here and work through it together. Dictate the admission notes and the first answers are filled in for you.</span></div>
+            <div><b>Keep your own list</b><span>Residents whose families are applying another way, so nobody is forgotten. Under &ldquo;More&rdquo; below.</span></div>
+          </div>
+          <p class="hint">Whichever way, the family receives the full service: the step-by-step pack, the official form filled in, the checklist with reminders, and the request letters. It helps at any stage, even if the application is already posted.</p>
+          <div class="stepline"><span class="stepn">1</span><b>Their details</b> <span class="hint small">Say them or type them.</span></div>
           <div class="dict" id="dict">
             <div class="row">
               <button class="btn small ghost micbtn" type="button" id="dict-mic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg><span>Dictate</span></button>
@@ -502,11 +539,13 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
             <textarea id="dict-text" placeholder="For example: Mary Byrne, coming in Monday. Widow, owns her house in Naas, nobody living there. State pension and an Irish Life pension, savings in AIB. Her daughter Anne will do the paperwork, 087 123 4567. Not started yet." aria-label="Dictated notes"></textarea>
             <div class="dict-review" id="dict-review" hidden></div>
           </div>
+          <div class="stepline"><span class="stepn">2</span><b>How do you want to set them up?</b></div>
           <div class="chan" id="chan">
             <input type="radio" name="chan" id="ch-email" value="email" checked><label for="ch-email">By email</label>
             <input type="radio" name="chan" id="ch-sms" value="sms"><label for="ch-sms">By text message</label>
             <input type="radio" name="chan" id="ch-desk" value="assisted"><label for="ch-desk">Set up here with the family</label>
           </div>
+          <div class="stepline"><span class="stepn">3</span><b>Send it</b></div>
           <form id="f-invite" class="invite" novalidate>
             <div class="field"><label for="i-first">Resident’s first name</label><input type="text" id="i-first" maxlength="60"></div>
             <div class="field" id="fld-email"><label for="i-email">Family member’s email</label><input type="email" id="i-email"></div>
@@ -530,6 +569,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           <div id="pending"></div>
         </div>
 
+        <details class="fold" id="fold-more"><summary>More: your own list, your finder listing, your group</summary>
         <div class="hcard" id="res-card">
           <span class="kicker">Your own list</span>
           <h2>Other residents and their Fair Deal</h2>
@@ -580,6 +620,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           <button class="btn small ghost" type="button" id="grp-load">Show the group</button>
           <div id="grp-out"></div>
         </div>
+        </details>
       </div>
 
       <aside>
@@ -618,6 +659,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           </form>
           <p class="note" id="n-team"></p>
         </div>
+        <details class="fold" id="fold-bill"><summary>Billing and how your home covers it</summary>
         <div class="hcard lilac">
           <span class="kicker lilac">Billing</span>
           <h3>This month</h3>
@@ -635,6 +677,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
             <input type="radio" name="cost" id="c3" value=""><label for="c3">Not decided</label>
           </div>
         </div>
+        </details>
         <div class="hcard askbox" id="ask-card">
           <span class="kicker">Ask a question</span>
           <h3>How does this work?</h3>
@@ -739,6 +782,11 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     }).join('') : '<p class="empty">Nobody on your own list yet.</p>';
     $('weekly').checked = d.home.weekly_email !== false;
     lstLoad();
+    // first-sign-in checklist: shown until the first family is set up
+    var fresh = !(d.families && d.families.length) && !(d.invites && d.invites.length);
+    $('start-card').hidden = !fresh || DEMO;
+    if (fresh) { var doneMap = {details: !!d.home.email, logo: !!d.home.logo_url, team: (d.team || []).length > 1, family: false};
+      document.querySelectorAll('#startlist li').forEach(function(li){ li.classList.toggle('done', !!doneMap[li.getAttribute('data-done')]); }); }
     $('team-num').textContent = d.home.number;
     $('team-list').innerHTML = (d.team || []).map(function(t){ return '<div class="trow"><div><b>' + esc(t.name || 'No name') + '</b> <span>' + (t.email ? 'code to ' + esc(t.email) : 'code to the home’s email') + (t.me ? ' · you' : '') + '</span></div>' + (t.me ? '' : '<button type="button" class="rm" data-rm="' + esc(t.id) + '">Remove</button>') + '</div>'; }).join('');
     try { localStorage.setItem('fd_home_num', String(d.home.number)); } catch(e) {}
@@ -939,6 +987,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     if (!confirm('Remove this photo from your listing?')) return;
     lstCall({action:'photo_remove', path:b.getAttribute('data-ph')}).then(function(j){ if (j.error) $('n-lst').textContent = j.error; else { $('n-lst').textContent = 'Photo removed.'; lstRender(j); } });
   });
+  document.addEventListener('click', function(e){ var a = e.target.closest('a[href^="#"]'); if (!a) return; var t = document.querySelector(a.getAttribute('href')); if (!t) return; var det = t.closest('details'); if (det) det.open = true; });
   function chan(){ var c = document.querySelector('input[name="chan"]:checked'); return c ? c.value : 'email'; }
   function chanUI(){ var c = chan(); $('fld-email').hidden = c !== 'email'; $('fld-phone').hidden = c !== 'sms'; $('i-btn').textContent = c === 'email' ? 'Send the link' : c === 'sms' ? 'Send the text' : 'Make the link'; $('linkout').hidden = true; }
   document.querySelectorAll('input[name="chan"]').forEach(function(r){ r.addEventListener('change', chanUI); });
@@ -1077,7 +1126,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
         (auto && !st.cta ? '<button type="button" data-t="pause" class="btn small ghost">' + (paused ? 'Play' : 'Pause') + '</button>' : '') +
         (idx < steps.length - 1 ? '<button type="button" data-t="next" class="btn small">Next</button>' : '') +
         '<button type="button" data-t="close" class="linkbtn">' + (idx < steps.length - 1 ? 'Skip' : 'Close') + '</button></div>';
-      if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+      if (el) { var det = el.closest('details'); if (det && !det.open) det.open = true; el.scrollIntoView({behavior:'smooth', block:'center'}); }
       setTimeout(place, el ? 450 : 0);
       if (st.act) setTimeout(st.act, 600);
       if (auto && !paused && idx < steps.length - 1) timer = setTimeout(function(){ show(idx + 1); }, 7500);
@@ -1095,5 +1144,6 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   load();
 })();
 </script>
+<script src="/voice.js" defer></script>
 </body>
 </html>

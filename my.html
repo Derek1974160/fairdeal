@@ -375,6 +375,10 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .micbtn.on{background:var(--coral);color:#fff;border-color:var(--coral)}
 .answer{margin-top:12px;padding:12px 14px;background:var(--sun-soft);border-radius:12px;font-size:15px;line-height:1.5;color:var(--ink);white-space:pre-wrap}
 .answer.off{background:var(--bg)}
+
+.fold{margin:4px 0 18px}.fold>summary{cursor:pointer;font-weight:600;color:var(--navy);padding:14px 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.fold>summary::-webkit-details-marker{display:none}.fold>summary::after{content:"+";font-size:22px;color:var(--gold);flex:none}.fold[open]>summary::after{content:"–"}
+.fold[open]>summary{margin-bottom:16px}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -416,16 +420,16 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           <div><h2 id="p-head">Documents gathered</h2><p id="p-text"></p></div>
         </div>
 
+        <div class="tcard" id="next-card">
+          <span class="kicker coral">What to do next</span>
+          <div id="next"></div>
+        </div>
+
         <div class="tcard formcard" id="form-card">
           <span class="kicker sun" id="form-kick">We fill it in for you</span>
           <h2>Fill in the official HSE form</h2>
           <p>Answer plain questions and download the official application form, completed and ready to print, sign and post. Your answers stay on this device and are never sent to us.</p>
           <a class="btn" id="form-link" href="/form">Fill in the form</a>
-        </div>
-
-        <div class="tcard" id="next-card">
-          <span class="kicker coral">What to do next</span>
-          <div id="next"></div>
         </div>
 
         <div class="tcard upcard" id="up-card" hidden>
@@ -452,6 +456,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       </div>
 
       <aside>
+        <details class="fold" id="fold-more"><summary>Also here when you need them: letters, your support office, after approval</summary>
         <div class="tcard lilacb" id="letters-card">
           <span class="kicker lilac">Ready-made letters</span>
           <h3>Ask for documents in one step</h3>
@@ -477,6 +482,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           <p class="hint">We will send you a reminder each January.</p>
         </div>
 
+        </details>
         <div class="tcard askbox" id="ask-card">
           <span class="kicker">Ask a question</span>
           <h3>Not sure about something?</h3>
@@ -841,5 +847,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     .catch(function(e){ showLost(e.message); });
 })();
 </script>
+<script>
+document.addEventListener('click', function(e){ var a = e.target.closest('a[href^="#"]'); if (!a) return; var t = document.querySelector(a.getAttribute('href')); if (!t) return; var det = t.closest('details'); if (det) det.open = true; });
+</script>
+<script src="/voice.js" defer></script>
 </body>
 </html>
