@@ -481,7 +481,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     <div id="r-alerts"></div>
     <p class="count" id="r-count"></p>
     <div id="r-groups"></div>
-    <div class="alert sun"><strong>Then</strong>Download the official application form from hse.ie/nhss, fill it in, and send it with these documents to the Nursing Homes Support Office for the applicant's county. Keep a copy of everything.</div>
+    <div class="alert sun"><strong>Then</strong>Fill in the official application form and send it with these documents to the Nursing Homes Support Office for the applicant's county. Keep a copy of everything. The current form is <a href="/nhss-form-v4.pdf" target="_blank" rel="noopener">here to download</a> (it is the HSE's own form, version 4), or the service below fills it in for you from plain questions.</div>
 
     <div class="packbox">
       <div id="sponsored" hidden>
@@ -719,7 +719,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     if(a.where==='nursinghome') alerts.push(['Already paying privately','Funding starts only from the date of approval and is never backdated, so get the application in complete this week.']);
     if(a.nursing_home_chosen==='no') it(next, 'Shortlist nursing homes with places available', 'Approval is not tied to a home, but the HSE needs one named before funding is paid.');
     if(a.both_need_care==='yes') it(next, 'Prepare a second application for the partner', 'Each is assessed on half the combined figures; both can go in together.');
-    it(next, 'Download the application form from hse.ie/nhss', 'Use the current version of the form.');
+    it(next, 'Download the application form', 'The current form, version 4, is at www.fairdeal.ie/nhss-form-v4.pdf. Use only the current version; older printed copies are sometimes returned.');
     it(next, 'Photocopy everything and keep the copies', 'The HSE may ask for items again.');
 
     var html = '';
