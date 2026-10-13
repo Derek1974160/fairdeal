@@ -450,8 +450,10 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     <div class="parts" id="parts"></div>
     <div class="wtop"><span id="stepno"></span><span id="saved" class="saved"></span></div>
     <div class="track"><div id="bar"></div></div>
+    <span class="qcount" id="qcount"></span>
     <h2 id="s-title"></h2>
     <p class="hint" id="s-intro"></p>
+    <p class="easy-only"><button class="btn ghost" id="read-page" type="button">Read me this page</button></p>
     <div id="s-body"></div>
     <div class="wbtns">
       <button class="btn ghost" id="back" type="button">Back</button>
@@ -1009,7 +1011,28 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   ];
   var PARTS = ['', 'The applicant', 'Who is helping', 'Money coming in', 'What they own', 'Options and finish'];
 
-  function visibleSteps(){ return STEPS.filter(function(s){ return !s.when || s.when(); }); }
+  function visibleSteps(){
+    var base = STEPS.filter(function(s){ return !s.when || s.when(); });
+    if (!(window.FDEasy && FDEasy.on())) return base;
+    // "Easier to read": one question per page. Each field becomes a page of its own; a pair, repeat, list or picks block is one page.
+    var out = [];
+    base.forEach(function(s){
+      if (s.review || !s.fields) { out.push(s); return; }
+      var fs = s.fields().filter(function(f){ return !(f.when && !f.when()); });
+      if (fs.length <= 1) { out.push(s); return; }
+      fs.forEach(function(f, i){
+        out.push(Object.assign({}, s, { _base: s, _q: (i + 1) + ' of ' + fs.length, intro: i === 0 ? s.intro : null, fields: function(){ return [f]; } }));
+      });
+    });
+    return out;
+  }
+  // when the switch changes, stay on the same question
+  document.addEventListener('fd-easy', function(){
+    var vs0 = lastSteps || [], cur = vs0[step]; var base = cur ? (cur._base || cur) : null;
+    var vs = visibleSteps(); var i = base ? vs.findIndex(function(x){ return (x._base || x) === base; }) : -1;
+    step = i >= 0 ? i : Math.min(step, vs.length - 1); render();
+  });
+  var lastSteps = null;
 
   // ---------- rendering ----------
   function inputHtml(id, type, val, ph){
@@ -1024,16 +1047,38 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     var cur = (d.picks || {})[f.picks] || [];
     return '<div class="picks">' + f.items.map(function(it, i){ var id = 'pk_' + f.picks + '_' + i; return '<input type="checkbox" id="' + id + '" data-pick="' + f.picks + '" value="' + it[0] + '"' + (cur.indexOf(it[0]) >= 0 ? ' checked' : '') + '><label for="' + id + '">' + esc(it[1]) + '</label>'; }).join('') + '</div>';
   }
+  var MEANS = {
+    'capacity': 'Can ' + 'the person' + ' understand what the form is and put their name to it? If not, a family member can sign the main form for them.',
+    'rel': 'Married or living with a partner means the HSE looks at both incomes and both sets of savings, and takes half.',
+    'a.resident': 'Fair Deal is for people who normally live in Ireland. A year here is enough.',
+    'a.abroad': 'Time abroad can mean a pension from another country. The HSE will ask about it.',
+    'a.pps': 'The PPS number is the seven numbers and a letter on any social welfare or tax letter.',
+    'cohabitYears': 'Only for a couple who are not married. The HSE treats three years living together as a couple.',
+    'sp.inCare': 'If both husband and wife need nursing home care, each makes their own application.',
+    'prevApplied': 'If an application was made before, even years ago, the HSE has a file. Say yes and it is quicker.',
+    'card': 'A medical card does not change the Fair Deal contribution. The HSE just asks.',
+    'cdmApplicant': 'A co-decision-making agreement is a signed arrangement where a trusted person helps make decisions. Most people do not have one.',
+    'cdmSpouse': 'The same question for the husband, wife or partner. Most people do not have one.',
+    'hasHelper': 'If a son, daughter or friend is doing the paperwork, the HSE can write to them instead.',
+    'signer.role': 'This is the legal reason the person can sign for someone else. A son or daughter over 18 is a common answer.',
+    'home.status': 'Owner means the house is in their name. Joint owner means in their name and someone else\u2019s. Tenant means they rent.',
+    'home.hasLoan': 'A mortgage or any loan secured on the house. The amount still owed is taken off the value.',
+    'hasOtherProp': 'Any land, a second house, a shop or a farm. Not the home they live in; that was the last page.',
+    'hasTransferred': 'Anything given away or sold cheaply in the last five years: a site to a child, money towards a deposit, a house signed over. The HSE counts it as if still owned.',
+    'wantLoan': 'The nursing home loan means the part of the contribution based on the house is not paid now; it is paid from the estate later. It is optional.',
+    'wantFarmCap': 'Only for a family farm or business that a family member will keep running for six years. It limits how long the farm is counted.',
+  };
+  function means(f){ return MEANS[f.path] ? '<span class="easy-means"><b>What this means</b>' + esc(MEANS[f.path]) + '</span>' : ''; }
   function fieldHtml(f){
     if (f.when && !f.when()) return '';
     if (f.type === 'blank') return '<p class="hint">' + esc(f.text) + '</p>';
     var id = 'f' + (uid++);
     if (f.type === 'radio') {
       var cur = get(f.path);
-      return '<fieldset class="q"><legend>' + esc(f.label) + '</legend>' + (f.hint ? '<p class="note">' + esc(f.hint) + '</p>' : '') + '<div class="opts">' +
+      return '<fieldset class="q"><legend>' + esc(f.label) + '</legend>' + (f.hint ? '<p class="note">' + esc(f.hint) + '</p>' : '') + means(f) + '<div class="opts">' +
         f.opts.map(function(o, i){ var oid = id + '_' + i; return '<input type="radio" name="' + id + '" id="' + oid + '" value="' + o[0] + '" data-path="' + f.path + '"' + (cur === o[0] ? ' checked' : '') + '><label for="' + oid + '">' + esc(o[1]) + '</label>'; }).join('') + '</div></fieldset>';
     }
-    return '<div class="field"><label for="' + id + '">' + esc(f.label) + '</label>' + (f.hint ? '<p class="note">' + esc(f.hint) + '</p>' : '') + inputHtml(id, f.type, get(f.path), f.ph).replace('id="' + id + '"', 'id="' + id + '" data-path="' + f.path + '"') + (f.type === 'textarea' ? SPEAK : '') + '</div>';
+    return '<div class="field"><label for="' + id + '">' + esc(f.label) + '</label>' + (f.hint ? '<p class="note">' + esc(f.hint) + '</p>' : '') + means(f) + inputHtml(id, f.type, get(f.path), f.ph).replace('id="' + id + '"', 'id="' + id + '" data-path="' + f.path + '"') + (f.type === 'textarea' ? SPEAK : '') + '</div>';
   }
   function pairHtml(f, kind){
     var o1 = {inc:'inc', cash:'cash', ded:'ded'}[kind || 'inc'], o2 = o1 + 'S';
@@ -1371,7 +1416,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 
   function render(){
     var vs = visibleSteps(); if (step >= vs.length) step = vs.length - 1;
-    var s = vs[step];
+    var s = vs[step]; lastSteps = vs;
+    $('qcount').textContent = s._q ? 'Question ' + s._q + ' on this page' : '';
+    $('read-page').hidden = !window.speechSynthesis;
     var inPart = vs.filter(function(x){ return x.part === s.part; }), pi = inPart.indexOf(s);
     $('stepno').textContent = s.review ? 'Finish' : 'Part ' + s.part + ' of 5: ' + PARTS[s.part] + ' · page ' + (pi + 1) + ' of ' + inPart.length;
     $('bar').style.width = Math.round((step + 1) * 100 / vs.length) + '%';
@@ -1493,6 +1540,17 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     var mo = e.target.closest('[data-more]'); if (mo) { var k = mo.getAttribute('data-more'); more[k] = (more[k] || 0) + 1; render(); return; }
     if (e.target.id === 'make') make();
   });
+  // "Read me this page": the browser's own voice reads the title, the questions and their hints; nothing leaves the device
+  $('read-page').addEventListener('click', function(){
+    if (!window.speechSynthesis) return;
+    var ss = window.speechSynthesis;
+    if (ss.speaking) { ss.cancel(); this.textContent = 'Read me this page'; return; }
+    var parts = [$('s-title').textContent, $('s-intro').textContent];
+    document.querySelectorAll('#s-body legend, #s-body label, #s-body .note, #s-body .easy-means, #s-body .routebox').forEach(function(el){ if (el.closest('.opts')) return; var t = el.textContent.replace(/\s+/g, ' ').trim(); if (t) parts.push(t); });
+    var u = new SpeechSynthesisUtterance(parts.filter(Boolean).join('. ')); u.lang = 'en-IE'; u.rate = 0.95;
+    var b = this; b.textContent = 'Stop reading'; u.onend = u.onerror = function(){ b.textContent = 'Read me this page'; };
+    ss.cancel(); ss.speak(u);
+  });
   $('next').addEventListener('click', function(){ step++; render(); window.scrollTo({top: $('wiz').offsetTop - 90, behavior:'smooth'}); });
   $('back').addEventListener('click', function(){ step = Math.max(0, step - 1); render(); window.scrollTo({top: $('wiz').offsetTop - 90, behavior:'smooth'}); });
   $('clear').addEventListener('click', function(){ if (confirm('Clear all your answers from this device? This cannot be undone.')) { d = {}; prefill(); save(); step = 0; render(); } });
@@ -1540,6 +1598,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     .catch(function(e){ blocked(e.message + ' Open the form from the link in your pack email.'); });
 })();
 </script>
+<script src="/easy.js"></script>
 <script src="/routes.js"></script>
 <script src="/voice.js" defer></script>
 </body>

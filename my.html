@@ -268,6 +268,7 @@ input.txt{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px so
 .ring circle{fill:none;stroke-width:12}.ring .trk{stroke:var(--lilac-soft)}.ring .val{stroke:var(--teal);stroke-linecap:round;stroke-dasharray:314.16;stroke-dashoffset:314.16;transition:stroke-dashoffset .5s}
 .ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--head);font-size:26px;color:var(--navy)}
 .progress p{margin:0;color:var(--muted);font-size:16px}
+#relative-card .row{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}#relative-card .row input{display:block;width:100%;min-width:0;box-sizing:border-box;font:inherit;font-size:14px;padding:10px 12px;border:2px solid var(--line);border-radius:10px}#relative-card{min-width:0;overflow:hidden}
 .sitcard{border-top:6px solid var(--lilac)}.sitcard h2{font-size:22px;margin:6px 0 10px}.sitcard h3{font-size:16px;color:var(--navy);margin:14px 0 6px}
 .sitcard ul{margin:0 0 10px;padding-left:22px}.sitcard li{margin:6px 0;font-size:15px}.sit-who{font-size:15px;color:var(--muted);margin:0 0 12px}.sit-who b{color:var(--navy)}
 .sit-conflict{background:var(--sun-soft);color:var(--navy);border-radius:10px;padding:10px 14px;font-size:15px;margin:0 0 12px}
@@ -557,6 +558,22 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
         </div>
 
         </details>
+        <div class="tcard" id="print-card">
+          <span class="kicker">On paper</span>
+          <h3>Print my progress</h3>
+          <p class="hint">One page: where the application is, what to do next, every document with its tick, letters sent and waiting, and the support office. No figures.</p>
+          <button class="btn ghost" id="print-progress" type="button">Print my progress</button>
+          <p class="hint small">If printing is blocked on this device, <a href="#" id="print-open">open it as a page</a> instead.</p>
+        </div>
+
+        <div class="tcard" id="relative-card">
+          <span class="kicker">A hand from family</span>
+          <h3>Ask a family member to help</h3>
+          <p class="hint">Copy this link and send it to a son, daughter or anyone you trust. It opens this tracker exactly as you see it. <b>It is private:</b> anyone with the link can tick items and send letters in your name, so send it only to someone you trust, and never post it anywhere public.</p>
+          <div class="row"><input type="text" id="rel-link" readonly aria-label="Your private tracker link" data-novoice><button class="btn small ghost" type="button" id="rel-copy">Copy the link</button></div>
+          <p class="note" id="rel-note"></p>
+        </div>
+
         <div class="tcard askbox" id="ask-card">
           <span class="kicker">Ask a question</span>
           <h3>Not sure about something?</h3>
@@ -578,6 +595,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     </div>
   </div>
 </main>
+<section id="printview" aria-hidden="true"></section>
 
 <div class="modal" id="modal" hidden>
   <div class="mbox" role="dialog" aria-modal="true" aria-labelledby="m-title">
@@ -727,6 +745,52 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   function workingDays(iso, n){ var d = new Date(iso); var k = 0; while (k < n) { d.setDate(d.getDate() + 1); var w = d.getDay(); if (w !== 0 && w !== 6) k++; } return d.toISOString(); }
   function fmt(iso){ return iso ? new Date(iso).toLocaleDateString('en-IE', {day:'numeric', month:'long', year:'numeric'}) : ''; }
 
+  // "Print my progress" (upgrade 5): the stage, the next step, the checklist with ticks, letters sent and waiting, the office. No figures.
+  function progressHtml(){
+    var c = state.case, first = c.first_name || 'the applicant';
+    var stages = Array.prototype.map.call(document.querySelectorAll('#stages li'), function(li){ var b = li.querySelector('b'), n = li.querySelector('span, small, em'); return { name: b ? b.textContent : li.textContent, note: n ? n.textContent : '', done: /\bdone\b/.test(li.className), skip: /\bskip\b/.test(li.className) }; }).filter(function(x){ return !x.skip; });
+    var next = Array.prototype.map.call(document.querySelectorAll('#next .nstep'), function(d){ var b = d.querySelector('b'), sp = d.querySelector('span'); return (b ? b.textContent : '') + (sp ? ': ' + sp.textContent : ''); }).filter(function(x){ return x && !/mistake/i.test(x); });
+    var items = state.items || [];
+    var groups = {}; items.forEach(function(i){ (groups[i.grp] = groups[i.grp] || []).push(i); });
+    var letters = (S.letters || []);
+    var office = $('office').innerText.replace(/\s+\n/g, '\n').trim();
+    var h = '<h1>' + esc(first) + '\u2019s Fair Deal application</h1><p>Printed ' + new Date().toLocaleDateString('en-IE', {day:'numeric', month:'long', year:'numeric'}) + ' from fairdeal.ie. ' + esc($('t-sub').textContent) + '</p>';
+    h += '<h2>Where it is</h2><ul>' + stages.map(function(x){ return '<li class="' + (x.done ? 'tick' : 'untick') + '">' + esc(x.name) + (x.note ? ': ' + esc(x.note) : '') + '</li>'; }).join('') + '</ul>';
+    if (next.length) h += '<h2>What to do next</h2><ul>' + next.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+    Object.keys(groups).forEach(function(g){ h += '<h2>' + esc(g) + '</h2><ul>' + groups[g].map(function(i){ return '<li class="' + (i.done_at ? 'tick' : 'untick') + '">' + esc(i.item) + (i.note ? ' <small>(' + esc(i.note) + ')</small>' : '') + '</li>'; }).join('') + '</ul>'; });
+    if (letters.length) h += '<h2>Letters sent from the tracker</h2><ul>' + letters.map(function(l){ return '<li>' + esc(KIND_NAME[l.kind] || 'Letter') + ' to ' + esc(l.to_name || l.to_email || '') + ', sent ' + fdate(l.sent_at) + ': ' + (l.status === 'done' ? 'done' : l.status === 'replied' ? 'reply received' : 'waiting for a reply') + '</li>'; }).join('') + '</ul>';
+    if (office) h += '<h2>Support office</h2><p>' + esc(office).replace(/\n/g, '<br>') + '</p>';
+    h += '<p class="pfoot">This page holds no PPS number, balance or valuation. fairdeal.ie is an independent service and is not the HSE. fairdeal.ie is a service of Alderidge Fusion Limited, registered in Ireland, company number 816930.</p>';
+    return h;
+  }
+  function printProgress(){
+    if (!state) return;
+    var pv = $('printview'); pv.innerHTML = progressHtml();
+    document.body.classList.add('printing');
+    var done = function(){ document.body.classList.remove('printing'); window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done);
+    try { window.print(); } catch (e) { done(); openProgress(); }
+    setTimeout(done, 1500);
+    act('log', {kind: 'progress_printed'});
+  }
+  function openProgress(){
+    if (!state) return;
+    var html = '<!doctype html><html lang="en-IE"><head><meta charset="utf-8"><title>My progress</title><link rel="stylesheet" href="/theme.css"><style>body{max-width:720px;margin:24px auto;padding:0 18px}#printview{display:block!important}</style></head><body><section id="printview">' + progressHtml() + '</section></body></html>';
+    try { var u = URL.createObjectURL(new Blob([html], {type:'text/html'})); var w = window.open(u, '_blank'); if (!w) location.href = u; } catch (e) { alert('Could not open the page. Try printing instead.'); }
+  }
+  $('print-progress').addEventListener('click', printProgress);
+  $('print-open').addEventListener('click', function(e){ e.preventDefault(); openProgress(); });
+  // the private link for a relative (until family helpers get links of their own)
+  $('rel-copy').addEventListener('click', function(){
+    var inp = $('rel-link'); inp.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    if (navigator.clipboard) navigator.clipboard.writeText(inp.value).then(function(){ $('rel-note').textContent = 'Copied. Send it only to someone you trust.'; }, function(){ $('rel-note').textContent = ok ? 'Copied. Send it only to someone you trust.' : 'Press and hold the link to copy it.'; });
+    else $('rel-note').textContent = ok ? 'Copied. Send it only to someone you trust.' : 'Press and hold the link to copy it.';
+  });
+  // "Easier to read": logged once per device, so it can be counted (never what was typed)
+  document.addEventListener('fd-easy', function(e){
+    if (e.detail && e.detail.on) { var k = 'fd_easy_logged'; try { if (localStorage.getItem(k)) return; localStorage.setItem(k, '1'); } catch (x) {} if (token) act('log', {kind: 'easy_mode_on'}); }
+  });
   // the guided route for complex cases (upgrade 6): one route at a time, from the intake answers and the decision; routes.js holds the rules
   var sitIndex = 0;
   function renderSituation(){
@@ -798,6 +862,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     if (c.can_undo && c.status !== 'closed') nx.push('<div class="nstep quietstep"><span>Marked something by mistake?</span><button class="btn small ghost" data-step="undo">Undo the last change</button></div>');
     $('next').innerHTML = nx.join('');
     renderSituation();
+    $('rel-link').value = location.origin + '/my?t=' + encodeURIComponent(token);
     $('after-card').hidden = c.status !== 'approved';
     $('handover').hidden = c.status === 'closed';
     $('form-link').href = '/form?t=' + encodeURIComponent(token);
@@ -1082,6 +1147,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 <script>
 document.addEventListener('click', function(e){ var a = e.target.closest('a[href^="#"]'); if (!a) return; var t = document.querySelector(a.getAttribute('href')); if (!t) return; var det = t.closest('details'); if (det) det.open = true; });
 </script>
+<script src="/easy.js"></script>
 <script src="/routes.js"></script>
 <script src="/voice.js" defer></script>
 </body>
