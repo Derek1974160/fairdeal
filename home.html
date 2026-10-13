@@ -443,6 +443,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .reqrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid #E3D3AE}.reqrow b{color:var(--navy)}.reqrow span{color:var(--muted);font-size:14px;flex:1}
 .frow{cursor:pointer}.fdetail{grid-column:1/-1;font-size:14px;color:var(--muted);padding:4px 0 2px}
 .startlist li button.linkbtn{grid-row:span 2;font-weight:600}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.rgrid div{background:#F4F1EA;border-top:2px solid #0F2238;padding:10px 12px}.rgrid b{display:block;font-size:24px;line-height:1.1;color:#0F2238}.rgrid span{font-size:12.5px;color:#56606B;line-height:1.3;display:block;margin-top:3px}@media(max-width:480px){.rgrid{grid-template-columns:repeat(2,1fr)}}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -684,6 +685,15 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           <p class="hint" id="b-plan"></p>
           <p class="hint">One statement on the 1st of each month, listing the families you set up. Your rate is the founding rate and stays as it is for as long as your home stays with us.</p>
         </div>
+        <div class="hcard" id="report-card">
+          <span class="kicker">Your month with fairdeal.ie</span>
+          <h3>This month so far</h3>
+          <p class="hint">What the service has done for your families since the 1st. The full report for each month is emailed on the 1st of the next, in numbers you can forward to an owner. First names only; no financial information exists here.</p>
+          <div class="rgrid" id="rgrid"></div>
+          <p class="hint" id="r-stages"></p>
+          <p class="hint" id="r-nudge" hidden></p>
+          <p class="hint" id="r-last" hidden><a href="#" id="r-last-link">Last month&rsquo;s report</a></p>
+        </div>
         <div class="hcard">
           <span class="kicker">Covering the cost</span>
           <h3>How does your home cover it?</h3>
@@ -755,6 +765,29 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   var emailForCode = '', claimNumber = null;
   var DEMO = new URLSearchParams(location.search).has('demo');
   var daysAgo = function(n){ return new Date(Date.now() - n*86400000).toISOString(); };
+  function renderReport(r){
+    var f = r && r.this_month; var g = $('rgrid'); if (!g) return;
+    if (!f) { $('report-card').hidden = true; return; }
+    $('report-card').hidden = false;
+    var cells = [[f.invited, 'families invited'], [f.started, 'families started'], [f.active, 'active this month'], [f.docs_ticked, 'documents ticked off'],
+      [f.letters_sent + ' / ' + f.replies, 'letters sent / replies'], [f.reminders, 'reminders sent for you'], [f.posted, 'posted to the HSE'], [f.approved, 'approvals recorded'],
+      f.median_days != null ? [f.median_days + ' days', 'typical set-up to posting'] : [f.open, 'applications open now']];
+    g.innerHTML = cells.map(function(c){ return '<div><b>' + esc(String(c[0])) + '</b><span>' + c[1] + '</span></div>'; }).join('');
+    var st = f.stages || {};
+    $('r-stages').textContent = 'Open applications now: ' + (st.not_started || 0) + ' not started, ' + (st.gathering || 0) + ' gathering documents, ' + (st.posted || 0) + ' posted, ' + (st.approved || 0) + ' approved.' + (f.own_list ? ' On your own list: ' + f.own_list + '.' : '');
+    var n = f.nudge || []; $('r-nudge').hidden = !n.length; if (n.length) $('r-nudge').textContent = 'Could do with a nudge (no progress for two weeks): ' + n.join(', ') + '.';
+    var last = r.last; $('r-last').hidden = !last;
+    if (last) { $('r-last-link').textContent = 'Last report: ' + monthName(last.month); $('r-last-link').setAttribute('data-month', last.month); }
+  }
+  function monthName(m){ var p = m.split('-'); return ['January','February','March','April','May','June','July','August','September','October','November','December'][+p[1]-1] + ' ' + p[0]; }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('#r-last-link'); if (!a) return; e.preventDefault();
+    var m = a.getAttribute('data-month'); if (!m) return;
+    if (DEMO) { alert('In the sample home the report is not stored. Your own home will have it here on the 1st of each month.'); return; }
+    var w = window.open('', '_blank'); if (!w) { alert('Your browser blocked the window. Allow pop-ups for fairdeal.ie and try again.'); return; }
+    w.document.write('<!doctype html><title>Report</title><body style="font-family:Arial;padding:30px;color:#56606B">Opening the report&hellip;</body>');
+    call({action:'report_html', month:m, s:s}).then(function(j){ if (j.error) { w.document.body.textContent = j.error; return; } w.document.open(); w.document.write(j.html); w.document.close(); }).catch(function(){ w.document.body.textContent = 'Could not open the report. Please try again.'; });
+  });
   var SAMPLE_REQ = [{id:'r1', first_name:'Kathleen', email:'jo…@gmail.com', asked:new Date().toISOString()}];
   var SAMPLE = {
     requests: SAMPLE_REQ, onboarding: {show:false, steps:{}}, contact: {name:'Derek Fitzgerald', phone:'087 759 9848', email:'derek@fairdeal.ie'},
@@ -770,6 +803,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     invites:[{first_name:'Seán',email:'daughter@example.ie',channel:'email',sent:daysAgo(2)},{first_name:'Peg',email:null,phone:'+353871234567',channel:'sms',sent:daysAgo(1)}],
     residents:[{id:'r1',first_name:'Patrick',stage:'gathering',note:'Solicitor handling it',stage_at:daysAgo(20),updated_at:daysAgo(20),flag:'Not updated for 2 weeks'},{id:'r2',first_name:'Annie',stage:'posted',note:'',stage_at:daysAgo(10),updated_at:daysAgo(3),flag:''}],
     stats:{total:5,gathering:2,posted:2,approved:1,flagged:3,tracked:2},
+    report:{this_month:{month:new Date().toISOString().slice(0,7),invited:4,started:3,active:5,open:5,stages:{not_started:0,gathering:2,posted:2,approved:1},docs_ticked:11,letters_sent:3,replies:2,reminders:6,posted:1,approved:1,posted_all:3,median_days:null,nudge:['Kathleen'],own_list:2},last:{month:'2026-09',figures:{}}},
     billing:{plan:'monthly',monthly_cents:7500,fee_cents:4000,billing_from:'2026-07',month:'',month_families:3,month_cents:7500,history:[]}
   };
   function call(body){ return fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}).then(function(r){ return r.json().then(function(j){ j._status = r.status; return j; }); }); }
@@ -818,6 +852,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     try { localStorage.setItem('fd_home_num', String(d.home.number)); } catch(e) {}
     $('grp-card').hidden = !(d.staff && d.staff.grp);
     if (d.staff && d.staff.grp) $('grp-title').textContent = 'Every home in ' + d.staff.grp;
+    renderReport(d.report);
     $('b-amount').textContent = euro(d.billing.month_cents);
     $('b-count').textContent = d.billing.month_families + (d.billing.month_families === 1 ? ' family' : ' families');
     $('b-plan').textContent = d.billing.plan === 'per_family' ? euro(d.billing.fee_cents) + ' per family.' : euro(d.billing.monthly_cents) + ' a month covers every family you send us' + (d.billing.billing_from ? ', since ' + d.billing.billing_from.replace(/^(\d{4})-(\d{2})$/, function(_, y, m){ return ['January','February','March','April','May','June','July','August','September','October','November','December'][+m-1] + ' ' + y; }) : '. It starts the month you send your first family') + '.';
