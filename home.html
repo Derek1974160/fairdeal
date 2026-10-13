@@ -437,6 +437,12 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .startlist li.done::before{content:"✓";background:#2F5D50}
 .startlist li.done b{text-decoration:line-through;color:var(--muted)}
 .startlist b{color:var(--navy)}.startlist span{grid-column:2;font-size:14.5px;color:var(--muted)}.startlist a{grid-row:span 2;font-weight:600}
+
+.packrow{border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin:0 0 14px;background:#fff}.packrow>div:first-child{margin-bottom:8px}.packrow input{flex:1;min-width:220px}
+.reqs{border:1px solid #E3D3AE;background:var(--gold-soft,#F4ECDC);border-radius:6px;padding:12px 14px;margin-bottom:14px}.reqs h3{margin:0 0 6px;font-size:16px;color:var(--navy)}
+.reqrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid #E3D3AE}.reqrow b{color:var(--navy)}.reqrow span{color:var(--muted);font-size:14px;flex:1}
+.frow{cursor:pointer}.fdetail{grid-column:1/-1;font-size:14px;color:var(--muted);padding:4px 0 2px}
+.startlist li button.linkbtn{grid-row:span 2;font-weight:600}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -507,14 +513,16 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     </div>
 
     <div class="hcard start" id="start-card" hidden>
-      <span class="kicker">Getting started</span>
-      <h2>Four things to do once</h2>
-      <p class="hint">This card goes away after your first family is set up.</p>
+      <span class="kicker">Your first week</span>
+      <h2>Six steps, then you are set</h2>
+      <p class="hint">They tick themselves off as you go. Your contact for anything is <b id="ob-contact"></b>.</p>
       <ol class="startlist" id="startlist">
-        <li data-done="details"><b>Check your details</b><span>Contact email for statements and families&rsquo; questions.</span><a href="#details-card">Open</a></li>
-        <li data-done="logo"><b>Add your logo</b><span>Shown on every invitation and tracker, so families know it is you.</span><a href="#details-card">Open</a></li>
+        <li data-done="brand"><b>Add your logo and contact email</b><span>Shown on every invitation and tracker, so families know it is you.</span><a href="#details-card">Open</a></li>
         <li data-done="team"><b>Add a colleague</b><span>Anyone who admits residents. They sign in with your home number and their first name.</span><a href="#team-card">Open</a></li>
-        <li data-done="family"><b>Set up your first family</b><span>Below. It takes about fifteen seconds.</span><a href="#setup-card">Open</a></li>
+        <li data-done="family"><b>Set up your first family</b><span>Fifteen seconds below, or print the admission pack for the desk.</span><a href="#setup-card">Open</a></li>
+        <li data-done="tour"><b>Watch the one-minute walkthrough</b><span>What families see and what you see.</span><button type="button" class="linkbtn" id="ob-tour">Watch</button></li>
+        <li data-done="opened"><b>Open a family&rsquo;s progress</b><span>Tap any family in the list to see their dates and what is left.</span><a href="#fam-card">Open</a></li>
+        <li data-done="week"><b>Your first-week summary</b><span>Emailed on day seven. Nothing to do.</span></li>
       </ol>
     </div>
 
@@ -527,6 +535,14 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
             <div><b>Send them a link</b><span>By email or by text message. The family does it at home, in their own time, by typing or by voice.</span></div>
             <div><b>Apply with them at the desk</b><span>Open the family&rsquo;s link here and work through it together. Dictate the admission notes and the first answers are filled in for you.</span></div>
             <div><b>Keep your own list</b><span>Residents whose families are applying another way, so nobody is forgotten. Under &ldquo;More&rdquo; below.</span></div>
+          </div>
+          <div class="packrow">
+            <div><b>The admission pack</b> <span class="hint small">A one-page sheet with your name, a code and a QR for the admission desk. Families scan it and ask you to set them up; you press Approve.</span></div>
+            <div class="row" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <button class="btn small" type="button" id="pack-print">Print the admission pack</button>
+              <input type="text" id="pack-contact" maxlength="120" placeholder="Admissions contact to show, for example Mary Byrne, 045 000 000" aria-label="Admissions contact">
+              <button class="btn small ghost" type="button" id="pack-save">Save</button>
+            </div>
           </div>
           <p class="hint">Whichever way, the family receives the full service: the step-by-step pack, the official form filled in, the checklist with reminders, and the request letters. It helps at any stage, even if the application is already posted.</p>
           <div class="stepline"><span class="stepn">1</span><b>Their details</b> <span class="hint small">Say them or type them.</span></div>
@@ -561,10 +577,11 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           <p class="note" id="n-invite">Please do not fill in the family’s finances for them: their PPS numbers and income details should be typed in by the family themselves.</p>
         </div>
 
-        <div class="hcard">
+        <div class="hcard" id="fam-card">
           <span class="kicker">Your families</span>
           <h2>Where each application stands</h2>
-          <p class="hint">You see progress only. Income, savings and PPS numbers stay with the family.</p>
+          <p class="hint">You see progress only. Income, savings and PPS numbers stay with the family. Tap a family to see their dates.</p>
+          <div id="requests" hidden></div>
           <div id="families" class="fam"></div>
           <div id="pending"></div>
         </div>
@@ -738,7 +755,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   var emailForCode = '', claimNumber = null;
   var DEMO = new URLSearchParams(location.search).has('demo');
   var daysAgo = function(n){ return new Date(Date.now() - n*86400000).toISOString(); };
+  var SAMPLE_REQ = [{id:'r1', first_name:'Kathleen', email:'jo…@gmail.com', asked:new Date().toISOString()}];
   var SAMPLE = {
+    requests: SAMPLE_REQ, onboarding: {show:false, steps:{}}, contact: {name:'Derek Fitzgerald', phone:'087 759 9848', email:'derek@fairdeal.ie'},
     home:{number:1000,name:'Sample Nursing Home',town:'Naas',county:'Kildare',address:'Main Street, Naas, W91 XXXX',phone:'045 000 000',beds:60,pic:'Mary Byrne',provider:'Sample Care Limited',email:'admissions@example.ie',website:'',logo_url:'',cost_mode:'included',free_families:0,fee_cents:4000,weekly_email:true},
     staff:{name:'Admissions team',email:'admissions@example.ie',grp:null},
     team:[{id:'t1',name:'Mary',email:'ad…@example.ie',me:true},{id:'t2',name:'Siobhan',email:null,me:false},{id:'t3',name:'Tom',email:null,me:false}],
@@ -766,7 +785,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     ['total','gathering','posted','approved','flagged','tracked'].forEach(function(k){ $('s-'+k).textContent = d.stats[k] || 0; });
     $('families').innerHTML = d.families.length ? d.families.map(function(f){
       var st = STAGE[f.status] || [f.status,'g'], pct = f.docs.total ? Math.round(f.docs.done*100/f.docs.total) : 0;
-      return '<div class="frow' + (f.flag ? ' flagged' : '') + '"><div class="fname"><b>' + esc(f.first_name || 'Family') + '</b><span>Started ' + fmt(f.started) + (f.posted_at ? ' · posted ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + '</span></div>' +
+      return '<div class="frow' + (f.flag ? ' flagged' : '') + '" data-detail="' + esc('Started ' + fmt(f.started) + (f.assessment ? ' · care needs assessment requested' : '') + (f.posted_at ? ' · posted ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + ' · ' + f.docs.done + ' of ' + f.docs.total + ' documents · last activity ' + fmt(f.last_activity)) + '"><div class="fname"><b>' + esc(f.first_name || 'Family') + '</b><span>Started ' + fmt(f.started) + (f.posted_at ? ' · posted ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + '</span></div>' +
         '<span class="chip ' + st[1] + '">' + st[0] + '</span>' +
         '<div class="bar"><div style="width:' + pct + '%"></div><span>' + f.docs.done + ' of ' + f.docs.total + ' documents</span></div>' +
         (f.flag ? '<span class="flag">' + esc(f.flag) + '</span>' : '<span class="ok">Last activity ' + fmt(f.last_activity) + '</span>') + '</div>';
@@ -782,11 +801,18 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     }).join('') : '<p class="empty">Nobody on your own list yet.</p>';
     $('weekly').checked = d.home.weekly_email !== false;
     lstLoad();
-    // first-sign-in checklist: shown until the first family is set up
-    var fresh = !(d.families && d.families.length) && !(d.invites && d.invites.length);
-    $('start-card').hidden = !fresh || DEMO;
-    if (fresh) { var doneMap = {details: !!d.home.email, logo: !!d.home.logo_url, team: (d.team || []).length > 1, family: false};
-      document.querySelectorAll('#startlist li').forEach(function(li){ li.classList.toggle('done', !!doneMap[li.getAttribute('data-done')]); }); }
+    // first week: six steps, derived on the server
+    var ob = d.onboarding || {show: false, steps: {}};
+    $('start-card').hidden = !ob.show || DEMO;
+    if (d.contact) $('ob-contact').textContent = d.contact.name + ', ' + d.contact.phone + ', ' + d.contact.email;
+    document.querySelectorAll('#startlist li').forEach(function(li){ li.classList.toggle('done', !!(ob.steps || {})[li.getAttribute('data-done')]); });
+    // families asking to be set up (from the admission pack)
+    var rq = d.requests || [];
+    $('requests').hidden = !rq.length;
+    $('requests').innerHTML = rq.length ? '<div class="reqs"><h3>' + rq.length + (rq.length === 1 ? ' family is' : ' families are') + ' asking you to set them up</h3><p class="hint small">They scanned your admission pack. Approve sends them their link; Not now tells them you will be in touch.</p>' +
+      rq.map(function(r){ return '<div class="reqrow"><b>' + esc(r.first_name) + '</b><span>' + esc(r.email || r.phone || '') + ' · asked ' + fmt(r.asked) + '</span><button class="btn small" type="button" data-req="approve" data-id="' + esc(r.id) + '">Approve</button><button class="btn small ghost" type="button" data-req="decline" data-id="' + esc(r.id) + '">Not now</button></div>'; }).join('') + '</div>' : '';
+    if (document.activeElement !== $('pack-contact')) $('pack-contact').value = d.home.pack_contact || '';
+    HOME = d.home;
     $('team-num').textContent = d.home.number;
     $('team-list').innerHTML = (d.team || []).map(function(t){ return '<div class="trow"><div><b>' + esc(t.name || 'No name') + '</b> <span>' + (t.email ? 'code to ' + esc(t.email) : 'code to the home’s email') + (t.me ? ' · you' : '') + '</span></div>' + (t.me ? '' : '<button type="button" class="rm" data-rm="' + esc(t.id) + '">Remove</button>') + '</div>'; }).join('');
     try { localStorage.setItem('fd_home_num', String(d.home.number)); } catch(e) {}
@@ -988,6 +1014,56 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     lstCall({action:'photo_remove', path:b.getAttribute('data-ph')}).then(function(j){ if (j.error) $('n-lst').textContent = j.error; else { $('n-lst').textContent = 'Photo removed.'; lstRender(j); } });
   });
   document.addEventListener('click', function(e){ var a = e.target.closest('a[href^="#"]'); if (!a) return; var t = document.querySelector(a.getAttribute('href')); if (!t) return; var det = t.closest('details'); if (det) det.open = true; });
+  var HOME = null;
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-req]'); if (b) { b.disabled = true; call({action: b.getAttribute('data-req') === 'approve' ? 'request_approve' : 'request_decline', s: s, invite_id: b.getAttribute('data-id')}).then(function(j){ if (j.error) { alert(j.error); b.disabled = false; return; } render(j); }); return; }
+    var fr = e.target.closest('.frow'); if (fr && !DEMO) { var det = fr.querySelector('.fdetail'); if (det) det.remove(); else { var d2 = document.createElement('div'); d2.className = 'fdetail'; d2.textContent = fr.getAttribute('data-detail') || ''; fr.appendChild(d2); call({action:'family_opened', s: s}).catch(function(){}); } return; }
+  });
+  $('ob-tour').addEventListener('click', function(){ Tour.start(TIP_STEPS, false); if (!DEMO) call({action:'tour_seen', s: s}).then(function(){ load(); }).catch(function(){}); });
+  $('pack-save').addEventListener('click', function(){ if (DEMO) return; call({action:'pack_contact', s: s, contact: $('pack-contact').value}).then(render); });
+  $('pack-print').addEventListener('click', function(){
+    var hm = HOME || {}; var num = hm.number || '', name = hm.name || 'Your nursing home';
+    var url = 'https://www.fairdeal.ie/start?nh=' + num;
+    var contact = ($('pack-contact').value || hm.pack_contact || '').trim();
+    var w = window.open('', '_blank'); if (!w) { alert('Your browser blocked the window. Allow pop-ups for fairdeal.ie and try again.'); return; }
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Preparing your admission pack</title></head><body style="font-family:Arial,sans-serif;padding:30px;color:#56606B">Preparing your admission pack&hellip;</body></html>');
+    qrData(url, function(qr){ writePack(w, qr); });
+  });
+  // Draw the QR code here on the dashboard (library loaded once, on demand), then hand the finished image to the print window.
+  function qrData(text, cb){
+    var done = false; function finish(d){ if (done) return; done = true; cb(d); }
+    function draw(){ try { var box = document.createElement('div'); box.style.cssText = 'position:absolute;left:-9999px;top:0'; document.body.appendChild(box);
+      new QRCode(box, {text: text, width: 150, height: 150, correctLevel: QRCode.CorrectLevel.M});
+      setTimeout(function(){ var img = box.querySelector('img'), cv = box.querySelector('canvas'); var d = (img && img.src && img.src.indexOf('data:') === 0) ? img.src : (cv ? cv.toDataURL('image/png') : ''); box.remove(); finish(d); }, 60); } catch (e) { finish(''); } }
+    if (window.QRCode) { draw(); return; }
+    var sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'; sc.onload = draw; sc.onerror = function(){ finish(''); }; document.head.appendChild(sc);
+    setTimeout(function(){ finish(''); }, 4000);
+  }
+  function writePack(w, qr){
+    var hm = HOME || {}; var num = hm.number || '', name = hm.name || 'Your nursing home';
+    var contact = ($('pack-contact').value || hm.pack_contact || '').trim();
+    w.document.open();
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Fair Deal help at ' + esc(name) + '</title>' +
+      '<style>@page{size:A4;margin:18mm}body{font-family:Arial,Helvetica,sans-serif;color:#1A1F26;margin:0}.p{page-break-after:always;max-width:720px;margin:0 auto}h1{font-size:30px;color:#0F2238;margin:0 0 6px;line-height:1.15}h2{font-size:20px;color:#0F2238;margin:22px 0 8px}p{font-size:16px;line-height:1.55;margin:0 0 10px}.top{display:flex;align-items:center;gap:16px;border-bottom:2px solid #A67C2E;padding-bottom:14px;margin-bottom:22px}.top img{max-height:70px;max-width:200px}.top .n{font-size:22px;font-weight:bold;color:#0F2238}.top .s{font-size:13px;color:#56606B}.qr{display:flex;gap:24px;align-items:center;margin:22px 0;padding:18px;border:1px solid #E4DED3;border-radius:6px}.qr .code{font-size:34px;font-weight:bold;color:#0F2238;letter-spacing:.04em}.qr .url{font-size:16px;color:#1A1F26}ol{font-size:16px;line-height:1.55;padding-left:22px}li{margin-bottom:8px}.foot{margin-top:28px;font-size:12px;color:#56606B;border-top:1px solid #E4DED3;padding-top:10px}.script{background:#FAF8F4;border-left:3px solid #A67C2E;padding:12px 16px;margin:10px 0}.script p{margin:0 0 8px}</style></head><body>' +
+      '<div class="p"><div class="top">' + (hm.logo_url ? '<img src="' + esc(hm.logo_url) + '" alt="">' : '') + '<div><div class="n">' + esc(name) + '</div><div class="s">Help with Fair Deal, at no cost to your family</div></div></div>' +
+      '<h1>Applying for Fair Deal? We can help.</h1>' +
+      '<p>Fair Deal (the Nursing Homes Support Scheme) pays part of the cost of care. The application runs to forty pages and the HSE does not backdate funding, so it is worth starting early and getting it right first time.</p>' +
+      '<p>' + esc(name) + ' has arranged a service called fairdeal.ie for its families. It works out the likely weekly cost, fills in the official form from plain questions (by typing or by voice), keeps a checklist of every document, sends the letters to the bank and the auctioneer for you, and reminds you what to do next. <b>It costs your family nothing.</b></p>' +
+      '<div class="qr"><div id="qr">' + (qr ? '<img src="' + qr + '" width="150" height="150" alt="QR code for www.fairdeal.ie/start">' : '<div style="width:150px;font-size:14px;color:#56606B">Type the address and code shown here into your phone.</div>') + '</div><div><div class="s" style="font-size:13px;color:#56606B">Scan with your phone camera, or go to</div><div class="url">www.fairdeal.ie/start</div><div class="s" style="font-size:13px;color:#56606B;margin-top:6px">and enter this code</div><div class="code">' + esc(String(num)) + '</div></div></div>' +
+      '<h2>What happens</h2><ol><li>Scan the code and give the resident&rsquo;s first name and your email or mobile.</li><li>' + esc(name) + ' presses Approve, usually the same day, and you receive your private link.</li><li>Answer a few plain questions. Everything you need arrives by email, and your checklist is online from then on.</li></ol>' +
+      '<p>What the home can see: how the application is progressing. What the home cannot see: your income, savings or PPS numbers. Those stay on your own phone or computer.</p>' +
+      (contact ? '<p><b>Questions at the home:</b> ' + esc(contact) + '</p>' : '') +
+      '<div class="foot">fairdeal.ie is an independent service and is not the HSE. A service of Alderidge Fusion Limited, registered in Ireland, company number 816930. Official information and the form are at hse.ie.</div></div>' +
+      '<div class="p"><div class="top"><div><div class="n">' + esc(name) + '</div><div class="s">For staff: what to say at the desk</div></div></div>' +
+      '<h1>Four lines, then hand them the sheet</h1>' +
+      '<div class="script"><p>&ldquo;One more thing before you go. We have a service that helps with the Fair Deal application: it fills in the form, keeps the document list and chases the bank for you. It is free for your family.&rdquo;</p><p>&ldquo;Scan this code with your phone, put in ' + '[resident]' + '&rsquo;s first name and your email, and we switch it on today.&rdquo;</p><p>&ldquo;If you would rather, I can set it up for you now; I just need your email.&rdquo;</p><p>&ldquo;Everything financial stays with you. We only see how far along it is.&rdquo;</p></div>' +
+      '<h2>Then</h2><ol><li>When a family scans the code, their request appears on the dashboard under Your families. Press <b>Approve</b>. That is all.</li><li>If they are not ready today, nothing is lost: the request waits, and a reminder goes to the family three days and ten days after you approve.</li><li>If a family has no smartphone, press <b>Set up here with the family</b> on the dashboard and type their details yourself. Fifteen seconds.</li><li>Already posted the application? The service still helps: tracking, reminders and the follow-up letter to the HSE.</li></ol>' +
+      '<p>Sign in at www.fairdeal.ie/home with home number <b>' + esc(String(num)) + '</b> and your first name. Questions: Derek Fitzgerald, 087 759 9848, derek@fairdeal.ie.</p>' +
+      '<div class="foot">Keep this page at the admission desk. Print the first page as many times as you need.</div></div>' +
+      '</body></html>');
+    w.document.close();
+    setTimeout(function(){ try { w.focus(); w.print(); } catch (e) {} }, 600);
+  }
   function chan(){ var c = document.querySelector('input[name="chan"]:checked'); return c ? c.value : 'email'; }
   function chanUI(){ var c = chan(); $('fld-email').hidden = c !== 'email'; $('fld-phone').hidden = c !== 'sms'; $('i-btn').textContent = c === 'email' ? 'Send the link' : c === 'sms' ? 'Send the text' : 'Make the link'; $('linkout').hidden = true; }
   document.querySelectorAll('input[name="chan"]').forEach(function(r){ r.addEventListener('change', chanUI); });

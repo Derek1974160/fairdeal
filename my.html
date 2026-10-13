@@ -763,7 +763,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 
   function showOffice(k){
     var o = OFFICES[k];
-    $('office').innerHTML = o ? '<p><b>HSE Nursing Homes Support Office</b><br>' + esc(o[0]) + '</p><p>Phone: <a href="tel:' + o[1].replace(/\s/g,'') + '">' + esc(o[1]) + '</a>' + (o[2] ? '<br>Email: <a href="mailto:' + esc(o[2]) + '">' + esc(o[2]) + '</a>' : '') + '</p><p class="hint">Taken from the official HSE application form. Check the form you download, as offices can change.</p>' : '';
+    $('office').innerHTML = o ? '<p><b>HSE Nursing Homes Support Office</b><br>' + esc(o[0]) + '</p><p>Phone: <a href="tel:' + o[1].replace(/\s/g,'') + '">' + esc(o[1]) + '</a>' + (o[2] ? '<br>Email: <a href="mailto:' + esc(o[2]) + '">' + esc(o[2]) + '</a>' : '') + '</p><p class="hint">Taken from the official HSE application form, reviewed 13 October 2026. Check the form you download, as offices can change.</p>' : '';
   }
   $('county').addEventListener('change', function(){ var v = this.value; showOffice(v); if (v) act('county', {county: v}); });
 

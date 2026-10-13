@@ -200,3 +200,4 @@ summary::after{font-weight:400}
 .chan input:checked+label{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important}
 .chan label{border-width:1px!important;border-radius:3px!important}
 .alertbox{border-radius:6px!important}.alertbox.coral{background:#F7ECE8!important;border-left-color:#B3261E!important}.alertbox.teal{background:#EAF0EC!important;border-left-color:#2F5D50!important}.alertbox.sunbox{background:#F4ECDC!important;border-left-color:#A67C2E!important}.alertbox li{margin:6px 0}
+.reviewed{margin:26px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}

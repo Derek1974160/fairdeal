@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ask your nursing home to set you up with Fair Deal help | fairdeal.ie</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F2238;--ink:#1A1F26;--muted:#56606B;--line:#E4DED3;--bg:#FAF8F4;--body:"Libre Franklin","Source Sans 3",system-ui,Arial,sans-serif;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.nav{background:#fff;border-bottom:1px solid var(--line)}.nav .wrap{max-width:720px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:64px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy);font-weight:600;font-size:21px}
+.logo i{width:36px;height:36px;border-radius:3px;background:var(--navy);display:grid;place-items:center;color:#E5CF96;font-style:normal;font-size:17px}
+.logo em{font-style:normal;color:#A67C2E}.logo small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+main{max-width:720px;margin:0 auto;padding:28px 20px 60px}
+.home{display:flex;gap:14px;align-items:center;margin-bottom:18px}.home img{max-height:56px;max-width:160px;background:#fff;border:1px solid var(--line);border-radius:4px;padding:4px}
+.home b{font-size:20px;color:var(--navy);display:block}.home span{color:var(--muted);font-size:14px}
+h1{font-size:28px;line-height:1.2;color:var(--navy);margin:0 0 10px;font-weight:600}
+.card{background:#fff;border:1px solid var(--line);border-top:2px solid var(--navy);border-radius:6px;padding:22px 20px;margin-top:18px}
+.field{margin-bottom:14px}.field label{display:block;font-weight:600;margin-bottom:6px;color:var(--navy)}
+input[type=text],input[type=email],input[type=tel]{width:100%;font:inherit;font-size:17px;padding:12px 14px;border:1px solid #CFC7B8;border-radius:3px;background:#fff}
+input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,34,56,.12)}
+.tick{display:flex;gap:10px;align-items:flex-start;font-size:15px;margin:6px 0 14px}.tick input{width:20px;height:20px;margin-top:3px;accent-color:var(--navy)}
+.btn{display:inline-block;background:var(--navy);color:#fff;border:0;border-radius:3px;font:inherit;font-weight:700;font-size:16px;padding:13px 22px;cursor:pointer}.btn:disabled{opacity:.6}
+.note{font-size:15px;color:var(--muted);margin-top:10px}.hint{color:var(--muted);font-size:15px}
+.ok{background:#EAF0EC;border-left:3px solid #2F5D50;padding:14px 16px;border-radius:3px}
+.err{color:#B3261E;font-weight:600}
+footer{max-width:720px;margin:0 auto;padding:0 20px 40px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.codebox{display:flex;gap:8px}.codebox input{max-width:200px}
+</style>
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<div class="nav"><div class="wrap"><a class="logo" href="/"><i>€</i><span>fairdeal<em>.ie</em><small>Independent guide. Not the HSE.</small></span></a></div></div>
+<main>
+  <div id="ask-code" hidden>
+    <h1>Fair Deal help from your nursing home</h1>
+    <p class="hint">Type the code on the sheet the home gave you.</p>
+    <div class="card"><div class="field"><label for="code">Home code</label><div class="codebox"><input type="text" inputmode="numeric" id="code" maxlength="5" placeholder="For example 1308"><button class="btn" type="button" id="code-go">Next</button></div></div><p class="note err" id="n-code"></p></div>
+  </div>
+
+  <div id="page" hidden>
+    <div class="home"><img id="h-logo" alt="" hidden><div><b id="h-name"></b><span id="h-town"></span></div></div>
+    <h1>Ask <span id="h-name2"></span> to set you up with Fair Deal help</h1>
+    <p>It costs your family nothing. The home presses Approve, usually the same day, and you receive a private link by email or text to start. The service works out the likely weekly cost, fills in the official HSE form from plain questions, keeps a checklist of every document, sends the request letters for you, and reminds you what to do next.</p>
+    <div class="card">
+      <form id="f" novalidate>
+        <div class="field"><label for="first">The resident&rsquo;s first name</label><input type="text" id="first" maxlength="60" placeholder="For example Mary"></div>
+        <div class="field"><label for="email">Your email address</label><input type="email" id="email" placeholder="you@example.ie"></div>
+        <div class="field"><label for="phone">Or your mobile, if you would rather a text</label><input type="tel" id="phone" placeholder="087 123 4567"></div>
+        <label class="tick"><input type="checkbox" id="consent"> <span>I am asking <span id="h-name3"></span> to set my family up on fairdeal.ie. The home will see how the application is progressing, never our finances. I will read and accept the family agreement when I open my link.</span></label>
+        <button class="btn" type="submit" id="go">Send my request</button>
+        <p class="note err" id="n"></p>
+      </form>
+      <div class="ok" id="done" hidden></div>
+    </div>
+    <p class="note">What the home can see: how far along the application is. What it cannot see: your income, savings or PPS numbers. Those stay on your own phone or computer. <a href="/privacy">Privacy notice</a>.</p>
+  </div>
+</main>
+<footer>fairdeal.ie is an independent service and is not the HSE. A service of Alderidge Fusion Limited, registered in Ireland, company number 816930. Official information and the form are at hse.ie.</footer>
+<script>
+(function(){
+  var API = "https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-home";
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+  function call(body){ return fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}).then(function(r){ return r.json(); }); }
+  var num = (new URLSearchParams(location.search).get('nh') || '').replace(/\D/g, '');
+  function show(info){
+    $('ask-code').hidden = true; $('page').hidden = false;
+    $('h-name').textContent = info.name; $('h-name2').textContent = info.name; $('h-name3').textContent = info.name; $('h-town').textContent = info.town || '';
+    if (info.logo_url) { $('h-logo').src = info.logo_url; $('h-logo').hidden = false; }
+    document.title = 'Fair Deal help from ' + info.name + ' | fairdeal.ie';
+  }
+  function lookup(n){
+    call({action:'start_info', number:n}).then(function(j){ if (j.error) { $('ask-code').hidden = false; $('page').hidden = true; $('n-code').textContent = j.error; return; } num = String(j.number); show(j); history.replaceState(null, '', '/start?nh=' + num); })
+      .catch(function(){ $('ask-code').hidden = false; $('n-code').textContent = 'Could not reach fairdeal.ie. Please try again.'; });
+  }
+  $('code-go').addEventListener('click', function(){ var n = $('code').value.replace(/\D/g, ''); if (!n) { $('n-code').textContent = 'Type the code on the sheet.'; return; } lookup(n); });
+  $('code').addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); $('code-go').click(); } });
+  if (num) lookup(num); else $('ask-code').hidden = false;
+  $('f').addEventListener('submit', function(e){
+    e.preventDefault();
+    var first = $('first').value.trim(), email = $('email').value.trim(), phone = $('phone').value.trim();
+    if (!first) { $('n').textContent = 'Please give the resident’s first name.'; return; }
+    if (!email && !phone) { $('n').textContent = 'Please give an email address or a mobile number.'; return; }
+    if (!$('consent').checked) { $('n').textContent = 'Please tick the box to continue.'; return; }
+    $('go').disabled = true; $('n').textContent = '';
+    call({action:'start_request', number:num, first_name:first, email:email, phone:phone, consent:true}).then(function(j){
+      $('go').disabled = false;
+      if (j.error) { $('n').textContent = j.error; return; }
+      $('f').hidden = true; $('done').hidden = false;
+      $('done').innerHTML = j.pending_home ? '<b>Thank you.</b> This home is not switched on yet. We have let the home know, and we will be in touch with you by ' + (email ? 'email' : 'text') + '. The free guides and calculator at <a href="/">www.fairdeal.ie</a> are open to everyone meanwhile.'
+        : '<b>Thank you.</b> ' + esc($('h-name').textContent) + ' will switch this on, usually the same day. Your private link will arrive by ' + (email ? 'email at ' + esc(email) : 'text to ' + esc(phone)) + '. Nothing else to do for now.';
+    }).catch(function(){ $('go').disabled = false; $('n').textContent = 'Could not send. Please try again, or ask at the desk.'; });
+  });
+})();
+</script>
+<script src="/voice.js" defer></script>
+</body>
+</html>
