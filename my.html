@@ -268,6 +268,10 @@ input.txt{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px so
 .ring circle{fill:none;stroke-width:12}.ring .trk{stroke:var(--lilac-soft)}.ring .val{stroke:var(--teal);stroke-linecap:round;stroke-dasharray:314.16;stroke-dashoffset:314.16;transition:stroke-dashoffset .5s}
 .ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--head);font-size:26px;color:var(--navy)}
 .progress p{margin:0;color:var(--muted);font-size:16px}
+.sitcard{border-top:6px solid var(--lilac)}.sitcard h2{font-size:22px;margin:6px 0 10px}.sitcard h3{font-size:16px;color:var(--navy);margin:14px 0 6px}
+.sitcard ul{margin:0 0 10px;padding-left:22px}.sitcard li{margin:6px 0;font-size:15px}.sit-who{font-size:15px;color:var(--muted);margin:0 0 12px}.sit-who b{color:var(--navy)}
+.sit-conflict{background:var(--sun-soft);color:var(--navy);border-radius:10px;padding:10px 14px;font-size:15px;margin:0 0 12px}
+.sit-act{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 10px}.sit-not{font-size:13px;color:var(--muted);margin:0}
 .nstep{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
 .nstep:first-child{border-top:0}.nstep b{color:var(--navy);font-size:17px}.nstep span{grid-column:1;color:var(--muted);font-size:15px}
 .nstep .btn{grid-column:2;grid-row:1/span 2}.nstep.ok b::before{content:"\2713  ";color:var(--teal-2)}
@@ -451,6 +455,18 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
         <div class="tcard" id="next-card">
           <span class="kicker coral">What to do next</span>
           <div id="next"></div>
+        </div>
+
+        <div class="tcard sitcard" id="sit-card" hidden>
+          <span class="kicker lilac">Your situation</span>
+          <h2 id="sit-title"></h2>
+          <p class="sit-conflict" id="sit-conflict" hidden></p>
+          <p id="sit-why"></p>
+          <h3>What to check first</h3>
+          <ul id="sit-check"></ul>
+          <p class="sit-who">Who to ask: <b id="sit-who"></b></p>
+          <p class="sit-act"><a class="btn" id="sit-btn" href="#"></a> <button class="linkbtn" type="button" id="sit-next" hidden></button></p>
+          <p class="sit-not" id="sit-not"></p>
         </div>
 
         <div class="tcard formcard" id="form-card">
@@ -711,6 +727,26 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   function workingDays(iso, n){ var d = new Date(iso); var k = 0; while (k < n) { d.setDate(d.getDate() + 1); var w = d.getDay(); if (w !== 0 && w !== 6) k++; } return d.toISOString(); }
   function fmt(iso){ return iso ? new Date(iso).toLocaleDateString('en-IE', {day:'numeric', month:'long', year:'numeric'}) : ''; }
 
+  // the guided route for complex cases (upgrade 6): one route at a time, from the intake answers and the decision; routes.js holds the rules
+  var sitIndex = 0;
+  function renderSituation(){
+    var card = $('sit-card'); if (!window.FDRoutes || !state) { card.hidden = true; return; }
+    var f = Object.assign({}, state.facts || {}, { first_name: (state.case && state.case.first_name) || '', county: (state.case && state.case.county && /^[A-Za-z]+$/.test(state.case.county)) ? state.case.county : '', refused: !!(state.facts && state.facts.refused) || (state.case && state.case.status === 'refused') });
+    if (state.case && state.case.status === 'closed') { card.hidden = true; return; }
+    var keys = FDRoutes.compute(f);
+    if (!keys.length) { card.hidden = true; return; }
+    if (sitIndex >= keys.length) sitIndex = 0;
+    var r = FDRoutes.describe(keys[sitIndex], f);
+    card.hidden = false;
+    $('sit-title').textContent = r.title; $('sit-why').textContent = r.why;
+    $('sit-conflict').hidden = !r.conflict; $('sit-conflict').textContent = r.conflict || '';
+    $('sit-check').innerHTML = r.check.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('');
+    $('sit-who').textContent = r.who;
+    var b = $('sit-btn'); b.textContent = r.button.label; b.href = r.button.href; if (/^https?:/.test(r.button.href)) { b.target = '_blank'; b.rel = 'noopener'; } else { b.removeAttribute('target'); }
+    var nx = $('sit-next'); nx.hidden = keys.length < 2; nx.textContent = keys.length > 1 ? 'Next: ' + (sitIndex + 1) + ' of ' + keys.length + ' situations' : '';
+    $('sit-not').textContent = r.not;
+  }
+  document.addEventListener('click', function(e){ if (e.target && e.target.id === 'sit-next') { sitIndex++; renderSituation(); } });
   function render(){
     var c = state.case, items = state.items, n = nameOf();
     $('lost').hidden = true; $('app').hidden = false; $('stages').hidden = false;
@@ -761,6 +797,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     }
     if (c.can_undo && c.status !== 'closed') nx.push('<div class="nstep quietstep"><span>Marked something by mistake?</span><button class="btn small ghost" data-step="undo">Undo the last change</button></div>');
     $('next').innerHTML = nx.join('');
+    renderSituation();
     $('after-card').hidden = c.status !== 'approved';
     $('handover').hidden = c.status === 'closed';
     $('form-link').href = '/form?t=' + encodeURIComponent(token);
@@ -1045,6 +1082,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 <script>
 document.addEventListener('click', function(e){ var a = e.target.closest('a[href^="#"]'); if (!a) return; var t = document.querySelector(a.getAttribute('href')); if (!t) return; var det = t.closest('details'); if (det) det.open = true; });
 </script>
+<script src="/routes.js"></script>
 <script src="/voice.js" defer></script>
 </body>
 </html>

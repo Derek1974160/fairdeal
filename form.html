@@ -334,6 +334,9 @@ fieldset.q{border:0;padding:0;margin:0 0 18px}fieldset.q legend{font-weight:600;
 .clearl{text-align:center;margin-top:14px}.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:14px}
 .alertbox{border-radius:14px;padding:14px 16px;margin-bottom:18px}.alertbox.coral{background:#FFE8E1;border-left:5px solid var(--coral)}.alertbox.teal{background:var(--teal-soft);border-left:5px solid var(--teal)}
 .alertbox ul{margin:6px 0 0 18px;padding:0}
+.routebox{background:var(--lilac-soft,#EEEAFF);border-left:5px solid var(--lilac,#7A5AF8);border-radius:14px;padding:14px 16px;margin:18px 0 6px}
+.routebox b.rt{display:block;color:var(--navy);font-size:17px;margin-bottom:4px}.routebox p{margin:6px 0;font-size:15px}.routebox ul{margin:6px 0 6px 18px;padding:0;font-size:15px}.routebox .why{font-size:13px;color:var(--muted)}
+.routebox .conf{background:var(--sun-soft,#FFF4D6);border-radius:8px;padding:8px 12px;margin:0 0 8px;font-size:14px}.routebox a{font-weight:700}
 .sign table{width:100%;border-collapse:collapse;font-size:15px}.sign td{padding:9px 8px;border-top:1px solid var(--line);vertical-align:top}.sign tr td:first-child{white-space:nowrap;color:var(--coral-2)}
 .sign h3,.after h3{font-size:20px;color:var(--navy);margin:8px 0 6px}
 .dl{background:linear-gradient(140deg,var(--navy),var(--navy-2));border-radius:16px;padding:20px;margin:20px 0;text-align:center}.dl .note{color:#C9D9EA;margin-top:10px}
@@ -1387,7 +1390,40 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       else html += fieldHtml(f);
     });
     if (!fs.some(function(f){ return f.picks; })) html = dictBox() + html;
+    html += routeNotes(s);
     $('s-body').innerHTML = html;
+  }
+  // the guided route for complex cases (upgrade 6): the same rules as the tracker (routes.js), from the answers typed here
+  // and the intake answers, shown as a side note on the page it concerns, with why we are saying it
+  function routeFacts(){
+    var fi = (caseInfo && caseInfo.facts) || {}, signer = d.signer || {};
+    var prop = (fi.property || []).slice();
+    if (d.wantFarmCap === 'yes' && prop.indexOf('farm') < 0) prop.push('farm');
+    var hasT = function(o, k){ return o && o[k] && String(o[k]).replace(/[^0-9.]/g, '') > 0; };
+    return {
+      first_name: (d.a && d.a.first) || (caseInfo && caseInfo.case && caseInfo.case.first_name) || '',
+      capacity: d.capacity === 'no' ? 'no' : (d.capacity === 'yes' ? 'yes' : (fi.capacity || '')),
+      epa: fi.epa || '', signer_role: d.capacity === 'no' ? (signer.role || '') : '',
+      couple: d.rel ? d.rel === 'couple' : !!fi.couple, both_in_care: get('sp.inCare') === 'yes',
+      property: prop, farm_cap: d.wantFarmCap === 'yes',
+      joint: /joint|share|part|half|co-?own/i.test(String(get('home.status') || '')),
+      gifts: d.hasTransferred === 'yes' || hasT(d.cash, 'transferred') || hasT(d.cashS, 'transferred') ? 'yes' : (d.hasTransferred === 'no' ? 'no' : (fi.gifts || '')),
+      refused: !!fi.refused, county: '',
+    };
+  }
+  // a small hook for the automated tests: jump to a page by its title, and read the routes the review page will show
+  window.FDFormTest = { goto: function(t){ var vs = visibleSteps(); var i = vs.findIndex(function(x){ return x.title === t; }); if (i < 0) i = vs.length - 1; step = i; render(); }, routes: function(){ return FDRoutes.compute(routeFacts()); }, set: function(o){ Object.keys(o).forEach(function(k){ d[k] = o[k]; }); save(); } };
+  function routeNotes(s){
+    if (!window.FDRoutes || s.review) return '';
+    var f = routeFacts(), title = s.title || '';
+    var h = '';
+    FDRoutes.compute(f).forEach(function(k){
+      var r = FDRoutes.describe(k, f); if (!r || r.pages.indexOf(title) < 0) return;
+      h += '<div class="routebox"><b class="rt">' + esc(r.title) + '</b>' + (r.conflict ? '<p class="conf">' + esc(r.conflict) + '</p>' : '') + '<p>' + esc(r.why) + '</p><ul>' + r.check.slice(0, 3).map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+        '<p>Who to ask: <b>' + esc(r.who) + '</b> &middot; <a href="' + esc(r.button.href) + '"' + (/^https?:/.test(r.button.href) ? ' target="_blank" rel="noopener"' : '') + '>' + esc(r.button.label) + '</a></p>' +
+        '<p class="why"><b>Why we are telling you this:</b> the answers on this page, or at the start, point to a situation the standard route does not fit. ' + esc(r.not) + '</p></div>';
+    });
+    return h;
   }
 
   function missing(){
@@ -1430,6 +1466,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     var h = '';
     if (m.length) h += '<div class="alertbox coral"><b>Still to fill in</b><ul>' + m.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul><p class="note">You can still download the form and write these in by hand.</p></div>';
     else h += '<div class="alertbox teal"><b>Everything needed is filled in.</b> Download the form, check every page, then print it.</div>';
+    if (window.FDRoutes) { var rf = routeFacts(), rk = FDRoutes.compute(rf); if (rk.length) h += '<div class="routebox" id="review-routes"><b class="rt">Your situation: ' + rk.length + (rk.length === 1 ? ' route applies' : ' routes apply') + '</b><ul>' + rk.map(function(k){ var r = FDRoutes.describe(k, rf); return '<li data-route="' + k + '"><b>' + esc(r.title) + '</b>: ask ' + esc(r.who.toLowerCase()) + '. <a href="' + esc(r.button.href) + '">' + esc(r.button.label) + '</a></li>'; }).join('') + '</ul><p class="why">The same routes are on your tracker under Your situation. ' + esc(FDRoutes.NOT) + '</p></div>'; }
     var ca = cautions(); if (ca.length) h += '<div class="alertbox coral"><b>Before you post it: things worth a second look</b><ul>' + ca.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul><p class="note">fairdeal.ie is not a solicitor. Where it says ask a solicitor, do; it is cheaper than an application that is sent back.</p></div>';
     h += '<div class="alertbox sunbox"><b>Read every number before you print.</b> PPS numbers, Eircodes, dates and amounts are the answers most often mistyped or misheard.</div>';
     h += '<div class="sign"><h3>Where to sign</h3><p class="note">Signatures and dates are left blank. Sign in pen on the printed form, and date it on the day you sign.</p><table>' +
@@ -1503,6 +1540,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     .catch(function(e){ blocked(e.message + ' Open the form from the link in your pack email.'); });
 })();
 </script>
+<script src="/routes.js"></script>
 <script src="/voice.js" defer></script>
 </body>
 </html>

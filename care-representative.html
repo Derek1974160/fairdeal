@@ -488,7 +488,8 @@ document.getElementById('dmr-form').addEventListener('submit',async(ev)=>{ev.pre
   document.getElementById('dmr-form').style.display='none';document.getElementById('dmr-done').style.display='block';}
  catch(e){toast(e.message||'Could not send. Please try again.');btn.disabled=false;btn.textContent='Ask for a fixed price';}
 });
-
+// the tracker's guided route links here with the county already chosen (?county=Kildare)
+try{var qc=new URLSearchParams(location.search).get('county');var sel=document.getElementById('f-county');if(qc&&[].some.call(sel.options,function(o){return o.value===qc})){sel.value=qc;}}catch(e){}
 </script>
 <script src="/voice.js" defer></script>
 </body>

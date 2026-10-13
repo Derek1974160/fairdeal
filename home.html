@@ -278,6 +278,7 @@ input.txt{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px so
 .bar{position:relative;height:24px;background:var(--bg);border-radius:999px;overflow:hidden}.bar div{height:100%;background:linear-gradient(90deg,var(--teal),var(--lilac))}
 .bar span{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--navy)}
 .flag{color:var(--coral-2);font-weight:700;font-size:13px}.ok{color:var(--muted);font-size:13px}
+.advice{grid-column:1/-1;font-size:13px;color:var(--lilac);font-weight:700}.advice::before{content:"\2139  "}
 .ph{margin-top:18px}.prow{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}.prow b{color:var(--navy)}.prow span{color:var(--muted);font-size:14px}
 .empty{color:var(--muted)}.big{font-family:var(--head);font-size:34px;color:var(--navy);margin:4px 0}.big small{display:block;font-family:var(--body);font-size:14px;color:var(--muted)}
 .opts{display:flex;flex-wrap:wrap;gap:8px}.opts input{position:absolute;opacity:0;pointer-events:none}
@@ -772,8 +773,8 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     if (!f) { $('report-card').hidden = true; return; }
     $('report-card').hidden = false;
     var cells = [[f.invited, 'families invited'], [f.started, 'families started'], [f.active, 'active this month'], [f.docs_ticked, 'documents ticked off'],
-      [f.letters_sent + ' / ' + f.replies, 'letters sent / replies'], [f.reminders, 'reminders sent for you'], [f.posted, 'sent to the HSE'], [f.approved, 'approvals recorded'],
-      f.median_days != null ? [f.median_days + ' days', 'typical set-up to posting'] : [f.open, 'applications open now']];
+      [f.letters_sent + ' / ' + f.replies, 'letters sent / replies'], [f.reminders, 'reminders sent for you'], [f.posted, 'sent to the HSE'], [f.approved, 'approvals recorded'], [f.specialist || 0, 'families needing specialist advice'],
+      f.median_days != null ? [f.median_days + ' days', 'typical set-up to sending'] : [f.open, 'applications open now']];
     g.innerHTML = cells.map(function(c){ return '<div><b>' + esc(String(c[0])) + '</b><span>' + c[1] + '</span></div>'; }).join('');
     var st = f.stages || {};
     $('r-stages').textContent = 'Open applications now: ' + (st.not_started || 0) + ' not started, ' + (st.gathering || 0) + ' gathering documents, ' + (st.posted || 0) + ' posted, ' + (st.approved || 0) + ' approved.' + (f.own_list ? ' On your own list: ' + f.own_list + '.' : '');
@@ -797,7 +798,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     staff:{name:'Admissions team',email:'admissions@example.ie',grp:null},
     team:[{id:'t1',name:'Mary',email:'ad…@example.ie',me:true},{id:'t2',name:'Siobhan',email:null,me:false},{id:'t3',name:'Tom',email:null,me:false}],
     families:[
-      {first_name:'Kathleen',status:'gathering',stage:'Preparing',docs:{done:2,total:9},started:daysAgo(24),posted_at:null,approved_at:null,last_activity:daysAgo(17),flag:'No progress for 2 weeks'},
+      {first_name:'Kathleen',status:'gathering',stage:'Preparing',advice:true,docs:{done:2,total:9},started:daysAgo(24),posted_at:null,approved_at:null,last_activity:daysAgo(17),flag:'No progress for 2 weeks'},
       {first_name:'Tom',status:'gathering',stage:'Preparing',docs:{done:6,total:8},started:daysAgo(9),posted_at:null,approved_at:null,last_activity:daysAgo(1),flag:''},
       {first_name:'Bridget',status:'posted',stage:'Receipt acknowledged',stage_at:daysAgo(8),docs:{done:8,total:8},started:daysAgo(40),posted_at:daysAgo(12),approved_at:null,last_activity:daysAgo(12),flag:''},
       {first_name:'Michael',status:'posted',stage:'Financial assessment: more information requested',stage_at:daysAgo(5),docs:{done:9,total:9},started:daysAgo(70),posted_at:daysAgo(33),approved_at:null,last_activity:daysAgo(33),flag:'HSE asked for more information'},
@@ -826,7 +827,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       return '<div class="frow' + (f.flag ? ' flagged' : '') + '" data-detail="' + esc('Started ' + fmt(f.started) + (f.assessment ? ' · care needs assessment requested' : '') + (f.posted_at ? ' · sent ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + (f.stage && f.stage_at ? ' · ' + f.stage + ' ' + fmt(f.stage_at) : '') + ' · ' + f.docs.done + ' of ' + f.docs.total + ' documents · last activity ' + fmt(f.last_activity)) + '"><div class="fname"><b>' + esc(f.first_name || 'Family') + '</b><span>Started ' + fmt(f.started) + (f.posted_at ? ' · sent ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + '</span></div>' +
         '<span class="chip ' + st[1] + '" title="' + esc(f.stage_at ? fmt(f.stage_at) : '') + '">' + esc(st[0]) + '</span>' +
         '<div class="bar"><div style="width:' + pct + '%"></div><span>' + f.docs.done + ' of ' + f.docs.total + ' documents</span></div>' +
-        (f.flag ? '<span class="flag">' + esc(f.flag) + '</span>' : '<span class="ok">Last activity ' + fmt(f.last_activity) + '</span>') + '</div>';
+        (f.flag ? '<span class="flag">' + esc(f.flag) + '</span>' : '<span class="ok">Last activity ' + fmt(f.last_activity) + '</span>') + (f.advice ? '<span class="advice">Needs specialist advice</span>' : '') + '</div>';
     }).join('') : '<p class="empty">No families yet. Send your first link using the form above.</p>';
     $('pending').innerHTML = d.invites.length ? '<h3 class="ph">Links sent, not started yet</h3>' + d.invites.map(function(i){ var how = i.channel === 'sms' ? 'text to ' + esc(i.phone || '') : i.channel === 'assisted' ? 'set up at the desk' : esc(i.email || ''); return '<div class="prow"><b>' + esc(i.first_name) + '</b><span>' + how + ' · ' + fmt(i.sent) + '</span></div>'; }).join('') : '';
     var RST = {not_started:'Not started', gathering:'Gathering documents', posted:'Posted to the HSE', approved:'Approved', closed:'Closed'};
@@ -1185,7 +1186,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     {t:'#f-invite button', h:'Send the link', p:'That is all your staff do. The family answers a few questions and gets the step-by-step pack, the official HSE form filled in, a checklist with weekly reminders, and request letters.', act:function(){ $('f-invite').dispatchEvent(new Event('submit',{cancelable:true})); }},
     {t:'#pending', h:'Links waiting to be started', p:'Families who have their link but have not started yet. A quick reminder at the next visit usually does it.'},
     {t:'.frow.flagged', h:'Red means a family may need a nudge', p:'No progress for two weeks, or posted over four weeks ago with no decision. These are the families worth a phone call, before funding is delayed.'},
-    {t:'.fam', h:'Where each application stands', p:'Preparing, sent to the HSE, acknowledged, assessments, decision or appeal, with how many documents are ticked off. Funding is never backdated, so a complete application sent in early is what gets your home paid sooner.'},
+    {t:'.fam', h:'Where each application stands', p:'Preparing, sent to the HSE, acknowledged, assessments, decision or appeal, with how many documents are ticked off, and a note when a family\u2019s situation needs a solicitor (you never see why). Funding is never backdated, so a complete application sent in early is what gets your home paid sooner.'},
     {t:'#res-card', h:'Residents doing it another way', p:'Families using a solicitor, or doing it themselves, go on your own list, so every resident\u2019s Fair Deal is on one screen and nobody is forgotten.'},
     {t:'#lst-card', h:'Your listing on the nursing home finder', p:'Families choosing a home see your photos, a short description, the care you offer and whether you have places. It is included in your plan, and every home stays in the same order on the finder.'},
     {t:'#ask-card', h:'Ask a question, by typing or by voice', p:'Anything about Fair Deal or the dashboard. Answers come from fairdeal.ie’s guidance and your own screen; if it is not sure, a person replies by email.'},
