@@ -268,7 +268,11 @@ input.txt{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px so
 .ring circle{fill:none;stroke-width:12}.ring .trk{stroke:var(--lilac-soft)}.ring .val{stroke:var(--teal);stroke-linecap:round;stroke-dasharray:314.16;stroke-dashoffset:314.16;transition:stroke-dashoffset .5s}
 .ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--head);font-size:26px;color:var(--navy)}
 .progress p{margin:0;color:var(--muted);font-size:16px}
-#relative-card .row{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}#relative-card .row input{display:block;width:100%;min-width:0;box-sizing:border-box;font:inherit;font-size:14px;padding:10px 12px;border:2px solid var(--line);border-radius:10px}#relative-card{min-width:0;overflow:hidden}
+.helpers{list-style:none;padding:0;margin:0 0 14px}.helpers li{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:9px 0;border-top:1px solid var(--line)}.helpers li:first-child{border-top:0}
+.helpers b{color:var(--navy)}.helpers span{color:var(--muted);font-size:14px}.helpers .role{display:inline-block;background:var(--lilac-soft);color:var(--lilac);border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;margin-left:6px}
+.who{margin-left:auto;font:inherit;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:#fff;max-width:160px}.item .by{display:block;font-size:13px;color:var(--teal-2)}
+.item{flex-wrap:wrap}.item .who{flex:0 0 auto}
+.helperbar{background:var(--lilac-soft);color:var(--navy);border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:15px}
 .sitcard{border-top:6px solid var(--lilac)}.sitcard h2{font-size:22px;margin:6px 0 10px}.sitcard h3{font-size:16px;color:var(--navy);margin:14px 0 6px}
 .sitcard ul{margin:0 0 10px;padding-left:22px}.sitcard li{margin:6px 0;font-size:15px}.sit-who{font-size:15px;color:var(--muted);margin:0 0 12px}.sit-who b{color:var(--navy)}
 .sit-conflict{background:var(--sun-soft);color:var(--navy);border-radius:10px;padding:10px 14px;font-size:15px;margin:0 0 12px}
@@ -429,6 +433,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     <span class="eyebrow">Your private tracker</span>
     <h1 id="t-title">Your Fair Deal tracker</h1>
     <p id="t-sub">Loading your application…</p>
+    <div class="helperbar" id="helperbar" hidden></div>
     <p class="provided" id="provided" hidden></p>
     <ol class="tl" id="stages" hidden></ol>
   </div>
@@ -566,12 +571,18 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           <p class="hint small">If printing is blocked on this device, <a href="#" id="print-open">open it as a page</a> instead.</p>
         </div>
 
-        <div class="tcard" id="relative-card">
-          <span class="kicker">A hand from family</span>
-          <h3>Ask a family member to help</h3>
-          <p class="hint">Copy this link and send it to a son, daughter or anyone you trust. It opens this tracker exactly as you see it. <b>It is private:</b> anyone with the link can tick items and send letters in your name, so send it only to someone you trust, and never post it anywhere public.</p>
-          <div class="row"><input type="text" id="rel-link" readonly aria-label="Your private tracker link" data-novoice><button class="btn small ghost" type="button" id="rel-copy">Copy the link</button></div>
-          <p class="note" id="rel-note"></p>
+        <div class="tcard" id="helpers-card">
+          <span class="kicker">Who is helping</span>
+          <h3>Who is helping</h3>
+          <p class="hint" id="help-hint">Invite a son, daughter, sibling or a solicitor’s assistant. Each gets their own private link, can tick items off and send letters in their own name, and you can switch any link off at any time. They never see the figures typed into the HSE form on another device.</p>
+          <ul class="helpers" id="helper-list"></ul>
+          <form id="f-me" class="smsform" novalidate><div class="field"><label for="me-name">Your name, as the others will see it</label><input type="text" id="me-name" maxlength="80" placeholder="For example, Anne Byrne"></div><button class="btn small ghost" type="submit">Save my name</button><p class="note" id="n-me"></p></form>
+          <form id="f-helper" class="smsform" novalidate>
+            <div class="field"><label for="h-name">Helper’s name</label><input type="text" id="h-name" maxlength="80"></div>
+            <div class="field"><label for="h-email">Their email</label><input type="email" id="h-email"></div>
+            <button class="btn small" type="submit">Invite a helper</button>
+            <p class="note" id="n-helper"></p>
+          </form>
         </div>
 
         <div class="tcard askbox" id="ask-card">
@@ -780,17 +791,41 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   }
   $('print-progress').addEventListener('click', printProgress);
   $('print-open').addEventListener('click', function(e){ e.preventDefault(); openProgress(); });
-  // the private link for a relative (until family helpers get links of their own)
-  $('rel-copy').addEventListener('click', function(){
-    var inp = $('rel-link'); inp.select();
-    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
-    if (navigator.clipboard) navigator.clipboard.writeText(inp.value).then(function(){ $('rel-note').textContent = 'Copied. Send it only to someone you trust.'; }, function(){ $('rel-note').textContent = ok ? 'Copied. Send it only to someone you trust.' : 'Press and hold the link to copy it.'; });
-    else $('rel-note').textContent = ok ? 'Copied. Send it only to someone you trust.' : 'Press and hold the link to copy it.';
-  });
   // "Easier to read": logged once per device, so it can be counted (never what was typed)
   document.addEventListener('fd-easy', function(e){
     if (e.detail && e.detail.on) { var k = 'fd_easy_logged'; try { if (localStorage.getItem(k)) return; localStorage.setItem(k, '1'); } catch (x) {} if (token) act('log', {kind: 'easy_mode_on'}); }
   });
+  // who is helping (upgrade 3): the main helper invites and removes; a helper sees the list and their own name only
+  function renderHelpers(){
+    var me = state.me || {}, hs = state.helpers || [], isMain = me.role === 'main';
+    document.body.classList.toggle('is-helper', !isMain);
+    ['sms-card', 'pass-card'].forEach(function(id){ $(id).hidden = !isMain; });
+    $('f-helper').hidden = !isMain;
+    $('help-hint').textContent = isMain ? 'Invite a son, daughter, sibling or a solicitor\u2019s assistant. Each gets their own private link, can tick items off and send letters in their own name, and you can switch any link off at any time. They never see the figures typed into the HSE form on another device.' : 'You are helping with this tracker. ' + (hs.filter(function(h){ return h.role === 'main'; }).map(function(h){ return h.name || 'The person who opened it'; })[0] || 'The person who opened it') + ' decides who can see it.';
+    $('helper-list').innerHTML = hs.map(function(h){
+      return '<li><div><b>' + esc(h.name || (h.role === 'main' ? 'Name not given yet' : h.email)) + '</b>' + (h.role === 'main' ? '<span class="role">Opened the tracker</span>' : '') + (h.me ? '<span class="role">You</span>' : '') + (h.role === 'helper' && h.email && isMain ? '<br><span>' + esc(h.email) + '</span>' : '') + '</div>' +
+        '<span>Added ' + fmt(h.added_at) + (h.role === 'helper' ? (h.last_seen_at ? ' \u00b7 last opened ' + fmt(h.last_seen_at) : ' \u00b7 not opened yet') : '') + '</span>' +
+        (isMain && h.role === 'helper' ? '<button class="btn small ghost" type="button" data-remove="' + h.id + '">Remove</button>' : '') + '</li>';
+    }).join('');
+    if (document.activeElement !== $('me-name')) $('me-name').value = me.name || '';
+    var bar = $('helperbar');
+    if (!isMain) { bar.hidden = false; bar.textContent = 'You are helping as ' + (me.name || 'a helper') + '. You can tick items, put names on them and send letters in your own name. Settings, texts and closing the tracker are for the person who opened it.'; } else bar.hidden = true;
+  }
+  $('f-helper').addEventListener('submit', function(e){
+    e.preventDefault(); var name = $('h-name').value.trim(), email = $('h-email').value.trim();
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $('n-helper').textContent = 'Please give the helper\u2019s name and email address.'; return; }
+    $('n-helper').textContent = 'Sending\u2026';
+    call({t: token, action: 'helper_add', name: name, email: email}).then(function(j){ state = j; render(); $('n-helper').textContent = name + ' has been emailed their own link.'; $('h-name').value = ''; $('h-email').value = ''; })
+      .catch(function(e){ $('n-helper').textContent = e.message === 'already a helper' ? 'That email address is already on this tracker.' : e.message; });
+  });
+  $('f-me').addEventListener('submit', function(e){ e.preventDefault(); call({t: token, action: 'me', name: $('me-name').value.trim()}).then(function(j){ state = j; render(); $('n-me').textContent = 'Saved.'; }).catch(function(e){ $('n-me').textContent = e.message; }); });
+  $('helper-list').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-remove]'); if (!b) return;
+    var h = (state.helpers || []).filter(function(x){ return x.id === b.getAttribute('data-remove'); })[0];
+    if (!confirm('Switch off ' + (h ? (h.name || h.email) : 'this helper') + '\u2019s link? It stops at once and they are told by email.')) return;
+    act('helper_remove', {helper_id: b.getAttribute('data-remove')});
+  });
+  document.addEventListener('change', function(e){ var a = e.target.getAttribute && e.target.getAttribute('data-assign'); if (a) act('assign', {item_id: a, helper_id: e.target.value || null}); });
   // the guided route for complex cases (upgrade 6): one route at a time, from the intake answers and the decision; routes.js holds the rules
   var sitIndex = 0;
   function renderSituation(){
@@ -860,9 +895,16 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       nx.push('<div class="nstep"><b>We are sorry for your loss</b><span>We have emailed you a short guide to the Schedule of Assets and the nursing home loan. Reply to it if you would like help.</span></div>');
     }
     if (c.can_undo && c.status !== 'closed') nx.push('<div class="nstep quietstep"><span>Marked something by mistake?</span><button class="btn small ghost" data-step="undo">Undo the last change</button></div>');
+    // who is getting what (upgrade 3)
+    var me = state.me || {}, hs = state.helpers || [];
+    var open = items.filter(function(i){ return !i.done_at && i.assigned_to; });
+    if (open.length) {
+      var counts = {}; open.forEach(function(i){ counts[i.assigned_to] = (counts[i.assigned_to] || 0) + 1; });
+      nx.push('<div class="nstep quietstep"><span>' + hs.filter(function(h){ return counts[h.id]; }).map(function(h){ var n = counts[h.id]; return (h.me ? 'Yours' : esc(h.name || h.email || 'A helper')) + ': ' + n + (n === 1 ? ' item' : ' items'); }).join('. ') + '.</span></div>');
+    }
     $('next').innerHTML = nx.join('');
     renderSituation();
-    $('rel-link').value = location.origin + '/my?t=' + encodeURIComponent(token);
+    renderHelpers();
     $('after-card').hidden = c.status !== 'approved';
     $('handover').hidden = c.status === 'closed';
     $('form-link').href = '/form?t=' + encodeURIComponent(token);
@@ -870,6 +912,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     var formOnly = c.tier === 'form';
     $('form-card').hidden = c.status !== 'gathering' && !formOnly;
     ['prog-card','next-card','list-card','letters-card','pass-card','docs-card','sms-card'].forEach(function(id){ $(id).hidden = formOnly; });
+    if (state.me && state.me.role !== 'main') { $('sms-card').hidden = true; $('pass-card').hidden = true; }
     $('up-card').hidden = !formOnly;
     $('stages').hidden = formOnly;
     $('form-kick').textContent = formOnly ? 'Your form' : 'We fill it in for you';
@@ -880,7 +923,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     items.forEach(function(i){ if (!groups[i.grp]) { groups[i.grp] = []; orderG.push(i.grp); } groups[i.grp].push(i); });
     $('groups').innerHTML = orderG.map(function(g, gi){
       return '<div class="group"><h3><i>' + (gi + 1) + '</i>' + esc(g) + '</h3>' + groups[g].map(function(i){
-        return '<label class="item' + (i.done_at ? ' done' : '') + '"><input type="checkbox" data-item="' + i.id + '"' + (i.done_at ? ' checked' : '') + (c.status === 'closed' ? ' disabled' : '') + '><div><b>' + esc(i.item) + '</b><span>' + esc(i.note || '') + '</span></div></label>';
+        var hs = state.helpers || [], who = hs.length > 1 ? '<select class="who" data-assign="' + i.id + '" aria-label="Who will get this"><option value="">Who?</option>' + hs.map(function(h){ return '<option value="' + h.id + '"' + (i.assigned_to === h.id ? ' selected' : '') + '>' + esc(h.name || (h.role === 'main' ? 'Opened the tracker' : h.email)) + (h.me ? ' (me)' : '') + '</option>'; }).join('') + '</select>' : '';
+        var by = i.done_at && i.done_by_name ? '<em class="by">' + esc(i.done_by_name) + ', ticked ' + fmt(i.done_at) + '</em>' : (!i.done_at && i.assigned_name ? '<em class="by">' + esc(i.assigned_name) + ' is getting this</em>' : '');
+        return '<label class="item' + (i.done_at ? ' done' : '') + '"><input type="checkbox" data-item="' + i.id + '"' + (i.done_at ? ' checked' : '') + (c.status === 'closed' ? ' disabled' : '') + '><div><b>' + esc(i.item) + '</b><span>' + esc(i.note || '') + '</span>' + by + '</div>' + who + '</label>';
       }).join('') + '</div>';
     }).join('');
 

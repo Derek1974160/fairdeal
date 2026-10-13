@@ -538,7 +538,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           </ul>
         </label>
       </div>
-      <label class="agree"><input type="checkbox" id="agree"><span>I want the service to start straight away, and I understand I lose my right to cancel once my link or pack is sent. I agree to the <a href="/terms" target="_blank">terms of sale</a>, and to fairdeal.ie using my answers, which may include information about the applicant’s health, as set out in the <a href="/privacy" target="_blank">privacy notice</a>.</span></label>
+      <label class="agree"><input type="checkbox" id="agree"><span>I want the service to start straight away, and I understand I lose my right to cancel once my link or pack is sent. I agree to the <a href="/terms" target="_blank">terms of sale</a>, and to fairdeal.ie using my answers, which may include information about the applicant’s health, as set out in the <a href="/privacy" target="_blank">privacy notice</a>. The person who opens the tracker decides who else can see it.</span></label>
       <form class="mini" id="buy" novalidate>
         <input type="email" id="buy-email" placeholder="Your email" aria-label="Your email">
         <button class="btn" type="submit" id="buy-btn">Get the full service — €149</button>
@@ -812,7 +812,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
           if (n) $('inv-text').textContent = 'There is nothing to pay. ' + j.home + ' has already answered some of the questions below with you: check them, change anything that is wrong, then press “Start my service” at the end.';
         }
         if (j.stage) { var sr = document.querySelector('input[name="sp-stage"][value="' + j.stage + '"]'); if (sr) sr.checked = true; }
-        $('sp-agree-text').innerHTML = 'I want the service to start now. I agree to the <a href="/terms" target="_blank">terms</a>, to fairdeal.ie using my answers (which may include information about the applicant’s health) as set out in the <a href="/privacy" target="_blank">privacy notice</a>, and to <b>' + esc(j.home) + '</b> seeing how the application is progressing. They will not see any financial details.';
+        $('sp-agree-text').innerHTML = 'I want the service to start now. I agree to the <a href="/terms" target="_blank">terms</a>, to fairdeal.ie using my answers (which may include information about the applicant’s health) as set out in the <a href="/privacy" target="_blank">privacy notice</a>, and to <b>' + esc(j.home) + '</b> seeing how the application is progressing. They will not see any financial details. The person who opens the tracker decides who else can see it.';
         $('sp-btn').addEventListener('click', function(){
           var note = $('sp-note'), btn = this;
           var em = $('sp-email').value.trim();
