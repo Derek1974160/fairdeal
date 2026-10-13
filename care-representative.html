@@ -275,6 +275,10 @@ table.t{width:100%;border-collapse:collapse;font-size:16px}table.t th,table.t td
 .afaq details p{padding:0 20px 18px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:999px;font-weight:600;display:none;z-index:50}
 @media(max-width:640px){.box{padding:22px 20px}.box h2{font-size:22px}.figure .big{font-size:40px}}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+pre.wording{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%}
+@media(max-width:959px){.grid{grid-template-columns:minmax(0,1fr)}}.grid>*{min-width:0}.plain select,.plain input,.plain textarea{max-width:100%;box-sizing:border-box}
+@media(max-width:520px){table.t{font-size:14px}table.t th,table.t td{padding:8px 4px;overflow-wrap:anywhere}}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -305,14 +309,14 @@ table.t{width:100%;border-collapse:collapse;font-size:16px}table.t th,table.t td
 
 <div class="box">
 <h2>Who can do what</h2>
-<table class="t">
+<div class="tscroll"><table class="t">
 <thead><tr><th>Decision</th><th>A son, daughter, spouse or partner (&ldquo;specified person&rdquo;)</th><th>Registered enduring power of attorney</th><th>Decision-making representative (court)</th></tr></thead>
 <tbody>
 <tr><td>Apply for the care needs assessment and State support</td><td><strong>Yes</strong></td><td>Yes</td><td>Yes</td></tr>
 <tr><td>Deal with the HSE during the application</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
 <tr><td>Apply for the nursing home loan and agree to the charge on the home</td><td><strong>No</strong></td><td>Yes, if the power covers property</td><td>Yes, if the court order says so</td></tr>
 <tr><td>Appoint a family successor for a farm or business (three-year cap)</td><td>No</td><td>Yes, if the power covers property</td><td>Yes, if the court order says so</td></tr>
-</tbody></table>
+</tbody></table></div>
 <p class="small muted">The HSE lists the specified persons as a spouse or partner, a child over 18, a registered doctor, nurse or social worker, a ward of court committee, an attorney under a registered enduring power, or a decision-making representative.</p>
 </div>
 

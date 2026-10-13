@@ -493,7 +493,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
             <li>After approval, a yearly reminder about reporting changes, and help after a death</li>
           </ul>
           <label class="agree-up"><input type="checkbox" id="up-agree"><span>I want the full service to start straight away, and I understand I lose my right to cancel once my pack is sent. I agree to the <a href="/terms" target="_blank">terms of sale</a> and the <a href="/privacy" target="_blank">privacy notice</a>.</span></label>
-          <button class="btn" id="up-btn" type="button">Add the full service — €100</button>
+          <button class="btn" id="up-btn" type="button">Add the full service, €100</button>
           <p class="note" id="up-note">One payment. Secure payment by card through Stripe.</p>
         </div>
 
@@ -973,8 +973,8 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     var btn = this; btn.disabled = true; btn.textContent = 'Taking you to payment…';
     fetch("https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-buy-pack", {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({tier:'upgrade', consent: true, t: token})})
       .then(function(r){ return r.json(); })
-      .then(function(j){ if (j.url) location.href = j.url; else { $('up-note').textContent = j.error || 'Could not start payment. Please try again.'; btn.disabled = false; btn.textContent = 'Add the full service — €100'; } })
-      .catch(function(){ $('up-note').textContent = 'Something went wrong. Please try again.'; btn.disabled = false; btn.textContent = 'Add the full service — €100'; });
+      .then(function(j){ if (j.url) location.href = j.url; else { $('up-note').textContent = j.error || 'Could not start payment. Please try again.'; btn.disabled = false; btn.textContent = 'Add the full service, €100'; } })
+      .catch(function(){ $('up-note').textContent = 'Something went wrong. Please try again.'; btn.disabled = false; btn.textContent = 'Add the full service, €100'; });
   });
   $('handover').addEventListener('click', function(){
     if (confirm('We are sorry. Shall we close this tracker and email you a short guide to what happens with Fair Deal after a death?')) act('handover');

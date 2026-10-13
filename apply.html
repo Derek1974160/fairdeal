@@ -541,7 +541,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       <label class="agree"><input type="checkbox" id="agree"><span>I want the service to start straight away, and I understand I lose my right to cancel once my link or pack is sent. I agree to the <a href="/terms" target="_blank">terms of sale</a>, and to fairdeal.ie using my answers, which may include information about the applicant’s health, as set out in the <a href="/privacy" target="_blank">privacy notice</a>. The person who opens the tracker decides who else can see it.</span></label>
       <form class="mini" id="buy" novalidate>
         <input type="email" id="buy-email" placeholder="Your email" aria-label="Your email">
-        <button class="btn" type="submit" id="buy-btn">Get the full service — €149</button>
+        <button class="btn" type="submit" id="buy-btn">Get the full service, €149</button>
       </form>
       <p class="pack-note" id="buy-note">One payment, no subscription. Secure payment by card through Stripe. We never ask for PPS numbers or bank balances. Independent service, not the HSE.</p>
       </div>
@@ -746,7 +746,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       var head = d.querySelector('strong');
       var title = head ? head.textContent.trim() : '';
       var bodyText = head ? (head.nextSibling && head.nextSibling.textContent ? head.nextSibling.textContent.trim() : d.textContent.replace(title,'').trim()) : d.textContent.trim();
-      return title ? (title + ' — ' + bodyText) : bodyText;
+      return title ? (title + ': ' + bodyText) : bodyText;
     });
     if(al.length) out += 'THINGS TO WATCH\n' + al.map(function(t){ return '- ' + t; }).join('\n') + '\n';
     return out;
@@ -764,7 +764,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 
   // Paid service: Form only (EUR 49) or Full service (EUR 149)
   var BUY = "https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-buy-pack";
-  var TIER_LABEL = {form:'Get the form filled in — €49', full:'Get the full service — €149'};
+  var TIER_LABEL = {form:'Get the form filled in, €49', full:'Get the full service, €149'};
   function tier(){ var c = document.querySelector('input[name="tier"]:checked'); return c ? c.value : 'full'; }
   function syncBtn(){ var b = $('buy-btn'); if (b && !b.disabled) b.textContent = TIER_LABEL[tier()]; }
   document.querySelectorAll('input[name="tier"]').forEach(function(r){ r.addEventListener('change', syncBtn); });
