@@ -502,6 +502,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 
   <!-- signed in -->
   <div id="in" hidden>
+    <div class="demobar" id="groupbar" hidden></div>
     <div class="topline"><div><b id="d-home"></b><span id="d-meta"></span></div><span class="tbtns"><button class="linkbtn" id="tips-again" type="button">Show me around</button> <button class="btn small ghost" id="signout" type="button">Sign out</button></span></div>
 
     <div class="tiles">
@@ -634,9 +635,8 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
         <div class="hcard" id="grp-card" hidden>
           <span class="kicker">Your group</span>
           <h2 id="grp-title">Every home in your group</h2>
-          <p class="hint">Families set up through fairdeal.ie and residents on each home’s own list.</p>
-          <button class="btn small ghost" type="button" id="grp-load">Show the group</button>
-          <div id="grp-out"></div>
+          <p class="hint">Every home side by side: where each family stands, who needs attention across the group, and homes not yet set up. First names and stages only, never finances.</p>
+          <a class="btn small" href="/group" id="grp-open">Open your group page</a>
         </div>
         </details>
       </div>
@@ -764,6 +764,8 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   try { s = localStorage.getItem(KEY) || ''; } catch(e) {}
   var emailForCode = '', claimNumber = null;
   var DEMO = new URLSearchParams(location.search).has('demo');
+  // a group staff member opening another home in the group (from /group): every call names the home
+  var GHOME = (new URLSearchParams(location.search).get('home') || '').replace(/\D/g, '');
   var daysAgo = function(n){ return new Date(Date.now() - n*86400000).toISOString(); };
   function renderReport(r){
     var f = r && r.this_month; var g = $('rgrid'); if (!g) return;
@@ -806,7 +808,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     report:{this_month:{month:new Date().toISOString().slice(0,7),invited:4,started:3,active:5,open:5,stages:{not_started:0,gathering:2,posted:2,approved:1},docs_ticked:11,letters_sent:3,replies:2,reminders:6,posted:1,approved:1,posted_all:3,median_days:null,nudge:['Kathleen'],own_list:2},last:{month:'2026-09',figures:{}}},
     billing:{plan:'monthly',monthly_cents:7500,fee_cents:4000,billing_from:'2026-07',month:'',month_families:3,month_cents:7500,history:[]}
   };
-  function call(body){ return fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}).then(function(r){ return r.json().then(function(j){ j._status = r.status; return j; }); }); }
+  function call(body){ if (GHOME && body.s && !body.home_number) body.home_number = GHOME; return fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}).then(function(r){ return r.json().then(function(j){ j._status = r.status; return j; }); }); }
   var fmt = function(iso){ return iso ? new Date(iso).toLocaleDateString('en-IE', {day:'numeric', month:'short'}) : ''; };
   var euro = function(c){ return '€' + (c/100).toFixed(2); };
   var STAGE = {gathering:['Gathering documents','g'], posted:['Sent to the HSE','p'], approved:['Approved','a'], refused:['Refused','g'], closed:['Closed','c']};
@@ -852,6 +854,13 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     $('team-num').textContent = d.home.number;
     $('team-list').innerHTML = (d.team || []).map(function(t){ return '<div class="trow"><div><b>' + esc(t.name || 'No name') + '</b> <span>' + (t.email ? 'code to ' + esc(t.email) : 'code to the home’s email') + (t.me ? ' · you' : '') + '</span></div>' + (t.me ? '' : '<button type="button" class="rm" data-rm="' + esc(t.id) + '">Remove</button>') + '</div>'; }).join('');
     try { localStorage.setItem('fd_home_num', String(d.home.number)); } catch(e) {}
+    // opened from the group page: say so, and lock every form when the staff member may only look
+    var gb = $('groupbar');
+    if (d.staff && d.staff.via_group) {
+      gb.hidden = false;
+      gb.innerHTML = '<b>' + esc(d.home.name) + '</b> as part of ' + esc(d.staff.grp || 'your group') + '. ' + (d.staff.readonly ? 'You can see this home but not change it: you are not on its team and your group sign-in is a viewer. Ask the home to add you, or ask Derek for a manager role.' : 'You are a group manager, so anything you change here is logged under your name.') + ' <a href="/group">Back to your group</a>';
+      if (d.staff.readonly) setTimeout(function(){ document.querySelectorAll('#in input, #in button, #in select, #in textarea').forEach(function(el){ if (!el.closest('.topline') && el.id !== 'tips-again') el.disabled = true; }); }, 0);
+    } else gb.hidden = true;
     $('grp-card').hidden = !(d.staff && d.staff.grp);
     if (d.staff && d.staff.grp) $('grp-title').textContent = 'Every home in ' + d.staff.grp;
     renderReport(d.report);
@@ -1147,16 +1156,6 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     call({action:'resident_remove', s:s, id:id}).then(function(j){ if (!j.error) render(j); });
   });
   $('weekly').addEventListener('change', function(){ if (DEMO) return; call({action:'weekly', s:s, on:this.checked}).then(function(j){ if (!j.error) render(j); }); });
-  $('grp-load').addEventListener('click', function(){
-    var b = this; b.disabled = true;
-    call({action:'group', s:s}).then(function(j){
-      b.disabled = false; if (j.error) { $('grp-out').textContent = j.error; return; }
-      var tot = {total:0,gathering:0,posted:0,approved:0,flagged:0,tracked:0};
-      $('grp-out').innerHTML = '<table class="gtable"><tr><th>Home</th><th class="n">Families</th><th class="n">Gathering</th><th class="n">Posted</th><th class="n">Approved</th><th class="n">Need a nudge</th><th class="n">Own list</th></tr>' +
-        j.homes.map(function(h){ Object.keys(tot).forEach(function(k){ tot[k] += h[k] || 0; }); return '<tr><td><b>' + esc(h.name) + '</b><br><span class="hint small">' + esc(h.town || '') + ' · ' + h.number + (h.set_up ? '' : ' · not set up yet') + '</span></td><td class="n">' + h.total + '</td><td class="n">' + h.gathering + '</td><td class="n">' + h.posted + '</td><td class="n">' + h.approved + '</td><td class="n">' + h.flagged + '</td><td class="n">' + h.tracked + '</td></tr>'; }).join('') +
-        '<tr><th>All homes</th><th class="n">' + tot.total + '</th><th class="n">' + tot.gathering + '</th><th class="n">' + tot.posted + '</th><th class="n">' + tot.approved + '</th><th class="n">' + tot.flagged + '</th><th class="n">' + tot.tracked + '</th></tr></table>';
-    });
-  });
   document.querySelectorAll('input[name="cost"]').forEach(function(r){ r.addEventListener('change', function(){ if (DEMO) return; call({action:'cost', s:s, mode:this.value}).then(function(j){ if (!j.error) render(j); }); }); });
   $('signout').addEventListener('click', function(){ call({action:'signout', s:s}); s=''; lstLoaded = false; try{localStorage.removeItem(KEY);}catch(e){} showOut(); });
   $('logo-file').addEventListener('change', function(){

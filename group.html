@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your group on fairdeal.ie</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Every home in your group, side by side: where each family's Fair Deal application stands and who needs attention, without any private financial information.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,600i&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--teal-2)}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.12;margin:0;letter-spacing:-.01em}
+p{margin:0 0 1em}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:#fff;box-shadow:0 2px 14px rgba(14,42,71,.08)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:70px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy);font-family:var(--head);font-weight:700;font-size:21px}
+.logo i{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--lilac));display:grid;place-items:center;color:#fff;font-style:normal;font-size:18px}
+.logo small{display:block;font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted);letter-spacing:0}
+.nav nav{display:flex;gap:6px;align-items:center}
+.nav nav a{text-decoration:none;color:var(--navy);font-weight:600;font-size:15px;padding:9px 13px;border-radius:999px}
+.nav nav a:hover{background:var(--teal-soft)}
+.nav nav a.pill{background:var(--coral);color:#fff}
+.nav nav a.pill:hover{background:var(--coral-2)}
+.eyebrow{display:inline-block;justify-self:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.hint{font-size:15px;color:var(--muted);margin:0 0 10px}
+.field label{display:block;font-weight:600;font-size:15px;margin-bottom:6px;color:var(--navy)}
+.field label span{font-weight:400;color:var(--muted)}
+.note{font-size:14px;color:var(--muted);margin-top:6px}
+.empty{color:#A9C4DB;font-size:15px}
+.btn{display:inline-block;background:var(--coral);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:13px 22px;border-radius:999px;border:0;cursor:pointer;font-family:var(--head);box-shadow:0 8px 20px rgba(255,107,74,.35);transition:transform .12s,background .12s}
+.btn:hover{background:var(--coral-2);transform:translateY(-1px)}
+.btn:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.btn.teal{background:var(--teal);box-shadow:0 8px 20px rgba(15,163,138,.3)}.btn.teal:hover{background:var(--teal-2)}
+.btn.ghost{background:transparent;border:2px solid #fff;box-shadow:none}
+.ok{font-size:14px;color:#DCEAF5;margin-top:8px}
+.kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-2);background:var(--teal-soft);padding:6px 12px;border-radius:999px;margin-bottom:14px}
+.kicker.coral{color:var(--coral-2);background:#FFE8E1}.kicker.lilac{color:var(--lilac);background:var(--lilac-soft)}
+.btns{display:flex;justify-content:space-between;gap:10px;margin-top:26px;flex-wrap:wrap}
+.btn.back{background:#fff;color:var(--navy);border:2px solid var(--line);box-shadow:none}
+.btn.back:hover{background:var(--bg)}
+.hhero{background:linear-gradient(115deg,#0E2A47 0%,#14425E 45%,#0FA38A 100%);color:#fff;padding:46px 0 74px;position:relative;overflow:hidden}
+.hhero::before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:var(--coral);opacity:.28;left:-90px;bottom:-170px}
+.hhero::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:var(--sun);opacity:.35;right:-60px;top:-80px}
+.hhero .wrap{position:relative;z-index:1}
+.hhero .eyebrow{display:inline-block;background:rgba(255,255,255,.15);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sun);margin-bottom:12px}
+.hhero h1{font-size:clamp(28px,4.2vw,44px);margin-bottom:10px;max-width:22ch}.hhero p{color:#DCEAF5;font-size:18px;max-width:62ch;margin:0}
+.hmain{margin-top:-44px;position:relative;z-index:2;padding-bottom:60px}
+.hcard{background:#fff;border-radius:18px;padding:24px 22px;box-shadow:0 10px 30px rgba(14,42,71,.08);margin-bottom:22px;border-top:6px solid var(--teal)}
+.hcard.sun{border-top-color:var(--sun)}.hcard.coral{border-top-color:var(--coral)}.hcard.lilac{border-top-color:var(--lilac)}.hcard.quiet{border-top-color:var(--line)}
+.hcard h2{font-size:24px;color:var(--navy);margin-bottom:8px}.hcard h3{font-size:19px;color:var(--navy);margin-bottom:6px}
+.kicker.sun{color:#8A5A00;background:var(--sun-soft)}
+.hcard input[type=text],.hcard input[type=email]{width:100%;font:inherit;font-size:16px;padding:11px 14px;border:2px solid var(--line);border-radius:12px}
+.hcard .mini{display:flex;gap:10px;flex-wrap:wrap}.hcard .mini input{flex:1;min-width:200px}
+.field{margin-bottom:12px}.field label{display:block;font-weight:600;font-size:15px;color:var(--navy);margin-bottom:5px}
+.topline{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 10px 30px rgba(14,42,71,.08);margin-bottom:18px}
+.topline b{font-family:var(--head);font-size:20px;color:var(--navy);margin-right:10px}.topline span{color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{border-radius:16px;padding:16px;color:#fff}.tile b{display:block;font-family:var(--head);font-size:32px;line-height:1.1}.tile span{font-size:14px;opacity:.92}
+.frow{display:grid;grid-template-columns:1.2fr auto minmax(150px,1fr) auto;gap:12px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:12px 14px}
+.frow.flagged{border-color:var(--coral);background:#FFF5F2}@media(max-width:760px){.frow{grid-template-columns:1fr}}
+.fname b{display:block;color:var(--navy);font-size:16px}.fname span{font-size:13px;color:var(--muted)}
+.chip{border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;white-space:normal;max-width:100%;line-height:1.3}.chip.g{background:var(--lilac-soft);color:var(--lilac)}.chip.p{background:var(--teal-soft);color:var(--teal-2)}.chip.a{background:#DFF5E1;color:#1E7B34}.chip.c{background:var(--bg);color:var(--muted)}
+.bar{position:relative;height:24px;background:var(--bg);border-radius:999px;overflow:hidden}.bar div{height:100%;background:linear-gradient(90deg,var(--teal),var(--lilac))}
+.bar span{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--navy)}
+.flag{color:var(--coral-2);font-weight:700;font-size:13px}.ok{color:var(--muted);font-size:13px}
+.empty{color:var(--muted)}.big{font-family:var(--head);font-size:34px;color:var(--navy);margin:4px 0}.big small{display:block;font-family:var(--body);font-size:14px;color:var(--muted)}
+.btn.small{font-size:14px;padding:9px 16px}.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line);box-shadow:none}
+.demobar{background:var(--sun);color:var(--navy);border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:15px}.demobar a{color:var(--navy);font-weight:700}
+.tbtns{display:flex;gap:12px;align-items:center}.linkbtn{background:none;border:0;color:var(--teal-2);text-decoration:underline;cursor:pointer;font:inherit;font-size:14px}
+.logo-row{display:flex;gap:14px;align-items:center;margin:10px 0 14px}
+.logo-box{width:120px;height:72px;border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;background:#fff;flex:none;overflow:hidden}
+.logo-box img{max-width:110px;max-height:64px;object-fit:contain}.logo-box span{font-size:12px;color:var(--muted)}
+.hint.small{font-size:13px;margin-top:6px}.hcard .btn.small{display:inline-block;cursor:pointer}
+:root{--lilac:#163B63;--lilac-soft:#E8EEF6;--pale:#EEF3F8}
+a{color:var(--navy-2)}
+.logo i{background:var(--navy);color:var(--sun)}
+.logo em{font-style:normal;color:#B07800}
+.nav nav a:hover{background:var(--pale)}
+.btn.teal{background:var(--navy);box-shadow:0 8px 20px rgba(14,42,71,.25)}.btn.teal:hover{background:var(--navy-2)}
+.kicker,.kicker.coral,.kicker.lilac{color:var(--navy);background:var(--sun-soft)}
+.bar div{background:var(--navy-2)}
+  .nav .wrap{height:62px;gap:10px}
+  .logo{font-size:17px;gap:8px;min-width:0}
+  .logo i{width:32px;height:32px;font-size:16px;flex:none}
+  .logo span{white-space:nowrap;font-size:20px}
+  .logo small{display:none}
+  .nav nav{flex:none}
+  .nav nav a.pill{white-space:nowrap;font-size:14px;padding:8px 14px}
+.gtable{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}.gtable th,.gtable td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}.gtable th{color:var(--muted);font-weight:600;font-size:13px}
+.gtable td.n{text-align:right}.gtable th.n{text-align:right}
+.tiles{grid-template-columns:repeat(6,1fr)}@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}.tile.t6{background:var(--navy-2)}
+.bar div{background:var(--sun)}
+.reqs{border:1px solid #E3D3AE;background:var(--gold-soft,#F4ECDC);border-radius:6px;padding:12px 14px;margin-bottom:14px}.reqs h3{margin:0 0 6px;font-size:16px;color:var(--navy)}
+.reqrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid #E3D3AE}.reqrow b{color:var(--navy)}.reqrow span{color:var(--muted);font-size:14px;flex:1}
+.frow{cursor:pointer}.fdetail{grid-column:1/-1;font-size:14px;color:var(--muted);padding:4px 0 2px}
+/* ---- group page ---- */
+.hhero{padding:40px 0 70px}
+.gtop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 10px 30px rgba(14,42,71,.08);margin-bottom:18px}
+.gtop b{font-family:var(--head);font-size:20px;color:var(--navy)}.gtop span{color:var(--muted);font-size:15px}
+.tiles{grid-template-columns:repeat(4,1fr)}@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile.t1{background:var(--navy)}.tile.t2{background:var(--teal)}.tile.t3{background:var(--lilac)}.tile.t4{background:var(--coral)}.tile.t5{background:var(--navy-2)}.tile.t6{background:var(--teal-2)}.tile.t7{background:#8A5A00}.tile.t8{background:#2E6F9E}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -6px}
+.gtable{min-width:760px}.gtable tr.home{cursor:pointer}.gtable tr.home:hover td{background:var(--bg)}
+.gtable td.n b{color:var(--coral-2)}
+.att{list-style:none;padding:0;margin:8px 0 0}.att li{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
+.att li:first-child{border-top:0}.att b{color:var(--navy)}.att .home{color:var(--muted);font-size:14px;display:block}.att .why{color:var(--coral-2);font-weight:700;font-size:14px;text-align:right}
+@media(max-width:560px){.att li{grid-template-columns:1fr}.att .why{text-align:left}}
+.nsu{list-style:none;padding:0;margin:8px 0 0}.nsu li{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.nsu li:first-child{border-top:0}
+.nsu b{color:var(--navy)}.nsu span{color:var(--muted);font-size:14px}.nsu .sent{font-size:13px;color:var(--muted)}
+.roll{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.roll div{background:#F4F1EA;border-top:2px solid #0F2238;padding:10px 12px}.roll b{display:block;font-size:24px;line-height:1.1;color:#0F2238}.roll span{font-size:12.5px;color:#56606B;line-height:1.3;display:block;margin-top:3px}@media(max-width:480px){.roll{grid-template-columns:repeat(2,1fr)}}
+.twocol{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:start}@media(max-width:900px){.twocol{grid-template-columns:1fr}}
+.promise{background:var(--sun-soft);border-radius:12px;padding:12px 16px;font-size:15px;color:var(--navy);margin:0 0 14px}
+.note{font-size:14px;color:var(--muted);margin:8px 0 0;min-height:1.2em}
+.empty{color:var(--muted);font-size:15px;padding:8px 0}
+.gtable td.n.zero{color:var(--muted)}
+</style>
+<link rel="stylesheet" href="/theme.css">
+</head>
+<body>
+<div class="nav"><div class="wrap">
+  <a class="logo" href="/"><i>€</i><span>fairdeal<em>.ie</em><small>Independent guide. Not the HSE.</small></span></a>
+  <nav><a href="/home">A single home</a><a href="/home-agreement">Agreement</a><a class="pill" href="/home#out">Sign in</a></nav>
+</div></div>
+<section class="hhero">
+  <div class="wrap">
+    <span class="eyebrow">For group owners and regional managers</span>
+    <h1 id="h-title">Every home in your group, side by side</h1>
+    <p id="h-sub">See which families need attention across your homes, without ever seeing their private financial information. None is stored here.</p>
+  </div>
+</section>
+
+<main class="wrap hmain">
+  <div class="demobar" id="demobar" hidden><b>Sample group.</b> Nothing here is real. <a href="/home">Sign in to your own</a></div>
+
+  <div id="out" class="hcard sun" hidden>
+    <span class="kicker sun">Sign in first</span>
+    <h2>Your group page is behind your home sign-in</h2>
+    <p class="hint">Sign in at <a href="/home">www.fairdeal.ie/home</a> with your home number and your first name, then come back here. If your sign-in is not part of a group yet, ask Derek Fitzgerald (087 759 9848, derek@fairdeal.ie) to add it.</p>
+    <p><a class="btn" href="/home#out">Go to sign-in</a> <a class="btn ghost" href="/group?demo">See a sample group</a></p>
+    <p class="note" id="n-out"></p>
+  </div>
+
+  <div id="in" hidden>
+    <div class="gtop"><div><b id="g-name"></b> <span id="g-meta"></span></div><span><button class="btn small ghost" type="button" id="refresh">Refresh</button> <a class="btn small ghost" href="/home" id="myhome">My own home</a></span></div>
+
+    <div class="tiles">
+      <div class="tile t1"><b id="t-homes">0</b><span>homes set up</span></div>
+      <div class="tile t2"><b id="t-families_month">0</b><span>families started this month</span></div>
+      <div class="tile t3"><b id="t-active">0</b><span>families active this month</span></div>
+      <div class="tile t4"><b id="t-nudge">0</b><span>need attention now</span></div>
+      <div class="tile t5"><b id="t-preparing">0</b><span>preparing</span></div>
+      <div class="tile t6"><b id="t-sent">0</b><span>sent to the HSE</span></div>
+      <div class="tile t7"><b id="t-decision">0</b><span>decision received</span></div>
+      <div class="tile t8"><b id="t-letters">0</b><span>letters sent this month</span></div>
+    </div>
+
+    <div class="hcard">
+      <span class="kicker">Your homes</span>
+      <h2>Where each home stands</h2>
+      <p class="hint">Sorted by who needs attention most. Tap a home to open its dashboard: you see exactly what its own staff see, first names and stages, never finances.</p>
+      <div class="tscroll"><table class="gtable" id="homes"></table></div>
+      <p class="note" id="n-homes"></p>
+    </div>
+
+    <div class="twocol">
+      <div>
+        <div class="hcard coral">
+          <span class="kicker coral">Needs attention across the group</span>
+          <h2 id="att-title">Families who need a nudge</h2>
+          <p class="hint">The same reasons each home sees on its own dashboard: no progress for two weeks, sent four weeks ago with no decision marked, the HSE asked for more and nothing has been sent, or refused with the appeal window open.</p>
+          <ul class="att" id="attention"></ul>
+        </div>
+        <div class="hcard lilac" id="nsu-card">
+          <span class="kicker lilac">Homes not yet set up</span>
+          <h2>Not on fairdeal.ie yet</h2>
+          <p class="hint">Each of these can be switched on the same working day. The quick-start goes from Derek’s address with you copied.</p>
+          <ul class="nsu" id="notsetup"></ul>
+          <p class="note" id="n-nsu"></p>
+        </div>
+      </div>
+      <div>
+        <div class="hcard sun" id="roll-card">
+          <span class="kicker sun">Last month</span>
+          <h2 id="roll-title">The roll-up</h2>
+          <p class="hint">Emailed on the 1st of each month to the group contact. The same figures summed across your set-up homes.</p>
+          <div id="roll"></div>
+        </div>
+        <div class="hcard quiet">
+          <span class="kicker">What the group sees</span>
+          <h3>Nothing a home does not see</h3>
+          <p class="promise">First names, stages and dates. No income, savings, PPS number or valuation exists anywhere on fairdeal.ie, so there is nothing to leak.</p>
+          <p class="hint small">Opening a home you are not on the team of shows its dashboard read-only. Group managers can set up families and add team members for any home in the group; each such change is logged with your name.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  var API = "https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-home";
+  var KEY = 'fd_home_s', s = '';
+  try { s = localStorage.getItem(KEY) || ''; } catch(e) {}
+  var DEMO = new URLSearchParams(location.search).has('demo');
+  function $(id){ return document.getElementById(id); }
+  function esc(x){ return String(x == null ? '' : x).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmt(d){ if (!d) return ''; var x = new Date(d); return x.toLocaleDateString('en-IE', {day:'numeric', month:'short'}); }
+  function ago(d){ if (!d) return 'never'; var days = Math.floor((Date.now() - new Date(d).getTime()) / 86400000); return days === 0 ? 'today' : days === 1 ? 'yesterday' : days + ' days ago'; }
+  function monthName(m){ var p = m.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, 1)).toLocaleDateString('en-IE', {month:'long', year:'numeric', timeZone:'UTC'}); }
+  function call(body){ return fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}).then(function(r){ return r.json().then(function(j){ j._status = r.status; return j; }); }); }
+
+  var daysAgo = function(n){ return new Date(Date.now() - n * 86400000).toISOString(); };
+  var SAMPLE = { grp:'Sample Care Group', name:'Sample Care Group', role:'manager', month: new Date().toISOString().slice(0,7),
+    homes:[
+      {number:1308,name:'Riverside Nursing Home',town:'Naas',county:'Kildare',set_up:true,claimed_at:daysAgo(60),families_month:4,active:9,preparing:5,sent:3,decision:2,nudge:2,letters:6,last_signin:daysAgo(1)},
+      {number:1412,name:'Hillcrest House',town:'Newbridge',county:'Kildare',set_up:true,claimed_at:daysAgo(45),families_month:2,active:5,preparing:2,sent:2,decision:1,nudge:1,letters:3,last_signin:daysAgo(0)},
+      {number:1520,name:'The Willows',town:'Athy',county:'Kildare',set_up:true,claimed_at:daysAgo(12),families_month:1,active:1,preparing:1,sent:0,decision:0,nudge:0,letters:0,last_signin:daysAgo(9)}],
+    attention:[
+      {number:1412,home:'Hillcrest House',first_name:'Kathleen',reason:'No progress for 2 weeks',stage:'Preparing'},
+      {number:1308,home:'Riverside Nursing Home',first_name:'Michael',reason:'HSE asked for more information',stage:'Financial assessment: more information requested'},
+      {number:1308,home:'Riverside Nursing Home',first_name:'Tom',reason:'Sent over 4 weeks ago, no decision marked',stage:'Receipt acknowledged (assumed)'}],
+    not_set_up:[{number:1601,name:'Lakeview Lodge',town:'Kildare town',county:'Kildare',has_email:true,quickstart_sent:null},{number:1633,name:'Oakfield Nursing Home',town:'Celbridge',county:'Kildare',has_email:true,quickstart_sent:daysAgo(3)}],
+    last_report:{month:(function(){ var d = new Date(); d.setUTCDate(1); d.setUTCMonth(d.getUTCMonth()-1); return d.toISOString().slice(0,7); })(), figures:{totals:{homes:2,started:5,active:11,docs_ticked:38,letters_sent:7,replies:4,reminders:12,posted:4,approved:2,refused:0,nudge:2,open:12,stages:{not_started:1,gathering:6,posted:4,approved:1,refused:0,info_requested:1}}, homes:[]}},
+    totals:{homes:3,families_month:7,active:15,preparing:8,sent:5,decision:3,nudge:3,letters:9} };
+
+  function render(d){
+    $('out').hidden = true; $('in').hidden = false;
+    $('h-title').textContent = d.name; $('h-sub').textContent = 'Every home in ' + d.name + ' on one screen. Where each family stands and who needs attention, without any private financial information.';
+    $('g-name').textContent = d.name; $('g-meta').textContent = (d.homes.length + d.not_set_up.length) + ' homes in the group · ' + d.totals.homes + ' set up · you are a group ' + d.role + ' · figures for ' + monthName(d.month);
+    ['homes','families_month','active','nudge','preparing','sent','decision','letters'].forEach(function(k){ $('t-'+k).textContent = d.totals[k] || 0; });
+    var cell = function(v, strong){ return '<td class="n' + (v ? '' : ' zero') + '">' + (strong && v ? '<b>' + v + '</b>' : v) + '</td>'; };
+    $('homes').innerHTML = d.homes.length ? '<tr><th>Home</th><th>Set up</th><th class="n">Families this month</th><th class="n">Active</th><th class="n">Preparing</th><th class="n">Sent</th><th class="n">Decision</th><th class="n">Need a nudge</th><th class="n">Letters</th><th>Last staff sign-in</th></tr>' +
+      d.homes.map(function(h){ return '<tr class="home" data-n="' + h.number + '" tabindex="0"><td><b>' + esc(h.name) + '</b><br><span class="hint small">' + esc(h.town || '') + ' · ' + h.number + '</span></td><td>Yes, ' + fmt(h.claimed_at) + '</td>' + cell(h.families_month) + cell(h.active) + cell(h.preparing) + cell(h.sent) + cell(h.decision) + cell(h.nudge, true) + cell(h.letters) + '<td>' + ago(h.last_signin) + '</td></tr>'; }).join('') +
+      '<tr><th>All set-up homes</th><th></th><th class="n">' + d.totals.families_month + '</th><th class="n">' + d.totals.active + '</th><th class="n">' + d.totals.preparing + '</th><th class="n">' + d.totals.sent + '</th><th class="n">' + d.totals.decision + '</th><th class="n">' + d.totals.nudge + '</th><th class="n">' + d.totals.letters + '</th><th></th></tr>'
+      : '<tr><td class="empty">None of your homes is set up yet. Start with the list below.</td></tr>';
+    $('att-title').textContent = d.attention.length ? d.attention.length + (d.attention.length === 1 ? ' family needs' : ' families need') + ' a nudge' : 'Nobody needs a nudge today';
+    $('attention').innerHTML = d.attention.length ? d.attention.map(function(a){ return '<li><div><b>' + esc(a.first_name || 'Family') + '</b> <span class="hint small" style="display:inline">' + esc(a.stage || '') + '</span><span class="home">' + esc(a.home) + '</span></div><span class="why">' + esc(a.reason) + '</span></li>'; }).join('') : '<li class="empty">Every family across the group has moved in the last two weeks or is waiting on the HSE within the usual time.</li>';
+    $('nsu-card').hidden = !d.not_set_up.length;
+    $('notsetup').innerHTML = d.not_set_up.map(function(h){ return '<li data-n="' + h.number + '"><div><b>' + esc(h.name) + '</b><br><span>' + esc(h.town || '') + ' · ' + h.number + '</span></div>' + (h.quickstart_sent ? '<span class="sent">Quick-start sent ' + fmt(h.quickstart_sent) + '</span>' : '') + '<button class="btn small" type="button" data-qs="' + h.number + '"' + (h.has_email ? '' : ' disabled title="No email address on file for this home"') + '>' + (h.quickstart_sent ? 'Send it again' : 'Email the home the quick-start') + '</button></li>'; }).join('');
+    var r = d.last_report;
+    if (r && r.figures && r.figures.totals) {
+      var t = r.figures.totals, st = t.stages || {};
+      $('roll-title').textContent = monthName(r.month);
+      $('roll').innerHTML = '<div class="roll"><div><b>' + t.homes + '</b><span>homes set up</span></div><div><b>' + t.started + '</b><span>families started</span></div><div><b>' + t.active + '</b><span>families active</span></div><div><b>' + t.docs_ticked + '</b><span>documents ticked off</span></div><div><b>' + t.letters_sent + ' / ' + t.replies + '</b><span>letters sent / replies</span></div><div><b>' + t.reminders + '</b><span>reminders sent for your homes</span></div><div><b>' + t.posted + '</b><span>sent to the HSE</span></div><div><b>' + t.approved + (t.refused ? ' / ' + t.refused : '') + '</b><span>' + (t.refused ? 'approved / refused' : 'approvals recorded') + '</span></div><div><b>' + t.nudge + '</b><span>needed a nudge</span></div></div>' +
+        '<p class="hint small">Open applications at the month end: ' + st.not_started + ' not started, ' + st.gathering + ' preparing, ' + st.posted + ' sent to the HSE' + (st.info_requested ? ' (' + st.info_requested + ' asked for more)' : '') + ', ' + st.approved + ' approved' + (st.refused ? ', ' + st.refused + ' refused' : '') + '.</p>';
+    } else { $('roll-title').textContent = 'No roll-up yet'; $('roll').innerHTML = '<p class="empty">The first roll-up arrives on the 1st of the month after your first home is set up.</p>'; }
+  }
+  function load(){
+    if (DEMO) { $('demobar').hidden = false; render(SAMPLE); return; }
+    if (!s) { $('out').hidden = false; return; }
+    call({action:'group', s:s}).then(function(j){
+      if (j.error) { $('out').hidden = false; $('n-out').textContent = j._status === 401 ? 'Your sign-in has expired. Sign in again at /home.' : j.error; return; }
+      render(j);
+    }).catch(function(){ $('out').hidden = false; $('n-out').textContent = 'Could not reach fairdeal.ie. Check your connection and try again.'; });
+  }
+  $('homes').addEventListener('click', function(e){ var tr = e.target.closest('tr.home'); if (tr) location.href = '/home?home=' + tr.getAttribute('data-n'); });
+  $('homes').addEventListener('keydown', function(e){ var tr = e.target.closest('tr.home'); if (tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); location.href = '/home?home=' + tr.getAttribute('data-n'); } });
+  $('notsetup').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-qs]'); if (!b) return;
+    var n = b.getAttribute('data-qs'), name = b.closest('li').querySelector('b').textContent;
+    if (DEMO) { $('n-nsu').textContent = 'Sample only: nothing is sent. On your own group this emails ' + name + ' the quick-start, with you copied.'; return; }
+    if (!confirm('Email ' + name + ' the fairdeal.ie quick-start now? It goes from Derek’s address with you copied.')) return;
+    b.disabled = true;
+    call({action:'group_quickstart', s:s, number:n}).then(function(j){ if (j.error) { $('n-nsu').textContent = j.error; b.disabled = false; } else { $('n-nsu').textContent = 'Sent to ' + name + '. You have a copy in your inbox.'; render(j); } });
+  });
+  $('refresh').addEventListener('click', load);
+  load();
+</script>
+</body>
+</html>
