@@ -274,7 +274,7 @@ input.txt{width:100%;font:inherit;font-size:18px;padding:12px 14px;border:2px so
 .frow{display:grid;grid-template-columns:1.2fr auto minmax(150px,1fr) auto;gap:12px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:12px 14px}
 .frow.flagged{border-color:var(--coral);background:#FFF5F2}@media(max-width:760px){.frow{grid-template-columns:1fr}}
 .fname b{display:block;color:var(--navy);font-size:16px}.fname span{font-size:13px;color:var(--muted)}
-.chip{border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;white-space:nowrap}.chip.g{background:var(--lilac-soft);color:var(--lilac)}.chip.p{background:var(--teal-soft);color:var(--teal-2)}.chip.a{background:#DFF5E1;color:#1E7B34}.chip.c{background:var(--bg);color:var(--muted)}
+.chip{border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;white-space:normal;max-width:100%;line-height:1.3}.chip.g{background:var(--lilac-soft);color:var(--lilac)}.chip.p{background:var(--teal-soft);color:var(--teal-2)}.chip.a{background:#DFF5E1;color:#1E7B34}.chip.c{background:var(--bg);color:var(--muted)}
 .bar{position:relative;height:24px;background:var(--bg);border-radius:999px;overflow:hidden}.bar div{height:100%;background:linear-gradient(90deg,var(--teal),var(--lilac))}
 .bar span{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--navy)}
 .flag{color:var(--coral-2);font-weight:700;font-size:13px}.ok{color:var(--muted);font-size:13px}
@@ -507,7 +507,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     <div class="tiles">
       <div class="tile t1"><b id="s-total">0</b><span>families helped</span></div>
       <div class="tile t2"><b id="s-gathering">0</b><span>gathering documents</span></div>
-      <div class="tile t3"><b id="s-posted">0</b><span>posted to the HSE</span></div>
+      <div class="tile t3"><b id="s-posted">0</b><span>sent to the HSE</span></div>
       <div class="tile t4"><b id="s-approved">0</b><span>approved</span></div>
       <div class="tile t5"><b id="s-flagged">0</b><span>need a nudge</span></div>
       <div class="tile t6"><b id="s-tracked">0</b><span>on your own list</span></div>
@@ -770,7 +770,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     if (!f) { $('report-card').hidden = true; return; }
     $('report-card').hidden = false;
     var cells = [[f.invited, 'families invited'], [f.started, 'families started'], [f.active, 'active this month'], [f.docs_ticked, 'documents ticked off'],
-      [f.letters_sent + ' / ' + f.replies, 'letters sent / replies'], [f.reminders, 'reminders sent for you'], [f.posted, 'posted to the HSE'], [f.approved, 'approvals recorded'],
+      [f.letters_sent + ' / ' + f.replies, 'letters sent / replies'], [f.reminders, 'reminders sent for you'], [f.posted, 'sent to the HSE'], [f.approved, 'approvals recorded'],
       f.median_days != null ? [f.median_days + ' days', 'typical set-up to posting'] : [f.open, 'applications open now']];
     g.innerHTML = cells.map(function(c){ return '<div><b>' + esc(String(c[0])) + '</b><span>' + c[1] + '</span></div>'; }).join('');
     var st = f.stages || {};
@@ -795,11 +795,11 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     staff:{name:'Admissions team',email:'admissions@example.ie',grp:null},
     team:[{id:'t1',name:'Mary',email:'ad…@example.ie',me:true},{id:'t2',name:'Siobhan',email:null,me:false},{id:'t3',name:'Tom',email:null,me:false}],
     families:[
-      {first_name:'Kathleen',status:'gathering',docs:{done:2,total:9},started:daysAgo(24),posted_at:null,approved_at:null,last_activity:daysAgo(17),flag:'No progress for 2 weeks'},
-      {first_name:'Tom',status:'gathering',docs:{done:6,total:8},started:daysAgo(9),posted_at:null,approved_at:null,last_activity:daysAgo(1),flag:''},
-      {first_name:'Bridget',status:'posted',docs:{done:8,total:8},started:daysAgo(40),posted_at:daysAgo(12),approved_at:null,last_activity:daysAgo(12),flag:''},
-      {first_name:'Michael',status:'posted',docs:{done:9,total:9},started:daysAgo(70),posted_at:daysAgo(33),approved_at:null,last_activity:daysAgo(33),flag:'Posted over 4 weeks ago, no decision marked'},
-      {first_name:'Mary',status:'approved',docs:{done:7,total:7},started:daysAgo(95),posted_at:daysAgo(60),approved_at:daysAgo(20),last_activity:daysAgo(20),flag:''}],
+      {first_name:'Kathleen',status:'gathering',stage:'Preparing',docs:{done:2,total:9},started:daysAgo(24),posted_at:null,approved_at:null,last_activity:daysAgo(17),flag:'No progress for 2 weeks'},
+      {first_name:'Tom',status:'gathering',stage:'Preparing',docs:{done:6,total:8},started:daysAgo(9),posted_at:null,approved_at:null,last_activity:daysAgo(1),flag:''},
+      {first_name:'Bridget',status:'posted',stage:'Receipt acknowledged',stage_at:daysAgo(8),docs:{done:8,total:8},started:daysAgo(40),posted_at:daysAgo(12),approved_at:null,last_activity:daysAgo(12),flag:''},
+      {first_name:'Michael',status:'posted',stage:'Financial assessment: more information requested',stage_at:daysAgo(5),docs:{done:9,total:9},started:daysAgo(70),posted_at:daysAgo(33),approved_at:null,last_activity:daysAgo(33),flag:'HSE asked for more information'},
+      {first_name:'Mary',status:'approved',stage:'Approved',stage_at:daysAgo(20),docs:{done:7,total:7},started:daysAgo(95),posted_at:daysAgo(60),approved_at:daysAgo(20),last_activity:daysAgo(20),flag:''}],
     invites:[{first_name:'Seán',email:'daughter@example.ie',channel:'email',sent:daysAgo(2)},{first_name:'Peg',email:null,phone:'+353871234567',channel:'sms',sent:daysAgo(1)}],
     residents:[{id:'r1',first_name:'Patrick',stage:'gathering',note:'Solicitor handling it',stage_at:daysAgo(20),updated_at:daysAgo(20),flag:'Not updated for 2 weeks'},{id:'r2',first_name:'Annie',stage:'posted',note:'',stage_at:daysAgo(10),updated_at:daysAgo(3),flag:''}],
     stats:{total:5,gathering:2,posted:2,approved:1,flagged:3,tracked:2},
@@ -809,7 +809,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   function call(body){ return fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}).then(function(r){ return r.json().then(function(j){ j._status = r.status; return j; }); }); }
   var fmt = function(iso){ return iso ? new Date(iso).toLocaleDateString('en-IE', {day:'numeric', month:'short'}) : ''; };
   var euro = function(c){ return '€' + (c/100).toFixed(2); };
-  var STAGE = {gathering:['Gathering documents','g'], posted:['Posted to the HSE','p'], approved:['Approved','a'], closed:['Closed','c']};
+  var STAGE = {gathering:['Gathering documents','g'], posted:['Sent to the HSE','p'], approved:['Approved','a'], refused:['Refused','g'], closed:['Closed','c']};
+  // timeline (13 Oct 2026): the server names the stage; the colour follows the status
+  function stageOf(f){ var st = STAGE[f.status] || [f.status,'g']; return [f.stage || st[0], st[1]]; }
 
   function showOut(){ $('out').hidden = false; $('in').hidden = true; $('hstrip').hidden = false; $('hwatch').hidden = false; $('h-title').textContent = 'Fair Deal help for your families, under your name'; }
   function render(d){
@@ -818,9 +820,9 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     $('d-home').textContent = d.home.name; $('d-meta').textContent = 'Home number ' + d.home.number;
     ['total','gathering','posted','approved','flagged','tracked'].forEach(function(k){ $('s-'+k).textContent = d.stats[k] || 0; });
     $('families').innerHTML = d.families.length ? d.families.map(function(f){
-      var st = STAGE[f.status] || [f.status,'g'], pct = f.docs.total ? Math.round(f.docs.done*100/f.docs.total) : 0;
-      return '<div class="frow' + (f.flag ? ' flagged' : '') + '" data-detail="' + esc('Started ' + fmt(f.started) + (f.assessment ? ' · care needs assessment requested' : '') + (f.posted_at ? ' · posted ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + ' · ' + f.docs.done + ' of ' + f.docs.total + ' documents · last activity ' + fmt(f.last_activity)) + '"><div class="fname"><b>' + esc(f.first_name || 'Family') + '</b><span>Started ' + fmt(f.started) + (f.posted_at ? ' · posted ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + '</span></div>' +
-        '<span class="chip ' + st[1] + '">' + st[0] + '</span>' +
+      var st = stageOf(f), pct = f.docs.total ? Math.round(f.docs.done*100/f.docs.total) : 0;
+      return '<div class="frow' + (f.flag ? ' flagged' : '') + '" data-detail="' + esc('Started ' + fmt(f.started) + (f.assessment ? ' · care needs assessment requested' : '') + (f.posted_at ? ' · sent ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + (f.stage && f.stage_at ? ' · ' + f.stage + ' ' + fmt(f.stage_at) : '') + ' · ' + f.docs.done + ' of ' + f.docs.total + ' documents · last activity ' + fmt(f.last_activity)) + '"><div class="fname"><b>' + esc(f.first_name || 'Family') + '</b><span>Started ' + fmt(f.started) + (f.posted_at ? ' · sent ' + fmt(f.posted_at) : '') + (f.approved_at ? ' · approved ' + fmt(f.approved_at) : '') + '</span></div>' +
+        '<span class="chip ' + st[1] + '" title="' + esc(f.stage_at ? fmt(f.stage_at) : '') + '">' + esc(st[0]) + '</span>' +
         '<div class="bar"><div style="width:' + pct + '%"></div><span>' + f.docs.done + ' of ' + f.docs.total + ' documents</span></div>' +
         (f.flag ? '<span class="flag">' + esc(f.flag) + '</span>' : '<span class="ok">Last activity ' + fmt(f.last_activity) + '</span>') + '</div>';
     }).join('') : '<p class="empty">No families yet. Send your first link using the form above.</p>';
@@ -1184,7 +1186,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     {t:'#f-invite button', h:'Send the link', p:'That is all your staff do. The family answers a few questions and gets the step-by-step pack, the official HSE form filled in, a checklist with weekly reminders, and request letters.', act:function(){ $('f-invite').dispatchEvent(new Event('submit',{cancelable:true})); }},
     {t:'#pending', h:'Links waiting to be started', p:'Families who have their link but have not started yet. A quick reminder at the next visit usually does it.'},
     {t:'.frow.flagged', h:'Red means a family may need a nudge', p:'No progress for two weeks, or posted over four weeks ago with no decision. These are the families worth a phone call, before funding is delayed.'},
-    {t:'.fam', h:'Where each application stands', p:'Gathering documents, posted to the HSE, or approved, with how many documents are ticked off. Funding is never backdated, so a complete application sent in early is what gets your home paid sooner.'},
+    {t:'.fam', h:'Where each application stands', p:'Preparing, sent to the HSE, acknowledged, assessments, decision or appeal, with how many documents are ticked off. Funding is never backdated, so a complete application sent in early is what gets your home paid sooner.'},
     {t:'#res-card', h:'Residents doing it another way', p:'Families using a solicitor, or doing it themselves, go on your own list, so every resident\u2019s Fair Deal is on one screen and nobody is forgotten.'},
     {t:'#lst-card', h:'Your listing on the nursing home finder', p:'Families choosing a home see your photos, a short description, the care you offer and whether you have places. It is included in your plan, and every home stays in the same order on the finder.'},
     {t:'#ask-card', h:'Ask a question, by typing or by voice', p:'Anything about Fair Deal or the dashboard. Answers come from fairdeal.ie’s guidance and your own screen; if it is not sure, a person replies by email.'},

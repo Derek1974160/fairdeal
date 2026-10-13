@@ -399,6 +399,18 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .lbl{display:block;font-weight:600;font-size:15px;margin-bottom:6px;color:var(--navy)}
 .smsform .tog{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:4px 0 10px;cursor:pointer}
 .unread{display:inline-block;background:#B3261E;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.tl{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:0;max-width:640px}
+.tl li{position:relative;padding:7px 0 7px 38px;color:#C9D9EA;font-size:15px;line-height:1.35}
+.tl li::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:2px;background:rgba(255,255,255,.18)}
+.tl li:first-child::before{top:14px}.tl li:last-child::before{bottom:auto;height:14px}
+.tl i{position:absolute;left:0;top:9px;width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:var(--navy);display:grid;place-items:center;font-style:normal;font-size:13px;color:#fff}
+.tl li.done i{background:#2F5D50;border-color:#2F5D50}.tl li.done i::after{content:"\2713"}
+.tl li.now i{background:#fff;border-color:#fff;color:var(--navy)}.tl li.now i::after{content:"\25CF"}
+.tl li.now b{color:#fff}.tl li.done b{color:#E8EEF4}
+.tl b{display:block;font-weight:600}.tl small{display:block;font-size:13px;color:#9FB2C6}
+.tl li.est i{background:transparent;border-style:dashed;border-color:#9FB2C6}.tl li.est small{font-style:normal;color:#9FB2C6}
+.tl li.skip{display:none}
+.nstep .when{display:inline-flex;gap:6px;align-items:center;margin-top:8px;font-size:14px;color:var(--muted)}.nstep .when input{font:inherit;padding:6px 8px;border:1px solid var(--line);border-radius:3px}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -413,11 +425,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     <h1 id="t-title">Your Fair Deal tracker</h1>
     <p id="t-sub">Loading your application…</p>
     <p class="provided" id="provided" hidden></p>
-    <div class="stages" id="stages" hidden>
-      <div class="stage" data-s="gathering"><i>1</i><span>Gathering documents</span></div>
-      <div class="stage" data-s="posted"><i>2</i><span>Posted to the HSE</span></div>
-      <div class="stage" data-s="approved"><i>3</i><span>Approved</span></div>
-    </div>
+    <ol class="tl" id="stages" hidden></ol>
   </div>
 </section>
 
@@ -680,6 +688,27 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   });
 
   function nameOf(){ return (state && state.case.first_name) || ''; }
+  // The eight stages, from the case's dated columns. Confirmed = the family marked it; estimated = assumed by the system.
+  function renderTimeline(c, items){
+    var docs = items.filter(function(i){ return i.grp !== 'Before you post it'; }), allDone = docs.length && docs.every(function(i){ return i.done_at; });
+    var S = [];
+    S.push({k:'prep', name:'Preparing', done:true, date:c.created_at, note:'Started ' + fmt(c.created_at)});
+    S.push({k:'checked', name:'Documents checked', done:!!(allDone || c.posted_at), note: allDone ? 'Every document ticked off' : (c.posted_at ? 'Sent with what was gathered' : docs.filter(function(i){ return i.done_at; }).length + ' of ' + docs.length + ' ticked off')});
+    S.push({k:'sent', name:'Sent to the HSE', done:!!c.posted_at, date:c.posted_at, note: c.posted_at ? 'You told us on ' + fmt(c.posted_at) : 'Post the signed form and documents'});
+    S.push({k:'ack', name:'Receipt acknowledged', done:!!(c.acknowledged_at || c.acknowledged_estimated), est: !c.acknowledged_at && c.acknowledged_estimated, note: c.acknowledged_at ? 'You told us on ' + fmt(c.acknowledged_at) : (c.acknowledged_estimated ? 'We assume, not confirmed' : 'Ring the office a week after posting')});
+    S.push({k:'care', name:'Care needs assessment', done:!!c.care_assessment_done_at, note: c.care_assessment_done_at ? 'Done, you told us on ' + fmt(c.care_assessment_done_at) : (c.assessment_asked_at ? 'Requested on ' + fmt(c.assessment_asked_at) : 'Ask the GP or public health nurse')});
+    S.push({k:'fin', name:'Financial assessment', done:!!(c.decision_at || c.info_sent_at), note: c.info_requested_at ? (c.info_sent_at ? 'HSE asked for more; sent ' + fmt(c.info_sent_at) : 'HSE asked for more on ' + fmt(c.info_requested_at)) : (c.posted_at ? 'In progress at the HSE' : 'After sending')});
+    S.push({k:'dec', name:'Decision', done:!!c.decision_at, note: c.decision_at ? (c.decision === 'approved' ? 'Approved' : 'Refused') + ', you told us on ' + fmt(c.decision_at) : 'Usually within a few weeks of the assessments'});
+    S.push({k:'appeal', name:'Appeal', skip: !c.appeal_lodged_at && c.decision !== 'refused', done:!!c.appeal_decided_at, note: c.appeal_decided_at ? (c.appeal_outcome === 'approved' ? 'Upheld: approved' : 'Refused') + ', ' + fmt(c.appeal_decided_at) : (c.appeal_lodged_at ? 'Lodged on ' + fmt(c.appeal_lodged_at) : 'Within 40 working days of the decision letter')});
+    if (c.status === 'closed') S.push({k:'closed', name:'Closed', done:true, note:'Closed ' + fmt(c.closed_at)});
+    var lastDone = -1; S.forEach(function(x, i){ if (!x.skip && x.done) lastDone = i; });
+    var nowIdx = -1; S.forEach(function(x, i){ if (i > lastDone && !x.skip && !x.done && nowIdx < 0) nowIdx = i; });
+    $('stages').innerHTML = S.map(function(x, i){ return '<li class="' + (x.skip ? 'skip ' : '') + (x.done ? 'done ' : '') + (x.est ? 'est ' : '') + (i === nowIdx ? 'now' : '') + '"><i></i><b>' + x.name + '</b><small>' + esc(x.note) + '</small></li>'; }).join('');
+  }
+  function stepBtn(step, label, withDate){
+    return '<button class="btn small teal" data-step="' + step + '">' + label + '</button>' + (withDate ? '<label class="when">on <input type="date" data-when="' + step + '" max="' + new Date().toISOString().slice(0,10) + '"> (leave blank for today)</label>' : '');
+  }
+  function workingDays(iso, n){ var d = new Date(iso); var k = 0; while (k < n) { d.setDate(d.getDate() + 1); var w = d.getDay(); if (w !== 0 && w !== 6) k++; } return d.toISOString(); }
   function fmt(iso){ return iso ? new Date(iso).toLocaleDateString('en-IE', {day:'numeric', month:'long', year:'numeric'}) : ''; }
 
   function render(){
@@ -687,8 +716,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     $('lost').hidden = true; $('app').hidden = false; $('stages').hidden = false;
     $('t-title').textContent = n ? n + '’s Fair Deal tracker' : 'Your Fair Deal tracker';
     $('pass-head').textContent = n ? 'If ' + n + ' passes away' : 'If the applicant passes away';
-    var order = ['gathering','posted','approved'], si = order.indexOf(c.status);
-    document.querySelectorAll('.stage').forEach(function(el){ var i = order.indexOf(el.dataset.s); el.classList.toggle('done', si > i || c.status === 'closed'); el.classList.toggle('now', si === i); });
+    renderTimeline(c, items);
 
     var docs = items.filter(function(i){ return i.grp !== 'Before you post it'; });
     var done = docs.filter(function(i){ return i.done_at; }).length;
@@ -699,7 +727,8 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 
     if (c.status === 'closed') $('t-sub').textContent = 'This tracker is closed. Reply to any of our emails if you need help.';
     else if (c.status === 'approved') $('t-sub').textContent = 'Approved on ' + fmt(c.approved_at) + '. Your tracker stays open if you need it.';
-    else if (c.status === 'posted') $('t-sub').textContent = 'Posted on ' + fmt(c.posted_at) + '. Now we wait for the HSE, and we will remind you when to follow up.';
+    else if (c.status === 'refused') $('t-sub').textContent = c.appeal_lodged_at ? 'Appeal lodged on ' + fmt(c.appeal_lodged_at) + '. Mark the outcome when it comes.' : 'Refused on ' + fmt(c.decision_at) + '. You have 40 working days from the decision letter to appeal.';
+    else if (c.status === 'posted') $('t-sub').textContent = 'Sent to the HSE on ' + fmt(c.posted_at) + '. ' + (c.info_requested_at && !c.info_sent_at ? 'The HSE has asked for more: send it and mark it below.' : 'Now we wait for the HSE, and we will remind you when to follow up.');
     else $('t-sub').textContent = 'Everything for the application in one place: your checklist, request letters and the office to send it to.';
 
     // next steps
@@ -711,17 +740,26 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       nx.push(done < docs.length
         ? '<div class="nstep"><b>Gather the ' + (docs.length - done) + ' remaining document' + (docs.length - done === 1 ? '' : 's') + '</b><span>Send the ready-made letters by email from here: the bank, the auctioneer, the pension office, whoever holds the deeds. Replies come back to this tracker.</span></div>'
         : '<div class="nstep ok"><b>All documents gathered</b><span>Print the filled-in form and sign it. Put the covering letter on top, the documents behind, photocopy the lot, and post it to the support office. The HSE needs the signed form on paper.</span><button class="btn small" data-letter="cover">Covering letter</button></div>');
-      nx.push('<div class="nstep"><b>Posted it?</b><span>Tell us the day you post it and we will remind you when to ring the office.</span><button class="btn small teal" data-step="posted">I have posted it</button></div>');
+      nx.push('<div class="nstep"><b>Sent it to the HSE?</b><span>Tell us the day you post it and we will remind you when to ring the office.</span>' + stepBtn('posted', 'I have sent it', true) + '</div>');
     } else if (c.status === 'posted') {
-      nx.push('<div class="nstep"><b>Ring the office a week after posting</b><span>Check it arrived and that nothing is missing. The number is on the right once you choose the area.</span></div>');
+      if (!c.acknowledged_at) nx.push('<div class="nstep"><b>Has the HSE acknowledged it?</b><span>' + (c.acknowledged_estimated ? 'It is more than ten working days since you sent it, so we assume it has arrived, but that is not confirmed. ' : 'Ring the office a week after posting to check it arrived and that nothing is missing. The number is on the right once you choose the area. ') + 'Mark it when they write to you or confirm on the phone.</span>' + stepBtn('acknowledged', 'The HSE has acknowledged it', true) + '</div>');
+      if (!c.care_assessment_done_at) nx.push(c.assessment_asked_at
+        ? '<div class="nstep"><b>Care needs assessment</b><span>Requested on ' + fmt(c.assessment_asked_at) + '. Mark it when the assessment has been done.</span>' + stepBtn('assessment_done', 'The assessment has been done', true) + '</div>'
+        : '<div class="nstep"><b>Ask for the care needs assessment</b><span>Ring the GP or public health nurse. Funding cannot start until it is done.</span><button class="btn small" data-step="assessment">I have asked</button></div>');
+      if (c.info_requested_at && !c.info_sent_at) nx.push('<div class="nstep"><b>The HSE asked for more on ' + fmt(c.info_requested_at) + '</b><span>Send what they asked for as soon as you can; the application waits until it arrives. Then mark it here so we stop reminding you.</span>' + stepBtn('info_sent', 'I have sent it', true) + '</div>');
+      else nx.push('<div class="nstep"><b>Has the HSE asked for more information?</b><span>If a letter or call asks for another document or a clarification, mark it here. We never record what was asked, only that it was.</span>' + stepBtn('info_requested', 'They asked for more', true) + '</div>');
       nx.push('<div class="nstep"><b>Still waiting?</b><span>Use the follow-up letter to the support office.</span><button class="btn small" data-letter="chase">Open the follow-up letter</button></div>');
-      nx.push('<div class="nstep"><b>Approved?</b><span>Mark it and we will send you what to keep on top of from here.</span><button class="btn small teal" data-step="approved">It has been approved</button></div>');
-      nx.push('<div class="nstep quietstep"><span>Posted by mistake?</span><button class="btn small ghost" data-step="reopen">Undo</button></div>');
+      nx.push('<div class="nstep"><b>Decision received?</b><span>Mark it and we will send you what to do from here, whichever way it went.</span><button class="btn small teal" data-step="approved">Approved</button> <button class="btn small ghost" data-step="refused">Refused</button></div>');
+    } else if (c.status === 'refused') {
+      if (!c.appeal_lodged_at) nx.push('<div class="nstep"><b>Refused on ' + fmt(c.decision_at) + '</b><span>You can appeal in writing within 40 working days of the date on the decision letter (until about ' + fmt(workingDays(c.decision_at, 40)) + '). If the HSE only wanted more information, ring the office first; sending it can be quicker than an appeal.</span>' + stepBtn('appeal_lodged', 'I have lodged an appeal', true) + '</div>');
+      else if (!c.appeal_decided_at) nx.push('<div class="nstep"><b>Appeal lodged on ' + fmt(c.appeal_lodged_at) + '</b><span>Mark the outcome when the letter comes.</span><button class="btn small teal" data-step="appeal_approved">Appeal upheld: approved</button> <button class="btn small ghost" data-step="appeal_refused">Appeal refused</button></div>');
+      else nx.push('<div class="nstep"><b>Appeal refused on ' + fmt(c.appeal_decided_at) + '</b><span>We are sorry. If circumstances change, a new application can be made at any time. Reply to any of our emails if you would like a hand.</span></div>');
     } else if (c.status === 'approved') {
       nx.push('<div class="nstep ok"><b>Approved on ' + fmt(c.approved_at) + '</b><span>Report changes in income, savings or property within 10 working days. We will remind you each January.</span></div>');
     } else {
       nx.push('<div class="nstep"><b>We are sorry for your loss</b><span>We have emailed you a short guide to the Schedule of Assets and the nursing home loan. Reply to it if you would like help.</span></div>');
     }
+    if (c.can_undo && c.status !== 'closed') nx.push('<div class="nstep quietstep"><span>Marked something by mistake?</span><button class="btn small ghost" data-step="undo">Undo the last change</button></div>');
     $('next').innerHTML = nx.join('');
     $('after-card').hidden = c.status !== 'approved';
     $('handover').hidden = c.status === 'closed';
@@ -775,9 +813,11 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     var s = e.target.closest('[data-step]'), l = e.target.closest('[data-letter]');
     if (s) {
       var st = s.getAttribute('data-step');
-      if (st === 'posted' && !confirm('Mark the application as posted today?')) return;
-      if (st === 'approved' && !confirm('Mark the application as approved?')) return;
-      act('step', {step: st});
+      var when = s.parentNode.querySelector('[data-when="' + st + '"]'), on = when && when.value ? when.value : '';
+      var ASK = {posted:'Mark the application as sent to the HSE' + (on ? ' on ' + on : ' today') + '?', approved:'Mark the application as approved?', refused:'Mark the application as refused?', undo:'Undo the last change to the timeline?'};
+      if (ASK[st] && !confirm(ASK[st])) return;
+      var extra = {step: st}; if (on) extra.on = on;
+      act('step', extra);
     }
     if (l) openLetter(l.getAttribute('data-letter'));
   });
