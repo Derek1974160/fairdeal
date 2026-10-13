@@ -379,6 +379,26 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 .fold{margin:4px 0 18px}.fold>summary{cursor:pointer;font-weight:600;color:var(--navy);padding:14px 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .fold>summary::-webkit-details-marker{display:none}.fold>summary::after{content:"+";font-size:22px;color:var(--gold);flex:none}.fold[open]>summary::after{content:"–"}
 .fold[open]>summary{margin-bottom:16px}
+
+.uprow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}.uprow select{flex:1;min-width:180px;font:inherit;font-size:15px;padding:9px 10px;border:1px solid #CFC7B8;border-radius:3px;background:#fff}
+.uplist{display:grid;gap:6px}.uprow-i{display:flex;gap:6px 10px;align-items:center;flex-wrap:wrap;padding:9px 0;border-top:1px solid var(--line);font-size:15px;min-width:0}
+.uprow-i b{flex:1 1 140px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:var(--navy)}.uprow-i span{color:var(--muted);font-size:13px}
+.uprow-i button,.uprow-i a{background:none;border:0;color:var(--navy-2);font:inherit;font-size:14px;cursor:pointer;text-decoration:underline;padding:0}
+.sent-h{margin:18px 0 6px;font-size:15px;color:var(--navy)}
+.sentlist{display:grid;gap:8px}
+.sent{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:#fff}
+.sent .top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.sent .top b{color:var(--navy)}.sent .top span{font-size:13.5px;color:var(--muted)}
+.sent .st{margin-left:auto;font-size:12.5px;font-weight:700;padding:3px 8px;border-radius:3px;background:var(--pale);color:var(--navy)}
+.sent .st.replied{background:#EAF0EC;color:#2F5D50}.sent .st.done{background:#eee;color:#555}
+.reply{margin-top:10px;padding:10px 12px;background:var(--bg);border-left:3px solid var(--gold);font-size:14.5px}
+.reply .from{font-size:13px;color:var(--muted);margin-bottom:4px}.reply pre{white-space:pre-wrap;font:inherit;margin:0;max-height:220px;overflow:auto}
+.reply .atts{margin-top:6px;font-size:13.5px}.reply .atts a{margin-right:10px}
+.sent .acts{margin-top:8px;display:flex;gap:12px;flex-wrap:wrap;font-size:14px}.sent .acts button{background:none;border:0;color:var(--navy-2);font:inherit;cursor:pointer;text-decoration:underline;padding:0}
+.sendbox{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.attlist{display:grid;gap:6px}.attlist label{display:flex;gap:8px;align-items:center;font-size:14.5px}
+.lbl{display:block;font-weight:600;font-size:15px;margin-bottom:6px;color:var(--navy)}
+.smsform .tog{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:4px 0 10px;cursor:pointer}
+.unread{display:inline-block;background:#B3261E;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -456,13 +476,43 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
       </div>
 
       <aside>
-        <details class="fold" id="fold-more"><summary>Also here when you need them: letters, your support office, after approval</summary>
+        <div class="tcard" id="docs-card">
+          <span class="kicker">Your documents</span>
+          <h3>Keep them here, send them from here</h3>
+          <p class="hint">Photograph or upload each document as you get it. You can attach them to a letter, and replies with attachments land here too. PDF, JPG or PNG, under 6 MB.</p>
+          <div class="uprow">
+            <label class="btn small" for="up-file">Add a document</label>
+            <input type="file" id="up-file" accept="application/pdf,image/jpeg,image/png,image/webp" multiple hidden>
+            <select id="up-item" aria-label="Which document is it?"><option value="">Which document is it? (optional)</option></select>
+          </div>
+          <div id="uplist" class="uplist"></div>
+          <p class="note" id="n-up"></p>
+        </div>
+
         <div class="tcard lilacb" id="letters-card">
           <span class="kicker lilac">Ready-made letters</span>
           <h3>Ask for documents in one step</h3>
-          <p class="hint">Pick a letter, fill in the blanks, then print it or copy it into an email. What you type stays on this device.</p>
+          <p class="hint">Pick a letter and fill in the blanks. Send it by email from here, in your own name, and the reply comes back to this tracker. Or print it. What you type stays on this device until you press Send.</p>
           <div class="letters" id="letters"></div>
+          <div id="sent-wrap" hidden>
+            <h4 class="sent-h">Sent from here</h4>
+            <div id="sentlist" class="sentlist"></div>
+          </div>
         </div>
+
+        <div class="tcard" id="sms-card">
+          <span class="kicker">Texts</span>
+          <h3>Text me when a reply lands</h3>
+          <p class="hint">We always email you. Tick this and we also send a short text, so nothing waits unseen.</p>
+          <form id="f-sms" class="smsform" novalidate>
+            <div class="field"><label for="sms-mobile">Your mobile</label><input type="tel" id="sms-mobile" placeholder="087 123 4567"></div>
+            <label class="tog"><input type="checkbox" id="sms-ok"> <span>Text me when a reply arrives. Standard texts, no marketing, stop at any time.</span></label>
+            <button class="btn small" type="submit">Save</button>
+            <p class="note" id="n-sms"></p>
+          </form>
+        </div>
+
+        <details class="fold" id="fold-more"><summary>Also here when you need them: your support office, after approval</summary>
 
         <div class="tcard">
           <span class="kicker">Your Nursing Homes Support Office</span>
@@ -512,8 +562,15 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     <p class="hint" id="m-hint"></p>
     <form id="m-form" novalidate></form>
     <div class="mbtns">
-      <button class="btn" id="m-print" type="button">Print the letter</button>
-      <button class="btn teal" id="m-copy" type="button">Copy the text</button>
+      <button class="btn" id="m-send-open" type="button">Send by email</button>
+      <button class="btn ghost" id="m-print" type="button">Print the letter</button>
+      <button class="btn ghost" id="m-copy" type="button">Copy the text</button>
+    </div>
+    <div class="sendbox" id="sendbox" hidden>
+      <div class="field"><label for="s-to">Their email address</label><input type="email" id="s-to" placeholder="name@example.ie"></div>
+      <div class="field" id="s-att-wrap" hidden><span class="lbl">Attach from your documents</span><div id="s-att" class="attlist"></div></div>
+      <p class="hint small">The email goes in your name through fairdeal.ie. When they reply, it lands in this tracker and we email you, and text you if you have asked for texts.</p>
+      <button class="btn" id="m-send" type="button">Send it now</button>
     </div>
     <p class="note" id="m-note"></p>
   </div>
@@ -652,8 +709,8 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
         ? '<div class="nstep ok"><b>Care needs assessment requested</b><span>Marked on ' + fmt(c.assessment_asked_at) + '.</span></div>'
         : '<div class="nstep"><b>Ask for the care needs assessment</b><span>Ring the GP or public health nurse (or the hospital social worker). Funding cannot start until it is done.</span><button class="btn small" data-step="assessment">I have asked</button></div>');
       nx.push(done < docs.length
-        ? '<div class="nstep"><b>Gather the ' + (docs.length - done) + ' remaining document' + (docs.length - done === 1 ? '' : 's') + '</b><span>Use the ready-made letters to ask the bank, the auctioneer and anyone holding the deeds.</span></div>'
-        : '<div class="nstep ok"><b>All documents gathered</b><span>Photocopy everything and post it to the support office.</span></div>');
+        ? '<div class="nstep"><b>Gather the ' + (docs.length - done) + ' remaining document' + (docs.length - done === 1 ? '' : 's') + '</b><span>Send the ready-made letters by email from here: the bank, the auctioneer, the pension office, whoever holds the deeds. Replies come back to this tracker.</span></div>'
+        : '<div class="nstep ok"><b>All documents gathered</b><span>Print the filled-in form and sign it. Put the covering letter on top, the documents behind, photocopy the lot, and post it to the support office. The HSE needs the signed form on paper.</span><button class="btn small" data-letter="cover">Covering letter</button></div>');
       nx.push('<div class="nstep"><b>Posted it?</b><span>Tell us the day you post it and we will remind you when to ring the office.</span><button class="btn small teal" data-step="posted">I have posted it</button></div>');
     } else if (c.status === 'posted') {
       nx.push('<div class="nstep"><b>Ring the office a week after posting</b><span>Check it arrived and that nothing is missing. The number is on the right once you choose the area.</span></div>');
@@ -672,7 +729,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     if (state.home && state.home.name) { $('provided').hidden = false; $('provided').innerHTML = (state.home.logo_url ? '<img src="' + esc(state.home.logo_url) + '" alt="">' : '') + 'Provided by ' + esc(state.home.name) + (state.home.town ? ', ' + esc(state.home.town) : ''); }
     var formOnly = c.tier === 'form';
     $('form-card').hidden = c.status !== 'gathering' && !formOnly;
-    ['prog-card','next-card','list-card','letters-card','pass-card'].forEach(function(id){ $(id).hidden = formOnly; });
+    ['prog-card','next-card','list-card','letters-card','pass-card','docs-card','sms-card'].forEach(function(id){ $(id).hidden = formOnly; });
     $('up-card').hidden = !formOnly;
     $('stages').hidden = formOnly;
     $('form-kick').textContent = formOnly ? 'Your form' : 'We fill it in for you';
@@ -692,6 +749,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
              ['valuer','Certificate of Market Value','From an auctioneer or valuer, for the home or other property'],
              ['pension','State pension confirmation','A letter from the Department of Social Protection'],
              ['deeds','Deeds or title documents','From the bank or solicitor holding them'],
+             ['cover','Covering letter to the support office','To go with the signed form and documents'],
              ['chase','Follow-up to the support office','Once the application has been posted']];
     if (!state.facts.home) L = L.filter(function(x){ return x[0] !== 'deeds'; });
     $('letters').innerHTML = L.map(function(x){ return '<button type="button" class="letter" data-letter="' + x[0] + '"><b>' + x[1] + '</b><span>' + x[2] + '</span></button>'; }).join('');
@@ -741,7 +799,8 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     you: ['Your full name', ''], youaddr: ['Your address', 'area'], applicant: ['Applicant’s full name', ''], appaddr: ['Applicant’s address', 'area'],
     dob: ['Applicant’s date of birth', ''], to: ['Who it is going to', ''], toaddr: ['Their address', 'area'],
     acct: ['Account number (optional, stays on this device)', ''], property: ['Address of the property', 'area'],
-    posted: ['Date the application was posted', ''], pps: ['Applicant’s PPS number (optional, stays on this device)', '']
+    posted: ['Date the application was posted', ''], pps: ['Applicant’s PPS number (optional, stays on this device)', ''],
+    enclosed: ['Documents enclosed (one per line)', 'area']
   };
   var LETTERS = {
     bank: { title: 'Request for account statements', hint: 'Banks usually want the account holder’s signature. If the applicant cannot sign, send a copy of your power of attorney or other authority with it.',
@@ -781,6 +840,16 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
         'Please confirm whether you hold the deeds or title documents for this property, and send a copy, or the folio number, to the address at the top of this letter. If there is a mortgage or charge on the property, please also send a statement of the amount outstanding.',
         'Thank you.', 'Yours faithfully,', '\n\n______________________________\n' + v.applicant + (v.you && v.you !== v.applicant ? '\n\n______________________________\n' + v.you + ', on behalf of ' + v.applicant : '')
       ]; } },
+    cover: { title: 'Covering letter to the support office', hint: 'Goes on top of the signed form. The documents you have ticked off are listed for you; add or remove lines as needed. The HSE needs the signed form by post; where the office has an email address you can also send this by email with a scan of the signed form attached.',
+      fields: ['you','youaddr','applicant','appaddr','dob','to','toaddr','enclosed'],
+      body: function(v){ return [
+        'Re: Application under the Nursing Homes Support Scheme, ' + v.applicant + (v.dob ? ', date of birth ' + v.dob : ''),
+        'Dear Sir or Madam,',
+        'Please find enclosed the completed and signed application form for ' + v.applicant + ' of ' + oneLine(v.appaddr) + ', together with the supporting documents listed below.',
+        'Enclosed:\n' + (v.enclosed || '[list]').split(/\n+/).filter(Boolean).map(function(x){ return '- ' + x.trim(); }).join('\n'),
+        'If anything further is needed, please contact me at the address above' + (v.you ? '' : '') + '. I would be grateful for an acknowledgement that the application has been received.',
+        'Thank you.', 'Yours faithfully,', '\n\n______________________________\n' + v.you
+      ]; } },
     chase: { title: 'Follow-up to the support office', hint: 'Choose the area on the tracker first and the office address is filled in for you.',
       fields: ['you','youaddr','applicant','appaddr','dob','pps','posted','to','toaddr'],
       body: function(v){ return [
@@ -798,7 +867,11 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
     var L = LETTERS[key]; current = key;
     var c = state.case;
     if (!vals.applicant && c.first_name) vals.applicant = c.first_name;
-    if (key === 'chase') { var o = OFFICES[c.county]; vals.to = 'HSE Nursing Homes Support Office'; if (o) vals.toaddr = o[0].split(', ').join('\n'); if (c.posted_at) vals.posted = fmt(c.posted_at); }
+    if (key === 'chase' || key === 'cover') { var o = OFFICES[c.county]; vals.to = 'HSE Nursing Homes Support Office'; if (o) vals.toaddr = o[0].split(', ').join('\n'); if (c.posted_at) vals.posted = fmt(c.posted_at); }
+    if (key === 'cover' && !vals.enclosed) vals.enclosed = (state.items || []).filter(function(i){ return i.done_at && i.grp !== 'Before you post it'; }).map(function(i){ return i.item; }).join('\n');
+    $('sendbox').hidden = true; $('m-send-open').hidden = false;
+    var oe = (key === 'chase' || key === 'cover') ? ((OFFICES[c.county] || [])[2] || '') : '';
+    $('s-to').value = oe; if ((key === 'chase' || key === 'cover') && !oe) { $('m-send-open').hidden = true; }
     $('m-title').textContent = L.title; $('m-hint').textContent = L.hint; $('m-note').textContent = '';
     $('m-form').innerHTML = L.fields.map(function(f){
       var d = F[f], v = esc(vals[f] || '');
@@ -841,9 +914,91 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !$('modal').hidden) closeModal(); });
 
+  // ---------- sending from the tracker: letters by email, documents, replies, texts ----------
+  var SEND = "https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-send";
+  var S = { contact: {mobile: '', sms_ok: false}, uploads: [], letters: [], unread: 0 };
+  function scall(body){ body.t = token; return fetch(SEND, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)}).then(function(r){ return r.json(); }); }
+  function kb(n){ return n > 900000 ? (n / 1000000).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1000)) + ' KB'; }
+  function fdate(iso){ return iso ? new Date(iso).toLocaleDateString('en-IE', {day:'numeric', month:'short'}) : ''; }
+  var KIND_NAME = {bank:'Bank or credit union', valuer:'Auctioneer or valuer', pension:'Department of Social Protection', deeds:'Deeds or title documents', chase:'Support office follow-up', cover:'Covering letter to the support office', other:'Letter'};
+  function srender(j){
+    if (!j || j.error) { if (j && j.error) $('n-up').textContent = j.error; return; }
+    S = j;
+    // documents
+    var sel = $('up-item'); if (sel.options.length < 2) (state.items || []).filter(function(i){ return i.grp !== 'Before you post it'; }).forEach(function(i){ var o = document.createElement('option'); o.value = i.id; o.textContent = i.item; sel.appendChild(o); });
+    var byId = {}; (state.items || []).forEach(function(i){ byId[i.id] = i.item; });
+    $('uplist').innerHTML = S.uploads.length ? S.uploads.map(function(u){
+      return '<div class="uprow-i"><b title="' + esc(u.filename) + '">' + esc(u.filename) + '</b><span>' + (u.source === 'reply' ? 'received · ' : '') + (u.item_id && byId[u.item_id] ? esc(byId[u.item_id]) + ' · ' : '') + fdate(u.created_at) + ' · ' + kb(u.size || 0) + '</span><button type="button" data-view="' + u.id + '">View</button><button type="button" data-rm="' + u.id + '">Remove</button></div>';
+    }).join('') : '<p class="hint small">Nothing here yet.</p>';
+    // sent letters
+    $('sent-wrap').hidden = !S.letters.length;
+    $('sentlist').innerHTML = S.letters.map(function(l){
+      var st = l.status === 'done' ? ['done','Done'] : l.status === 'replied' ? ['replied', (l.reply_count || 1) + (l.reply_count === 1 ? ' reply' : ' replies')] : ['', l.chase_count ? 'Reminded ' + l.chase_count + 'x, waiting' : 'Sent, waiting'];
+      var reps = (l.replies || []).map(function(r){
+        var atts = (r.attachments || []).map(function(a){ return '<a href="#" data-view="' + esc(a.upload_id || '') + '">' + esc(a.filename) + '</a>'; }).join('');
+        return '<div class="reply' + (r.read_at ? '' : ' new') + '"><div class="from">' + esc(r.from_name || r.from_email || '') + ' · ' + fdate(r.created_at) + (r.read_at ? '' : ' <span class="unread">New</span>') + '</div><pre>' + esc(r.body_text || '(no text)') + '</pre>' + (atts ? '<div class="atts">Attached: ' + atts + '</div>' : '') + (r.read_at ? '' : '<div class="acts"><button type="button" data-read="' + r.id + '">Mark as read</button></div>') + '</div>';
+      }).join('');
+      return '<div class="sent" data-letter-id="' + l.id + '"><div class="top"><b>' + esc(KIND_NAME[l.kind] || 'Letter') + '</b><span>to ' + esc(l.to_name || l.to_email) + ' · ' + fdate(l.sent_at) + (l.attachments && l.attachments.length ? ' · ' + l.attachments.length + ' attached' : '') + '</span><span class="st ' + st[0] + '">' + st[1] + '</span></div>' + reps +
+        (l.status !== 'done' ? '<div class="acts"><button type="button" data-done="' + l.id + '">Nothing more needed from them</button>' + (l.status === 'sent' ? '<span class="hint small">We remind them every 10 working days, up to six times, until they reply.</span>' : '') + '</div>' : '') + '</div>';
+    }).join('');
+    // unread replies on the next-step card
+    var old = document.getElementById('reply-step'); if (old) old.remove();
+    if (S.unread) { var d = document.createElement('div'); d.className = 'nstep'; d.id = 'reply-step'; d.innerHTML = '<b>' + S.unread + (S.unread === 1 ? ' reply is' : ' replies are') + ' waiting <span class="unread">New</span></b><span>Someone has answered a letter you sent. Read it under Ready-made letters, then tick the document off if it is what you needed.</span><a class="btn small" href="#letters-card">Read it</a>'; $('next').insertBefore(d, $('next').firstChild); }
+    // texts
+    if (document.activeElement !== $('sms-mobile')) $('sms-mobile').value = S.contact.mobile ? S.contact.mobile.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1 $2 $3') : '';
+    $('sms-ok').checked = !!S.contact.sms_ok;
+  }
+  function sload(){ scall({action:'get'}).then(srender).catch(function(){}); }
+  $('up-file').addEventListener('change', function(){
+    var files = Array.prototype.slice.call(this.files || []); this.value = '';
+    var item = $('up-item').value;
+    var next = function(){
+      var f = files.shift(); if (!f) { sload(); return; }
+      if (f.size > 6000000) { $('n-up').textContent = f.name + ' is over 6 MB. Please use a smaller file.'; return next(); }
+      $('n-up').textContent = 'Saving ' + f.name + '…';
+      var r = new FileReader(); r.onload = function(){ scall({action:'upload', filename:f.name, type:f.type, data:String(r.result).split(',')[1], item_id:item}).then(function(j){ $('n-up').textContent = j.error ? j.error : 'Saved ' + f.name + '.'; if (!j.error) srender(j); next(); }); }; r.readAsDataURL(f);
+    };
+    next();
+  });
+  document.addEventListener('click', function(e){
+    var v = e.target.closest('[data-view]'); if (v) { e.preventDefault(); scall({action:'file', upload_id:v.getAttribute('data-view')}).then(function(j){ if (j.url) window.open(j.url, '_blank', 'noopener'); else $('n-up').textContent = j.error || 'Could not open it.'; }); return; }
+    var rm = e.target.closest('[data-rm]'); if (rm) { if (confirm('Remove this file from your tracker?')) scall({action:'upload_remove', upload_id:rm.getAttribute('data-rm')}).then(srender); return; }
+    var dn = e.target.closest('[data-done]'); if (dn) { scall({action:'done', letter_id:dn.getAttribute('data-done')}).then(srender); return; }
+    var rd = e.target.closest('[data-read]'); if (rd) { scall({action:'reply_read', reply_id:rd.getAttribute('data-read')}).then(srender); return; }
+  });
+  $('f-sms').addEventListener('submit', function(e){
+    e.preventDefault();
+    scall({action:'contact', mobile:$('sms-mobile').value, sms_ok:$('sms-ok').checked}).then(function(j){ $('n-sms').textContent = j.error ? j.error : (j.contact && j.contact.sms_ok ? 'Saved. We will text ' + $('sms-mobile').value.trim() + ' when a reply lands.' : 'Saved. Email only.'); if (!j.error) srender(j); });
+  });
+  // send a letter by email
+  $('m-send-open').addEventListener('click', function(){
+    var p = letterParts();
+    if (p.missing.length) { $('m-note').textContent = 'Please fill in: ' + p.missing.map(function(f){ return F[f][0].toLowerCase(); }).join(', ') + '.'; return; }
+    $('sendbox').hidden = false; this.hidden = true;
+    var ups = S.uploads.filter(function(u){ return u.source === 'family'; });
+    $('s-att-wrap').hidden = !ups.length;
+    $('s-att').innerHTML = ups.map(function(u){ return '<label><input type="checkbox" value="' + u.id + '"> ' + esc(u.filename) + '</label>'; }).join('');
+    if (!$('s-to').value) $('s-to').focus();
+  });
+  $('m-send').addEventListener('click', function(){
+    var p = letterParts(), to = $('s-to').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) { $('m-note').textContent = 'Please check the email address.'; return; }
+    var ids = Array.prototype.map.call(document.querySelectorAll('#s-att input:checked'), function(x){ return x.value; });
+    var body = letterText().replace(/\n*_{10,}\n/g, '\n');
+    var L = LETTERS[current];
+    var btn = this; btn.disabled = true; $('m-note').textContent = 'Sending…';
+    scall({action:'send', kind:current, to_name:p.v.to, to_email:to, from_name:p.v.you, subject:L.title + (p.v.applicant ? ': ' + p.v.applicant : ''), body:body, attachment_ids:ids}).then(function(j){
+      btn.disabled = false;
+      if (j.error) { $('m-note').textContent = j.error; return; }
+      srender(j); closeModal(); $('fold-more') && ($('fold-more').open = false);
+      document.getElementById('letters-card').scrollIntoView({behavior:'smooth', block:'start'});
+      call({t: token, action: 'log', kind: 'letter_printed', detail: current + ' emailed'}).catch(function(){});
+    }).catch(function(){ btn.disabled = false; $('m-note').textContent = 'Could not send. Please try again.'; });
+  });
+
   // ---------- start ----------
   if (!token) showLost('');
-  else call({t: token, action: 'get'}).then(function(j){ state = j; render(); history.replaceState(null, '', location.pathname + '?t=' + encodeURIComponent(token)); })
+  else call({t: token, action: 'get'}).then(function(j){ state = j; render(); sload(); history.replaceState(null, '', location.pathname + '?t=' + encodeURIComponent(token)); })
     .catch(function(e){ showLost(e.message); });
 })();
 </script>

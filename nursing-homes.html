@@ -285,6 +285,11 @@ table.t{width:100%;border-collapse:collapse;font-size:16px}table.t th,table.t td
 .home .hlogo{max-height:34px;max-width:120px;float:right;margin-left:10px}
 .home .src{font-size:12px;color:var(--muted)}
 .lb{position:fixed;inset:0;background:rgba(14,42,71,.9);display:none;align-items:center;justify-content:center;z-index:60;padding:20px}.lb img{max-width:100%;max-height:90vh;border-radius:12px}.lb.on{display:flex}
+
+.fixbox[hidden]{display:none}.fixbox{position:fixed;inset:0;background:rgba(15,34,56,.6);display:grid;place-items:center;z-index:50;padding:16px}
+.fixin{background:#fff;border-radius:6px;padding:22px;max-width:480px;width:100%;border-top:3px solid var(--gold,#A67C2E)}
+.fixin h3{margin:0 0 4px;color:var(--navy)}.fixin textarea,.fixin input{width:100%;font:inherit;font-size:15px;padding:9px 10px;border:1px solid #CFC7B8;border-radius:3px;margin:6px 0}
+.fixin .row{display:flex;gap:8px;margin-top:8px}
 </style>
 <link rel="stylesheet" href="/theme.css">
 </head>
@@ -400,6 +405,18 @@ table.t{width:100%;border-collapse:collapse;font-size:16px}table.t th,table.t td
 </footer>
 <div class="toast" id="toast"></div>
 <div class="lb" id="lb" role="dialog" aria-label="Photo"><img id="lb-img" alt=""></div>
+<div class="fixbox" id="fixbox" hidden role="dialog" aria-labelledby="fix-title">
+  <div class="fixin">
+    <h3 id="fix-title">Report a wrong detail</h3>
+    <p class="small muted" id="fix-home"></p>
+    <p class="small">Name, address, phone, price, beds, owner, or anything else. We check it against the HIQA register and the HSE list and correct it.</p>
+    <textarea id="fix-what" rows="4" placeholder="What is wrong, and what it should say"></textarea>
+    <input type="text" id="fix-name" placeholder="Your name (optional)">
+    <input type="email" id="fix-email" placeholder="Your email, if you would like a reply (optional)">
+    <div class="row"><button class="btn small" type="button" id="fix-send">Send</button> <button class="btn small ghost" type="button" id="fix-close">Cancel</button></div>
+    <p class="small muted" id="fix-note"></p>
+  </div>
+</div>
 <script>
 var FN='https://ursmkvofnfzruimqobpx.supabase.co/functions/v1/fairdeal-finder';
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(function(){t.style.display='none'},3500);}
@@ -418,7 +435,8 @@ function extra(h){if(!h.on_fairdeal)return '';let o='';
  if(h.places_status&&PL[h.places_status]){const d=h.places_updated_at?new Date(h.places_updated_at).toLocaleDateString('en-IE',{day:'numeric',month:'short'}):'';o+='<div class="places '+h.places_status+'">'+PL[h.places_status]+(h.places_note?' · '+esc(h.places_note):'')+(d?' <small>(updated '+d+')</small>':'')+'</div>';}
  if(h.about)o+='<div class="about">'+esc(h.about)+'</div>';
  if((h.care_types||[]).length)o+='<div class="care">'+h.care_types.map(c=>'<span>'+esc(c)+'</span>').join('')+'</div>';
- if(o)o+='<div class="src">Photos and details supplied by the home.</div>';return o;}
+ if(o)o+='<div class="src">Photos, description, care types and places supplied by the home'+(h.listing_updated_at?', last updated '+fdate(h.listing_updated_at):'')+'. fairdeal.ie does not check them.</div>';return o;}
+function fdate(iso){try{return new Date(iso).toLocaleDateString('en-IE',{day:'numeric',month:'long',year:'numeric'});}catch(e){return '';}}
 function render(){let rows=all.slice();const t=g('type').value;if(t==='public')rows=rows.filter(h=>h.is_hse);if(t==='private')rows=rows.filter(h=>!h.is_hse);if(g('onfd').checked)rows=rows.filter(h=>h.on_fairdeal);
  const s=g('sort').value;rows.sort((a,b)=>s==='fee'?((a.nhss_weekly_eur||1e9)-(b.nhss_weekly_eur||1e9)):s==='beds'?((b.beds||0)-(a.beds||0)):s==='town'?String(a.town||'').localeCompare(b.town||''):String(a.name).localeCompare(b.name));
  const fees=rows.map(h=>h.nhss_weekly_eur).filter(Boolean);const beds=rows.reduce((t,h)=>t+(h.beds||0),0);
@@ -429,15 +447,19 @@ function render(){let rows=all.slice();const t=g('type').value;if(t==='public')r
  g('list').innerHTML=rows.map(h=>`<div class="home${h.on_fairdeal?' fd':''}">
   <div>${h.logo_url?'<img class="hlogo" src="'+esc(h.logo_url)+'" alt="">':''}<span class="nm">${esc(h.name)}</span> ${h.is_hse?'<span class="pill2">Public (HSE)</span>':''} ${h.on_fairdeal?'<span class="pill2 fd">Families here get fairdeal.ie help</span>':''}</div>
   <div class="small muted">${esc(h.address||h.town||'')}${h.beds?' · '+h.beds+' beds':''}</div>
-  <div class="fee">${h.nhss_weekly_eur?eur(h.nhss_weekly_eur)+' <span class="small muted" style="font-weight:400">a week · '+(h.is_hse?'public cost of care':'Fair Deal agreed price')+'</span>':'<span class="small muted" style="font-weight:400">Price not on the HSE list: ask the home</span>'}</div>
+  <div class="fee">${h.nhss_weekly_eur?eur(h.nhss_weekly_eur)+' <span class="small muted" style="font-weight:400">a week · '+(h.is_hse?'public cost of care':'Fair Deal agreed price')+'</span><div class="src">Source: HSE published list'+(h.nhss_fee_date?', '+fdate(h.nhss_fee_date):'')+'. The price the home may charge can change; confirm it with the home.</div>':'<span class="small muted" style="font-weight:400">Price not on the HSE list: ask the home</span>'}</div>
   <div class="small">${h.phone?'Phone '+esc(h.phone)+' · ':''}${h.provider&&!h.is_hse?'Run by '+esc(h.provider):''}</div>
   ${extra(h)}
-  <div class="links"><a href="${esc(h.hiqa_url)}" target="_blank" rel="noopener">Inspection reports on HIQA</a><a href="${esc(h.hiqa_search)}" target="_blank" rel="noopener">Search HIQA</a><a href="https://www.google.com/maps/search/${encodeURIComponent(h.name+' '+(h.address||h.town||''))}" target="_blank" rel="noopener">Map</a>${h.website?'<a href="'+esc(h.website)+'" target="_blank" rel="noopener">Website</a>':''}</div>
+  <div class="links"><a href="${esc(h.hiqa_url)}" target="_blank" rel="noopener">Inspection reports on HIQA</a><a href="${esc(h.hiqa_search)}" target="_blank" rel="noopener">Search HIQA</a><a href="https://www.google.com/maps/search/${encodeURIComponent(h.name+' '+(h.address||h.town||''))}" target="_blank" rel="noopener">Map</a>${h.website?'<a href="'+esc(h.website)+'" target="_blank" rel="noopener">Website</a>':''}<a href="#" data-fix="${h.number}">Report a wrong detail</a></div>
  </div>`).join('');}
 g('county').addEventListener('change',()=>{g('q').value='';load();});let tm;g('q').addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(()=>{if(g('q').value.trim().length>=2)g('county').value='';load();},350);});
 ['sort','type','onfd'].forEach(id=>g(id).addEventListener('change',render));
 g('list').addEventListener('click',e=>{const a=e.target.closest('[data-lb]');if(!a)return;e.preventDefault();g('lb-img').src=a.getAttribute('data-lb');g('lb').classList.add('on');});
-g('lb').addEventListener('click',()=>g('lb').classList.remove('on'));document.addEventListener('keydown',e=>{if(e.key==='Escape')g('lb').classList.remove('on');});
+g('lb').addEventListener('click',()=>g('lb').classList.remove('on'));
+g('list').addEventListener('click',e=>{const a=e.target.closest('[data-fix]');if(!a)return;e.preventDefault();const h=all.find(x=>String(x.number)===a.getAttribute('data-fix'));if(!h)return;g('fixbox').hidden=false;g('fixbox').dataset.number=h.number;g('fix-home').textContent=h.name+(h.town?', '+h.town:'');g('fix-note').textContent='';g('fix-what').value='';g('fix-what').focus();});
+g('fix-close').addEventListener('click',()=>{g('fixbox').hidden=true;});
+g('fix-send').addEventListener('click',()=>{const what=g('fix-what').value.trim();if(what.length<5){g('fix-note').textContent='Please say what is wrong.';return;}g('fix-send').disabled=true;
+ fetch(FN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'correction',number:g('fixbox').dataset.number,what:what,name:g('fix-name').value,email:g('fix-email').value})}).then(r=>r.json()).then(j=>{g('fix-send').disabled=false;g('fix-note').textContent=j.error||'Thank you. We will check it and correct the listing.';if(!j.error)setTimeout(()=>{g('fixbox').hidden=true;},1800);}).catch(()=>{g('fix-send').disabled=false;g('fix-note').textContent='Could not send. Please try again.';});});document.addEventListener('keydown',e=>{if(e.key==='Escape')g('lb').classList.remove('on');});
 const p=new URLSearchParams(location.search);if(p.get('county')){g('county').value=p.get('county');load();}
 
 </script>

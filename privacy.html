@@ -383,7 +383,7 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
   <div class="wrap">
     <span class="eyebrow">Privacy notice</span>
     <h1>How fairdeal.ie uses your information</h1>
-    <p>Version 3, 10 October 2026.</p>
+    <p>Version 4, 12 October 2026.</p>
   </div>
 </section>
 <main class="wrap tmain">
@@ -424,6 +424,11 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 <p>Your tracker keeps your checklist, which items you have ticked, the dates you mark (for example when you posted the form), the support office area you choose, and a log of the emails we send you. We use these to show your progress and to send your reminders.</p>
 <p>Your tracker is opened with a private link. We store only a scrambled version of the link, so we cannot recreate it.</p>
 
+<h3>Letters you send from your tracker, documents you keep there, and replies</h3>
+<p>If you choose to send a request letter by email from your tracker, we send it in your name from a fairdeal.ie address, to the address you type in. We keep a copy of the letter, who it went to and when. Each letter carries its own reply address at replies.fairdeal.ie, so that the answer comes back to your tracker and not to us. If no reply arrives within ten working days, we send a short reminder in your name, up to six times, unless you tell the tracker nothing more is needed.</p>
+<p>Documents you upload (for example a photograph of a bank statement or a certificate of market value) are kept in private storage in Ireland and shown only in your tracker. They are attached to a letter only when you tick them. Replies, and any attachments that come with them, are kept in the same way. Please upload only what the application needs.</p>
+<p>If you tick &ldquo;Text me when a reply lands&rdquo;, we keep your mobile number and send a short text when a reply arrives. There is a stop link in every text, and you can untick it in your tracker at any time. We never send marketing by text.</p>
+
 <h3>What stays on your own device</h3>
 <p>When you fill in the official HSE form or a request letter on fairdeal.ie, what you type is kept in your browser on your own phone or computer, and the completed form is created there. It is not sent to us. We only record that a form was downloaded, not what was in it. You can remove your answers at any time with “Clear my answers from this device”. Clearing your browser’s data also removes them.</p>
 
@@ -449,13 +454,13 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 <ul>
 <li><b>Supabase</b> stores our database, in a data centre in Ireland.</li>
 <li><b>Vercel</b> hosts the website pages.</li>
-<li><b>Resend</b> sends our emails.</li>
 <li><b>Stripe</b> processes card payments.</li>
-<li><b>Twilio</b> sends text messages, when a nursing home sends a family their link by text.</li>
+<li><b>Twilio</b> sends text messages, when a nursing home sends a family their link by text, or when you ask to be texted when a reply lands.</li>
+<li><b>Resend</b>, a company in the United States, delivers the emails we send and receives the replies to letters sent from your tracker, under standard contractual clauses.</li>
 <li><b>Anthropic</b> provides the automated answers for “Ask a question” and reads nursing home staff’s dictated notes to fill in the set-up form. It receives the question or the notes, and, for a question, the progress information shown on your own screen. It does not keep them or use them to train its systems.</li>
 </ul>
 <h3>Speaking instead of typing</h3>
-<p>Where you see a microphone button, your browser turns your voice into text. That is done by your browser’s own speech service (for example Google’s on Chrome and Android, Apple’s on iPhone and Safari), under that company’s privacy terms, and the text appears on your screen for you to check. On the HSE form, the words are sorted into the boxes on your own device; nothing you say there is sent to us. For “Ask a question”, the text of your question is sent to us only when you press Ask.</p>
+<p>Where you see a microphone button, including the small one beside each box, your browser turns your voice into text. That is done by your browser’s own speech service (for example Google’s on Chrome and Android, Apple’s on iPhone and Safari), under that company’s privacy terms, and the text appears on your screen for you to check. On the HSE form, the words are sorted into the boxes on your own device; nothing you say there is sent to us. For “Ask a question”, the text of your question is sent to us only when you press Ask.</p>
 <p>The website also loads fonts from Google Fonts, and the form-filling tool from jsDelivr. When your browser does this, those services see your device’s internet address, as with any website.</p>
 <p>Some of these companies are based in the United States. Where information is transferred outside the European Economic Area, they rely on the safeguards allowed by data protection law, such as the EU-US Data Privacy Framework or standard contractual clauses.</p>
 <p>We do not share your information with the HSE. You send your application to the HSE yourself. The only other organisation that can see anything is a nursing home that arranged the service for your family, as set out below.</p>
@@ -467,11 +472,11 @@ details,details:nth-of-type(n){border-left-color:var(--sun)!important}
 <li><b>Calculator sign-ups:</b> deleted after 24 months.</li>
 <li><b>Your answers on a paid order:</b> removed 12 months after payment. The payment record itself (email, what you bought, amount and date) is kept for six years for tax purposes.</li>
 <li><b>Your pack (PDF):</b> kept for 12 months so we can resend it if you lose it, then deleted.</li>
-<li><b>Your tracker:</b> deleted six months after it is closed, or after three years with no activity.</li>
+<li><b>Your tracker:</b> deleted six months after it is closed, or after three years with no activity. Letters, replies, uploaded documents and your mobile number go with it.</li>
 <li><b>Billing records for a nursing home that arranged the service:</b> six years.</li>
 <li><b>Copies of emails we send you:</b> deleted after 12 months.</li>
 </ul>
-<p>These deletions happen automatically each night.</p>
+<p>These deletions happen automatically each night from the live system. Our database provider keeps a daily backup for seven days, so a deleted record can remain in a backup for up to seven days after that; backups are used only to recover from a failure and are never used to restore deleted records on request. Uploaded documents and photographs are not held in backups at all: once deleted, they are gone.</p>
 
 <h2>Your rights</h2>
 <p>You can ask us for a copy of your information, to correct it, to delete it, to limit how we use it, or to object to how we use it. You can also ask for a copy in a form you can take elsewhere. Email <a href="mailto:derek@fairdeal.ie">derek@fairdeal.ie</a>. We will reply within one month.</p>
